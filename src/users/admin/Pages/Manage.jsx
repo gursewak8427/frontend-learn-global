@@ -101,7 +101,6 @@ const Manage = () => {
       e.stopPropagation();
       return;
     }
-<<<<<<< HEAD
 
     let oldAgents = state.agents;
     oldAgents[index].status = e.target.value;
@@ -121,41 +120,6 @@ const Manage = () => {
       document.getElementById("totalAgentsUnapproved").innerText = count + 1;
     } else {
       document.getElementById("totalAgentsUnapproved").innerText = count - 1;
-=======
-    const toggleStatus = (agentId, index, e) => {
-        if (!window.confirm("Are you confirm ?")) {
-            e.preventDefault();
-            e.stopPropagation();
-            return;
-        };
-
-        let oldAgents = state.agents
-        oldAgents[index].status = e.target.value;
-        // if (oldAgents[index].status == "APPROVED") {
-        //     oldAgents[index].status = "UN_APPROVED";
-        // } else {
-        // oldAgents[index].status = "APPROVED";
-        // }
-        setState({
-            ...state,
-            agents: oldAgents
-        })
-        let count = parseInt(document.getElementById("totalAgentsUnapproved").innerText)
-        if (e.target.value == "UN_APPROVED") {
-            document.getElementById("totalAgentsUnapproved").innerText = count + 1
-        } else {
-            document.getElementById("totalAgentsUnapproved").innerText = count - 1
-        }
-        let data = { agentId, status: e.target.value }
-        axios.post(process.env.REACT_APP_NODE_URL + "/admin/togglestatus", data).then(res => {
-            console.log(res)
-            // authenticate with token
-            // redirect
-        }).catch(err => {
-            console.log(err.response.data)
-            // alert(err.response.data.message)
-        })
->>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
     }
     let data = { agentId, status: e.target.value };
     axios
@@ -390,7 +354,6 @@ const Manage = () => {
     <>
       <div heading_title={"Agents List"}>
         <>
-<<<<<<< HEAD
           <div className="row px-4">
             <div className="w-full">
               <div className="shadow-lg mb-4 mt-4">
@@ -437,99 +400,6 @@ const Manage = () => {
                                             "/d/admin/agentprofile?id=" +
                                               agent._id
                                           )
-=======
-            <div heading_title={"Agents List"}>
-                <>
-                    <div className="row px-4">
-                        <div className="w-full">
-                            <div className="shadow-lg mb-4 mt-4">
-                                <div className="px-0 pt-0 pb-2">
-                                    <div className="table-responsive p-0">
-                                        {
-                                            state.isWaiting ? "Loading..." :
-                                                <table className="table w-full mb-0">
-                                                    <thead>
-                                                        <tr>
-                                                            <th className="border-2">Id</th>
-                                                            <th className="text-left p-3 border-2">Name</th>
-                                                            <th className="border-2">Phone</th>
-                                                            <th className="border-2">Approved</th>
-                                                            <th className="text-secondary opacity-7 border-2" />
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-
-                                                        {
-                                                            state.agents.map((agent, index) => {
-                                                                return <tr>
-                                                                    <td className="border-2">
-                                                                        <p className="text-xs text-center font-weight-bold mb-0">{index + 1}</p>
-                                                                        {/* <p className="text-xs text-secondary mb-0"><b>ID:</b> {agent._id}</p> */}
-                                                                    </td>
-                                                                    <td className="p-1 border-2 ">
-                                                                        <div className="flex jusify-center px-2 py-1">
-                                                                            <div>
-                                                                                <img width={"50px"} src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80" className="avatar avatar-sm mr-2" alt="user1" />
-                                                                            </div>
-                                                                            <div className="d-flex flex-column justify-content-center">
-                                                                                <h6 className="mb-0 text-sm font-bolder text-[#2a276b] capitalize hover:underline cursor-pointer" onClick={() => navigate("/d/admin/agentprofile?id=" + agent._id)}><b>{agent.first_name}</b></h6>
-                                                                                <p className="text-xs text-secondary mb-0 lowercase">{agent.username}</p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td className="align-middle text-center border-2">
-                                                                        <span className="text-secondary text-xs font-weight-bold">{agent.phone}</span>
-                                                                    </td>
-                                                                    <td className="align-middle text-center text-sm border-2">
-                                                                        {
-                                                                            agent.status == "PENDING" ?
-                                                                                <select name="" id="" className="px-4 py-2 border-2 border-gray" onChange={(e) => toggleStatus(agent._id, index, e)}>
-                                                                                    <option value="" className="border-2 border-gray px-4 py-2">-- PENDING --</option>
-                                                                                    <option value="APPROVED" className="border-2 border-gray px-4 py-2">APPROVE</option>
-                                                                                    <option value="REJECT" className="border-2 border-gray px-4 py-2">REJECT</option>
-                                                                                </select> :
-                                                                                agent.status == "APPROVED" ? <div className="text-[green]">Approved</div> :
-                                                                                    agent.status == "REJECT" ? <div className="text-[red]">Rejected</div> : <></>
-                                                                        }
-                                                                        {
-                                                                            //         <input className="checkboxstyle" type="checkbox" name="" id="" onClick={(e) => {
-                                                                            //             if (window.confirm("Are you sure ?")) {
-                                                                            //                 toggleStatus(agent._id, index)
-                                                                            //             } else {
-                                                                            //                 e.preventDefault();
-                                                                            //                 e.stopPropagation();
-                                                                            //                 return false;
-                                                                            //             }
-                                                                            //         }
-                                                                            //         } defaultChecked /> :
-                                                                            //         // <Switch color="secondary" defaultChecked onClick={() => toggleStatus(agent._id)} /> :
-                                                                            //         agent.status == "UN_APPROVED" ?
-                                                                            //             <input className="checkboxstyle" type="checkbox" name="" id="" onClick={(e) => {
-                                                                            //                 if (window.confirm("Are you sure ?")) {
-                                                                            //                     toggleStatus(agent._id, index)
-                                                                            //                 } else {
-                                                                            //                     e.preventDefault();
-                                                                            //                     e.stopPropagation();
-                                                                            //                     return false;
-                                                                            //                 }
-                                                                            //             }} /> : ""
-                                                                            //     // <Switch color="secondary" onClick={() => toggleStatus(agent._id)} /> : ""
-                                                                        }
-
-                                                                        {/* <span className="badge badge-sm bg-gradient-success">Online</span> */}
-                                                                    </td>
-
-                                                                    <td className="align-middle text-center border-2">
-                                                                        <Link to={"/d/admin/agent_students/" + agent._id} className="capitalize text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                                                                            Students
-                                                                        </Link>
-                                                                    </td>
-                                                                </tr>
-                                                            })
-                                                        }
-                                                    </tbody>
-                                                </table>
->>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
                                         }
                                       >
                                         <b>{agent.first_name}</b>

@@ -8,7 +8,6 @@ import Header from "../Components/Header";
 import AssessmentForm from "../Components/AssessmentForm";
 import { useState } from "react";
 
-<<<<<<< HEAD
 export default function WebsiteHome({ children, page }) {
     const [state, setState] = useState({
         isShowForm: false,
@@ -23,13 +22,6 @@ export default function WebsiteHome({ children, page }) {
 
     useEffect(() => {
         if(page != "home") return
-=======
-export default function WebsiteHome({ children }) {
-    const [state, setState] = useState({
-        isShowForm: false,
-    })
-    useEffect(() => {
->>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
         // get from localstorage
         var form = getLocalStorage("assessmentform")
         if (!form) {
@@ -54,11 +46,7 @@ export default function WebsiteHome({ children }) {
     return (<>
         <div className="app">
             {state.isShowForm && <AssessmentForm popup={true} closeForm={closeForm}/>}
-<<<<<<< HEAD
             <Header page={page}/>
-=======
-            <Header />
->>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
             {children}
             <Footer />
         </div >

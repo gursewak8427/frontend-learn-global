@@ -5,11 +5,7 @@ import Lv3 from "../images/lv3.png";
 
 export default function level() {
   return (
-<<<<<<< HEAD
     <div className="levels py-20 px-4 lg:px-0">
-=======
-    <div className="levels py-20">
->>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
       <div className="container mx-auto">
         <h4 className="relative text-center text-6xl relative">
           <span>Apply For</span> The Following Grade Levels

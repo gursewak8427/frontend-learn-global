@@ -99,6 +99,7 @@ const StudentDashboard = ({ children }) => {
           <div style={{ minHeight: "85vh" }}>
             <Outlet />
           </div>
+          
           <StudentFooter />
         </div>
       </main>

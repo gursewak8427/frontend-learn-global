@@ -42,15 +42,10 @@ const ProgramsList = (props) => {
             ...state,
             isWaiting: true,
         })
-<<<<<<< HEAD
         // var schoolName = state.first ? id : document.getElementById("schoolName").value;
         // var country = document.getElementById("country").value;
         var schoolName = "";
         var country = "";
-=======
-        var schoolName = state.first ? id : document.getElementById("schoolName").value;
-        var country = document.getElementById("country").value;
->>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
         var searchItem = document.getElementById("searchItem").value;
         const config = { headers: { "Authorization": `Bearer ${state.adminToken}` } }
 
@@ -69,11 +64,7 @@ const ProgramsList = (props) => {
                 setState({
                     ...state,
                     school_programs: res.data.details.totalData,
-<<<<<<< HEAD
-                    schoolNamesList: [],
-=======
-                    schoolNamesList: schoolsList,
->>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
+                schoolNamesList: [],
                     countryNamesList: countryList,
                     filterCountry: activeCountry,
                     // school: res.data.details.school,     
@@ -153,11 +144,7 @@ const ProgramsList = (props) => {
                             <div className="col-12">
                                 <div className="schoolFilters">
                                     <div className="left">
-<<<<<<< HEAD
                                         {/* <div className="filter-group w-4/12">
-=======
-                                        <div className="filter-group w-4/12">
->>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
                                             <select className="form-control p-2 border-2 border-black uppercase mr-2" name="country" id="country" onChange={handleChange}>
                                                 <option value="">-- Select Country --</option>
                                                 <option value="">All</option>
@@ -195,7 +182,6 @@ const ProgramsList = (props) => {
 
                                 <div className="card mb-4 mt-2">
                                     <div className="card-body px-0 pt-0 pb-2">
-<<<<<<< HEAD
                                         <div className="p-0">
                                             <table className="table-responsive mb-0 w-full dashbord-table">
                                                 <thead>
@@ -206,18 +192,6 @@ const ProgramsList = (props) => {
                                                         <th className="border-2 p-2 text-left align-middle text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Few Seats</th>
                                                         <th className="border-2 p-2 text-left align-middle text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Top Status</th>
                                                         <th className="border-2 p-2 text-left align-middle text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Intakes</th>
-=======
-                                        <div className="table-responsive p-0  dashbord-table">
-                                            <table className="table mb-0 w-full">
-                                                <thead>
-                                                    <tr>
-                                                        <th className="border-2  text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sr.</th>
-                                                        <th className="border-2 p-2 text-left text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Program</th>
-                                                        <th className="border-2  p-2 text-left align-middle text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Intakes</th>
-                                                        <th className="border-2 p-2 text-left align-middle text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Duration</th>
-                                                        <th className="border-2 p-2 text-left align-middle text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Few Seats</th>
-                                                        <th className="border-2  p-2 text-left align-middle text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Intake Status</th>
->>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
                                                         {/* <th className="p-2 align-middle text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Registred</th> */}
                                                         <th className="text-secondary opacity-7" />
                                                     </tr>
@@ -228,21 +202,13 @@ const ProgramsList = (props) => {
                                                         !state.isWaiting && state.school_programs.map((school, index) => {
                                                             return school.school_programs.map((program, index2) => {
                                                                 return <tr>
-<<<<<<< HEAD
                                                                     <td className="border-2 p-2 max-width">{index2 + 1}</td>
-=======
-                                                                    <td className="border-2 p-2 max-width">{+ index2 + 1}</td>
->>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
                                                                     <td className="border-2 p-2 max-width">
                                                                         <div className="">
                                                                             <div><b>{program.program_name}</b></div>
                                                                         </div>
                                                                     </td>
-<<<<<<< HEAD
                                                                     {/* <td className="border-2 p-2 text-center">{program.intake_id}</td> */}
-=======
-                                                                    <td className="border-2 p-2 text-center">{program.intake_id}</td>
->>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
                                                                     <td className="border-2 p-2 text-center">{program.duration} Sem</td>
                                                                     <td className="border-2 p-2 text-center">
                                                                         {
@@ -268,7 +234,6 @@ const ProgramsList = (props) => {
                                                                                 }} />
                                                                         }
                                                                     </td>
-<<<<<<< HEAD
                                                                     <td className="border-2 p-2 text-center">
                                                                         {
                                                                             Boolean(program.top_status) != false ?
@@ -301,9 +266,6 @@ const ProgramsList = (props) => {
                                                                         </button>
                                                                     </td>
                                                                     {/* <td className="border-2 p-2 text-center statusCell">
-=======
-                                                                    <td className="border-2 p-2 text-center statusCell">
->>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
                                                                         <span className={`${state.activeIndex == index2 ? "active" : ""} p-2 border rounded`} onClick={() => toggleActiveIndex(index2)}>Status</span>
                                                                         <div className={`${state.activeIndex == index2 ? "statusBox active" : "statusBox"}`}>
                                                                             <ul>
@@ -318,11 +280,7 @@ const ProgramsList = (props) => {
                                                                                                     e.stopPropagation();
                                                                                                     return false;
                                                                                                 }
-<<<<<<< HEAD
                                                                                             }} className={`${index4 + 1 == program.status.split(",").length ? "border-bottom-0" : ""}`}><span>{monthsArray[parseInt(program.intake_id.split(",")[index4]) - 1]}</span><span> <Switch color="primary" defaultChecked onClick={() => null} /> </span></li>
-=======
-                                                                                            }} className={`${index4 + 1 == program.status.split(",").length ? "border-bottom-0" : ""}`}><span>{monthsArray[program.intake_id.split(",")[index4]]}</span><span> <Switch color="primary" defaultChecked onClick={() => null} /> </span></li>
->>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
                                                                                         } else {
                                                                                             return <li onClick={(e) => {
                                                                                                 if (window.confirm("Are you sure ?")) {
@@ -333,21 +291,13 @@ const ProgramsList = (props) => {
                                                                                                     return false;
                                                                                                 }
                                                                                             }}
-<<<<<<< HEAD
                                                                                                 classname={`${index4 + 1 == program.status.split(",").length ? "border-bottom-0" : ""}`}><span>{monthsArray[parseInt(program.intake_id.split(",")[index4]) - 1]}</span><span><Switch color="primary" onClick={() => null} /> </span></li>
-=======
-                                                                                                classname={`${index4 + 1 == program.status.split(",").length ? "border-bottom-0" : ""}`}><span>January</span><span><Switch color="primary" onClick={() => null} /> </span></li>
->>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
                                                                                         }
                                                                                     })
                                                                                 }
                                                                             </ul>
                                                                         </div>
-<<<<<<< HEAD
                                                                     </td> */}
-=======
-                                                                    </td>
->>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
                                                                     {/* <td className="border-2 p-2 align-middle d-flex"> */}
                                                                     {/* <div className="tableIcons">
                                                                                     <i className="fa fa-edit"></i>
@@ -366,11 +316,7 @@ const ProgramsList = (props) => {
                                                 </tbody>
                                             </table>
                                             {
-<<<<<<< HEAD
                                                 !state.isWaiting && state.school_programs.length == 0 ? <div className="text-[red] w-full text-center mt-[50px]"></div> : <></>
-=======
-                                                !state.isWaiting && state.school_programs.length == 0 ? <div className="text-[red] w-full text-center mt-[50px]">No Program Found</div> : <></>
->>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
                                             }
                                             {
                                                 state.isWaiting &&

@@ -99,7 +99,6 @@ export default function WSearch() {
 
   }
 
-<<<<<<< HEAD
   const enrollNow = (sid, pid) => {
     let studentToken = getToken("student")
     if (studentToken) {
@@ -127,9 +126,6 @@ export default function WSearch() {
     }
 
   }
-=======
-  
->>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
   return (
     <WebsiteHome>
       <div className="search-content py-16">

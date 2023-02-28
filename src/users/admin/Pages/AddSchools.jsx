@@ -11,16 +11,11 @@ import { useDropzone } from 'react-dropzone'
 
 // web-socket
 import socketIOClient from "socket.io-client";
-<<<<<<< HEAD
 
 // const ENDPOINT = process.env.REACT_APP_NODE_URL + "/";
 // const ENDPOINT = "https://learnglobal-backend.onrender.com/";
 const ENDPOINT = "http://localhost:3006/";
 
-=======
-// const ENDPOINT = "https://learn-global-backend.onrender.com/";
-const ENDPOINT = "http://127.0.0.1:3006";
->>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
 console.log("COnnecting", ENDPOINT)
 var socket = socketIOClient(ENDPOINT);
 // if (!getCookie("socket")) {
@@ -491,7 +486,6 @@ const AddSchools = () => {
                                                                     return <td title={`Unknown School Name : ${item}`} className="p-2 myCell required_missing">{item}</td>
                                                                 }
 
-<<<<<<< HEAD
                                                                 // if (!state.countryList.includes(item.toLowerCase()) && index == 3) {
                                                                 //     if (!thisrow) {
                                                                 //         errorFieds++;
@@ -499,15 +493,6 @@ const AddSchools = () => {
                                                                 //     }
                                                                 //     return <td title={`Unknown Country Name : ${item}`} className="p-2 myCell required_missing">{item}</td>
                                                                 // }
-=======
-                                                                if (!state.countryList.includes(item.toLowerCase()) && index == 3) {
-                                                                    if (!thisrow) {
-                                                                        errorFieds++;
-                                                                        thisrow = true;
-                                                                    }
-                                                                    return <td title={`Unknown Country Name : ${item}`} className="p-2 myCell required_missing">{item}</td>
-                                                                }
->>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
 
                                                                 return <td className="p-2" title={item}>{item}</td>
                                                             })

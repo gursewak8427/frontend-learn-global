@@ -53,15 +53,9 @@ const AssessmentForms = () => {
                                                         <th className="text-left border-2 p-2 ">Last Name</th>
                                                         <th className="text-left border-2 p-2 ">Phone</th>
                                                         <th className="text-left border-2 p-2 ">Email</th>
-<<<<<<< HEAD
                                                         <th className="text-left border-2 p-2 ">Country</th>
                                                         <th className="text-left border-2 p-2 ">Created</th>
                                                         {/* <th className="text-left border-2 p-2 align-middle">Status</th> */}
-=======
-                                                        <th className="text-left border-2 p-2 ">Created</th>
-                                                        <th className="text-left border-2 p-2 align-middle">Status</th>
-                                                        
->>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -85,7 +79,6 @@ const AssessmentForms = () => {
                                                                     <p className="text-xs font-weight-bold mb-0">{student.email}</p>
                                                                 </td>
                                                                 <td className="p-2 text-left">
-<<<<<<< HEAD
                                                                     <p className="text-xs font-weight-bold mb-0">{student.destination_country}</p>
                                                                 </td>
                                                                 <td className="p-2 text-left">
@@ -96,15 +89,6 @@ const AssessmentForms = () => {
                                                                         {student.status}
                                                                     </a>
                                                                 </td> */}
-=======
-                                                                    <p className="text-xs font-weight-bold mb-0">{(new Date(parseInt(student.created))).toLocaleString()}</p>
-                                                                </td>
-                                                                <td className="p-2 align-middle">
-                                                                    <a href="javascript:;" className="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                                                                        {student.status}
-                                                                    </a>
-                                                                </td>
->>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
                                                             </tr>
                                                         })
                                                     }

@@ -4,7 +4,6 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import Can from "../images/can.jpg";
 import Russ from "../images/russ.jpg";
 import Usa from "../images/usa.png";
-<<<<<<< HEAD
 import Log_a from "../images/log_a.png";
 import { getToken } from "../../../helper/auth";
 
@@ -36,45 +35,18 @@ export default function Header({ page }) {
         ? "header-bg-dark"
         : ""
     }>
-=======
-
-export default function Header() {
-  const [headerClassName, setHeaderClassName] = useState("");
-
-  const handleScroll = (headerClassName) => {
-    if (headerClassName !== "menuscroll" && window.pageYOffset >= 100) {
-      setHeaderClassName("menuscroll");
-    } else if (headerClassName === "menuscroll" && window.pageYOffset < 100) {
-      setHeaderClassName("");
-    }
-  };
-
-  React.useEffect(() => {
-    window.onscroll = () => handleScroll(headerClassName);
-  }, [headerClassName]);
-  return (
-    <div>
->>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
       <div
         className={
           headerClassName
             ? `${headerClassName}` + "header-part "
-<<<<<<< HEAD
             : page == "home" ? "header-part " : ""
-=======
-            : "header-part "
->>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
         }
         id="header_menu"
       >
         <div className="top-bar flex py-2 px-4 lg:px-0   border-b">
           <div className="container mx-auto">
             <div className="grid lg:grid-cols-3 items-center">
-<<<<<<< HEAD
               <div className="lg:my-3 lg:my-0">
-=======
-              <div className="my-3 lg:my-0">
->>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
                 <a
                   className="mail-link text-center lg:text-left text-black  block text-sm tracking-widest"
                   href="mailto:info@learnglobal.com"
@@ -134,7 +106,6 @@ export default function Header() {
         <nav class="border-gray-200 px-2 sm:px-4 py-2.5 rounded light:bg-gray-800">
           <div class="container flex flex-wrap justify-between items-center mx-auto">
             <a href="/" className="logo flex items-center">
-<<<<<<< HEAD
               <img className="logo-norml" src={Log_a} />
               <img
                 className="logo-scroll"
@@ -142,23 +113,14 @@ export default function Header() {
                 alt="Logo"
                 width={"200px"}
               />
-=======
-              <img src={Logo} alt="Logo" width={"200px"} />
->>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
             </a>
             <button
               data-collapse-toggle="mobile-menu"
               type="button"
-<<<<<<< HEAD
               className="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
               aria-controls="mobile-menu"
               aria-expanded="false"
               onClick={() => handleTogle()}
-=======
-              class="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-              aria-controls="mobile-menu"
-              aria-expanded="false"
->>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
             >
               <span class="sr-only">Open main menu</span>
               <svg
@@ -186,7 +148,6 @@ export default function Header() {
                 ></path>
               </svg>
             </button>
-<<<<<<< HEAD
             <div
               class={
                 Show
@@ -195,9 +156,6 @@ export default function Header() {
               }
               id="mobile-menu"
             >
-=======
-            <div class="hidden w-full md:block md:w-auto" id="mobile-menu">
->>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
               <ul class="header-menus flex items-center flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
                 <li>
                   <Link
@@ -217,7 +175,6 @@ export default function Header() {
                   </a>
                 </li>
                 <li>
-<<<<<<< HEAD
                   {
                     getToken("student") ?
                       <Link
@@ -234,14 +191,6 @@ export default function Header() {
                         Login/Signup
                       </Link>
                   }
-=======
-                  <Link
-                    to={"/d/"}
-                    class="block text-sm py-2 pr-4 pl-3  border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0  md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-                  >
-                    Login/Signup
-                  </Link>
->>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
                 </li>
                 <li>
                   <a
