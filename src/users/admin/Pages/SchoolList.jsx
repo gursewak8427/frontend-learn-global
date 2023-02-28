@@ -1,0 +1,590 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
+import ReactPaginate from "react-paginate";
+import { Link, Navigate, redirect, useNavigate } from "react-router-dom";
+import { authenticate, getToken } from "../../../helper/auth";
+import Dashboard from "../Screens/Dashboard/Dashboard";
+import { MultiSelect } from "react-multi-select-component";
+import { Switch } from "@mui/material";
+
+const SchoolList = () => {
+    const [state, setState] = useState({
+        isWaiting: false,
+        schools: [],
+        schoolNamesList: [],
+<<<<<<< HEAD
+=======
+        countryNamesList: [],
+>>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
+        adminToken: getToken("admin"),
+        totalPages: 0,
+        currentPage: 1,
+        country: "",
+        searchItem: "",
+        first: true,
+<<<<<<< HEAD
+        baseUrl: "",
+
+        countryNamesList: [],
+        stateNamesList: [],
+        cityNamesList: [],
+    })
+
+    const [tableColumns, setTableColumns] = useState([{
+        label: "Sr.",
+        value: "Sr.",
+    },
+    {
+        label: "Country Logo",
+        value: "Country Logo",
+    },
+    {
+        label: "School Logo",
+        value: "School Logo",
+    },
+    {
+        label: "School Name",
+        value: "School Name",
+    },
+    {
+        label: "Country",
+        value: "Country",
+    },
+    {
+        label: "State",
+        value: "State",
+    },
+    {
+        label: "City",
+        value: "City",
+    },
+    {
+        label: "Total Programs",
+        value: "Total Programs",
+    },
+    {
+        label: "Type",
+        value: "Type",
+    },
+    {
+        label: "Total Students",
+        value: "Total Students",
+    },
+    {
+        label: "Founded",
+        value: "Founded",
+    },
+    {
+        label: "Top Status",
+        value: "Top Status",
+    },
+    {
+        label: "Actions",
+        value: "Actions",
+    }])
+
+    const [selectedColumns, setSelectedColumns] = useState([
+        {
+            label: "Sr.",
+            value: "Sr.",
+        },
+        {
+            label: "Country Logo",
+            value: "Country Logo",
+        },
+        {
+            label: "School Logo",
+            value: "School Logo",
+        },
+        {
+            label: "School Name",
+            value: "School Name",
+        },
+        {
+            label: "Country",
+            value: "Country",
+        },
+        {
+            label: "Total Programs",
+            value: "Total Programs",
+        },
+        {
+            label: "Top Status",
+            value: "Top Status",
+        },
+        {
+            label: "Actions",
+            value: "Actions",
+        }
+    ]);
+
+    const [selectedColumnsTable, setSelectedColumnsTable] = useState(["Sr.", "Country Logo", "School Logo", "School Name", "Country", "Total Programs", "Top Status", "Actions"]);
+
+
+=======
+        baseUrl : ""
+    })
+>>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
+    const navigate = useNavigate()
+    useEffect(() => {
+        // get school name and id list
+        axios.post(process.env.REACT_APP_NODE_URL + "/admin/getschoolnameidandcountrieslist", {}).then(res => {
+            console.log({ responseSchools: res })
+<<<<<<< HEAD
+            getPaginationData(1, res.data.schoolNamesList, res.data.countryNameList, res.data.cityNameList, res.data.stateNameList)
+=======
+            getPaginationData(1, res.data.schoolNamesList, res.data.countryNameList)
+>>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
+            setState({
+                ...state,
+                isWaiting: false,
+            })
+        }).catch(err => {
+<<<<<<< HEAD
+            console.log(err)
+=======
+            console.log(err.response.data)
+>>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
+            // alert(err.response.data.message)
+        })
+    }, [])
+
+<<<<<<< HEAD
+    const getPaginationData = (page, schoolsList, countryList, cityList, stateList) => {
+=======
+    const getPaginationData = (page, schoolsList, countryList) => {
+>>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
+        setState({
+            ...state,
+            isWaiting: true,
+        })
+
+        let countryId = document.getElementById("countryId").value
+        let stateId = document.getElementById("stateId").value
+        let cityId = document.getElementById("cityId").value
+        let searchItem = document.getElementById("searchItem").value
+
+        const config = { headers: { "Authorization": `Bearer ${state.adminToken}` } }
+        let data = { currentPage: page, countryId, stateId, cityId, searchItem }
+        axios.post(process.env.REACT_APP_NODE_URL + "/admin/getschools", data, config).then(res => {
+            console.log(res)
+            state.first ?
+                setState({
+                    ...state,
+                    schools: res.data.details.schools,
+                    totalPages: res.data.details.totalPages,
+                    currentPage: res.data.details.currentPage,
+                    schoolNamesList: schoolsList,
+                    countryNamesList: countryList,
+<<<<<<< HEAD
+                    cityNamesList: cityList,
+                    stateNamesList: stateList,
+                    isWaiting: false,
+                    first: false,
+                    baseUrl: res.data.details.baseUrl
+=======
+                    isWaiting: false,
+                    first: false,
+                    baseUrl : res.data.details.baseUrl
+>>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
+                }) :
+
+                setState({
+                    ...state,
+                    schools: res.data.details.schools,
+                    totalPages: res.data.details.totalPages,
+                    currentPage: res.data.details.currentPage,
+                    isWaiting: false,
+                })
+        }).catch(err => {
+            console.log(err.response.data)
+            // alert(err.response.data.message)
+        })
+    }
+
+    const handleChange = e => {
+        if (e.target.name == "countryId") {
+            getStates(e.target.value)
+        } else if (e.target.name == "stateId") {
+            getCities(e.target.value)
+        } else {
+            // getPaginationData(1)
+        }
+    }
+
+
+
+    const getStates = (countryId) => {
+        if (countryId == "") {
+            setState({
+                ...state,
+                stateNamesList: [],
+                cityNamesList: [],
+            })
+            return;
+        };
+        axios
+            .get(process.env.REACT_APP_NODE_URL + "/address/state/" + countryId).then(stateResponse => {
+                console.log({ stateResponse })
+                if (stateResponse.data.status == "1") {
+                    setState({
+                        ...state,
+                        countryId,
+                        stateNamesList: stateResponse.data.details.state,
+                    })
+                }
+            })
+    }
+
+
+    const getCities = (stateId) => {
+        if (stateId == "") {
+            setState({
+                ...state,
+                cityNamesList: [],
+            })
+            return;
+        };
+        axios
+            .get(process.env.REACT_APP_NODE_URL + "/address/city/" + stateId).then(cityResponse => {
+                console.log({ cityResponse })
+                if (cityResponse.data.status == "1") {
+                    setState({
+                        ...state,
+                        stateId,
+                        cityNamesList: cityResponse.data.details.city,
+                    })
+                }
+            })
+    }
+
+
+    
+    const toggleTopStatus = (sId) => {
+        const config = { headers: { "Authorization": `Bearer ${state.adminToken}` } }
+        let data = { sId}
+        axios.post(process.env.REACT_APP_NODE_URL + "/admin/toggletopstatusschool", data, config).then(res => {
+            console.log({ res })
+        }).catch(err => {
+            console.log(err.response.data)
+            // alert(err.response.data.message)
+        })
+    }
+    return (
+        <>
+            <div heading_title={"Schools List"}>
+                <>
+                    <div className="row min-height-vh-100">
+                        <div className="row p-45">
+                            <div className="col-12 mt-4">
+                                <div className="headerr d-flex align-items-end justify-content-end">
+                                    {/* <button className="btn AddDataBtn">Add</button> */}
+                                    {/* <button className="btn AddDataBtn" onClick={()=>navigate("/admin/addschools")}>Import</button> */}
+                                </div>
+<<<<<<< HEAD
+                                <div className="flex p-2 items-end justify-end">
+                                    <div className="filter-group w-[200px]">
+                                        <MultiSelect
+                                            id=""
+                                            options={tableColumns}
+                                            value={selectedColumns}
+                                            onChange={(value, b) => {
+                                                setSelectedColumns(value)
+                                                let newVal = value.map(val => val.label)
+                                                setSelectedColumnsTable(newVal)
+                                            }}
+                                            labelledBy="Advance"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="schoolFilters mb-4">
+                                    <div className="left">
+                                        <div className="filter-group w-2/12 m-2">
+                                            <label htmlFor="" className="text-[white]">Country</label>
+                                            <select className="uppercase rounded border-2 border-black form-control p-2" name="countryId" id="countryId" onChange={handleChange}>
+=======
+                                <div className="schoolFilters mb-4">
+                                    <div className="left">
+                                        <div className="filter-group">
+                                            <select className="uppercase border-2 border-black form-control p-2" name="country" id="country" onChange={handleChange}>
+>>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
+                                                <option value="" selected>-- Select Country --</option>
+                                                <option value="">All</option>
+                                                {
+                                                    state.countryNamesList.map(country => {
+<<<<<<< HEAD
+                                                        return <option className="uppercase" value={country.countryId}>{country.countryName}</option>
+=======
+                                                        return <option className="uppercase" value={country.countryName}>{country.countryName}</option>
+>>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
+                                                    })
+                                                }
+                                            </select>
+                                        </div>
+                                        <div className="filter-group w-2/12 m-2">
+                                            <label htmlFor="" className="text-[white]">State</label>
+                                            <select className="uppercase rounded border-2 border-black form-control p-2" name="stateId" id="stateId" onChange={handleChange}>
+                                                <option value="" selected>-- Select State --</option>
+                                                <option value="">All</option>
+                                                {
+                                                    state.stateNamesList.map(state => {
+                                                        return <option className="uppercase" value={state.stateId}>{state.stateName}</option>
+                                                    })
+                                                }
+                                            </select>
+                                        </div>
+                                        <div className="filter-group w-2/12 m-2">
+                                            <label htmlFor="" className="text-[white]">City</label>
+                                            <select className="uppercase rounded border-2 border-black form-control p-2" name="cityId" id="cityId" onChange={handleChange}>
+                                                <option value="" selected>-- Select City --</option>
+                                                <option value="">All</option>
+                                                {
+                                                    state.cityNamesList.map(city => {
+                                                        return <option className="uppercase" value={city.cityId}>{city.cityName}</option>
+                                                    })
+                                                }
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                    <div className="right">
+                                        <div className="filter-group">
+<<<<<<< HEAD
+                                            <input className="form-control rounded border-2 border-black p-2" type="text" placeholder="SEARCH" id="searchItem" name="searchItem" onChange={handleChange} />
+=======
+                                            <input className="form-control border-2 border-black p-2" type="text" placeholder="SEARCH" id="searchItem" name="searchItem" onChange={handleChange} />
+>>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div className="bg-[dark] flex justify-end">
+                                    <button
+                                        className="bg-gradient-primary px-4 py-2 text-white rounded mb-2"
+                                        onClick={() => getPaginationData(1)}
+                                    >
+                                        Find
+                                    </button>
+                                </div>
+
+                                {
+                                    state.isWaiting ?
+                                        <>
+                                            <center className="mt-4">
+                                                <div class="spinner-border" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                            </center>
+                                        </> : <div className="card mb-4">
+                                            <div className="card-body px-0 pt-0 pb-2">
+<<<<<<< HEAD
+                                                <div className="table-responsive p-0 dashbord-table">
+                                                    <table className="table mb-0 w-full">
+                                                        <thead>
+                                                            <tr>
+                                                                {
+                                                                    tableColumns.map(col => {
+                                                                        for (let index = 0; index < selectedColumns.length; index++) {
+                                                                            const element = selectedColumns[index];
+                                                                            if (element.label == col.label) {
+                                                                                return <th className="border-2 border-black p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left">{col.label}</th>
+                                                                            }
+                                                                        }
+                                                                    })
+                                                                }
+=======
+                                                <div className="table-responsive p-0 dashbord-table ">
+                                                    <table className="table mb-0 w-full">
+                                                        <thead>
+                                                            <tr>
+                                                                <th className="p-2 border-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sr.</th>
+                                                                <th className="border-2  p-2 text-left text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Country Logo</th>
+                                                                <th className="border-2 p-2 text-left text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">School Logo</th>
+                                                                <th className="border-2  p-2 text-left text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">School Name</th>
+                                                                <th className="border-2  p-2 text-left text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Country</th>
+                                                                <th className="border-2  p-2 align-middle text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Total Programs</th>
+                                                                {/* <th className="border-2  p-2 align-middle text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Registred</th> */}
+>>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {
+                                                                state.schools.map((school, index) => {
+                                                                    console.log({ school })
+                                                                    return <tr>
+<<<<<<< HEAD
+                                                                        {
+                                                                            selectedColumnsTable.includes("Sr.") &&
+                                                                            <td className="p-2 border-2">
+                                                                                <p className="text-xs font-weight-bold mb-0">{index + 1}</p>
+                                                                            </td>
+                                                                        }
+                                                                        {
+                                                                            selectedColumnsTable.includes("Country Logo") &&
+                                                                            <td className="border-2 p-2">
+                                                                                <div className="mr-2">
+                                                                                    <img width={60} src={state.baseUrl + school?.school_meta_details.schoolLogo} className="avatar avatar-sm me-3" alt="user1" />
+                                                                                </div>
+                                                                            </td>
+                                                                        }
+                                                                        {
+                                                                            selectedColumnsTable.includes("School Logo") &&
+                                                                            <td className="border-2 p-2">
+                                                                                <div className="mr-2">
+                                                                                    <img width={60} src={state.baseUrl + school?.school_meta_details.countryLogo} className="avatar avatar-sm me-3" alt="user1" />
+                                                                                </div>
+                                                                            </td>
+                                                                        }
+                                                                        {
+                                                                            selectedColumnsTable.includes("School Name") &&
+                                                                            <td className="border-2 p-2">
+                                                                                <div className="d-flex flex-column justify-content-center">
+                                                                                    <h6 className="mb-0 text-sm hover-underline" onClick={() => navigate("/d/admin/programs/" + school._id)}>{school.school_name}</h6>
+                                                                                    <p className="text-xs text-secondary mb-0">{school.school_location}</p>
+                                                                                </div>
+                                                                            </td>
+                                                                        }
+                                                                        {
+                                                                            selectedColumnsTable.includes("Country") &&
+                                                                            <td className="border-2 p-2 capitalize">
+                                                                                {school.country}
+                                                                            </td>
+                                                                        }
+                                                                        {
+                                                                            selectedColumnsTable.includes("State") &&
+                                                                            <td className="border-2 p-2 capitalize">
+                                                                                {school.state}
+                                                                            </td>
+                                                                        }
+                                                                        {
+                                                                            selectedColumnsTable.includes("City") &&
+                                                                            <td className="border-2 p-2 capitalize">
+                                                                                {school.city}
+                                                                            </td>
+                                                                        }
+                                                                        {
+                                                                            selectedColumnsTable.includes("Total Programs") &&
+                                                                            <td className="p-2 border-2 align-middle text-center">
+                                                                                <span className="text-secondary text-xs font-weight-bold">{school.school_programs.length}</span>
+                                                                            </td>
+                                                                        }
+                                                                        {
+                                                                            selectedColumnsTable.includes("Type") &&
+                                                                            <td className="p-2 border-2 align-middle text-center">
+                                                                                <span className="text-secondary text-xs font-weight-bold">{school.type}</span>
+                                                                            </td>
+                                                                        }
+                                                                        {
+                                                                            selectedColumnsTable.includes("Total Students") &&
+                                                                            <td className="p-2 border-2 align-middle text-center">
+                                                                                <span className="text-secondary text-xs font-weight-bold">{school.total_student}</span>
+                                                                            </td>
+                                                                        }
+                                                                        {
+                                                                            selectedColumnsTable.includes("Founded") &&
+                                                                            <td className="p-2 border-2 align-middle text-center">
+                                                                                <span className="text-secondary text-xs font-weight-bold">{school.founded}</span>
+                                                                            </td>
+                                                                        }
+                                                                        {
+                                                                            selectedColumnsTable.includes("Top Status") &&
+                                                                            <td className="border-2 p-2 text-center">
+                                                                                {
+                                                                                    Boolean(school.top_status) != false ?
+                                                                                        <Switch color="primary" defaultChecked onClick={(e) => {
+                                                                                            if (window.confirm("Are you sure ?")) {
+                                                                                                toggleTopStatus(school._id)
+                                                                                            } else {
+                                                                                                e.preventDefault();
+                                                                                                e.stopPropagation();
+                                                                                                return false;
+                                                                                            }
+                                                                                        }} />
+                                                                                        :
+                                                                                        <Switch color="primary" onClick={(e) => {
+                                                                                            if (window.confirm("Are you sure ?")) {
+                                                                                                toggleTopStatus(school._id)
+                                                                                            } else {
+                                                                                                e.preventDefault();
+                                                                                                e.stopPropagation();
+                                                                                                return false;
+                                                                                            }
+                                                                                        }} />
+                                                                                }
+                                                                            </td>
+                                                                        }
+                                                                        {
+                                                                            selectedColumnsTable.includes("Actions") &&
+                                                                            <td className="p-2 border-2 align-middle text-center">
+                                                                                <Link to={"/d/admin/schoolupdate/" + school._id}>Edit</Link>
+                                                                            </td>
+                                                                        }
+
+=======
+                                                                        <td className="border-2 p-2">
+                                                                            <p className="text-xs font-weight-bold mb-0">{index + 1}</p>
+                                                                        </td>
+                                                                        <td className="border-2 p-2">
+                                                                            <div className="mr-2">
+                                                                                <img width={60} src={state.baseUrl + school?.countryDetail[0].countryFlag} className="avatar avatar-sm me-3" alt="user1" />
+                                                                            </div>
+                                                                        </td>
+                                                                        <td className="border-2 p-2">
+                                                                            <div className="mr-2">
+                                                                                <img width={60} src={state.baseUrl + school?.schoolDetail[0].schoolLogo} className="avatar avatar-sm me-3" alt="user1" />
+                                                                            </div>
+                                                                        </td>
+                                                                        <td className="border-2 p-2">
+                                                                            <div className="d-flex flex-column justify-content-center">
+                                                                                <h6 className="mb-0 text-sm hover-underline" onClick={() => navigate("/d/admin/programs/" + school._id)}>{school.school_name}</h6>
+                                                                                <p className="text-xs text-secondary mb-0">{school.school_location}</p>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td className="border-2 p-2 capitalize">
+                                                                            {school.country}
+                                                                        </td>
+                                                                        <td className="p-2 border-2 align-middle text-center">
+                                                                            <span className="text-secondary text-xs font-weight-bold">{school.school_programs.length}</span>
+                                                                        </td>
+>>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
+                                                                    </tr>
+                                                                })
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div className="card-footer pb-0">
+                                                {/* pagination is here */}
+                                                <div className="pagination">
+                                                    <div className="pages">
+                                                        <ReactPaginate
+                                                            breakLabel="..."
+                                                            nextLabel="next"
+                                                            onPageChange={(event) => {
+                                                                getPaginationData(event.selected + 1)
+                                                            }}
+                                                            pageRangeDisplayed={2}
+                                                            pageCount={state.totalPages}
+                                                            previousLabel="prev"
+                                                            renderOnZeroPageCount={null}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                }
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </>
+            </div>
+        </>
+    )
+}
+
+export default SchoolList;

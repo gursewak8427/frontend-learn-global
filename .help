@@ -1,0 +1,16 @@
+// Set two dates
+const date1 = new Date("2022-02-20T10:00:00");
+const date2 = new Date("2022-02-20T11:30:00");
+
+// Get the difference in milliseconds
+const diffInMs = Math.abs(date2 - date1);
+
+// Convert the difference to hours, minutes, and seconds
+let hours = Math.floor(diffInMs / (1000 * 60 * 60));
+let minutes = Math.floor((diffInMs % (1000 * 60 * 60)) / (1000 * 60));
+let seconds = Math.floor((diffInMs % (1000 * 60)) / 1000);
+
+// Display the difference in console
+console.log(`The difference between the two dates is ${hours} hours, ${minutes} minutes, and ${seconds} seconds.`);
+
+
