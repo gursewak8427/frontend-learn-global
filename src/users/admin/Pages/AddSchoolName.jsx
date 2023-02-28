@@ -32,6 +32,7 @@ const Addschoolname = () => {
     showPopup: false,
   });
 
+<<<<<<< HEAD
   useEffect(() => {
     // get country list
     axios
@@ -57,6 +58,60 @@ const Addschoolname = () => {
                 });
               }
             });
+=======
+    const handleChange = e => {
+        setState({
+            ...state,
+            [e.target.name]: e.target.value
+        })
+    }
+
+
+    const handleFileChange = e => {
+        setState({
+            ...state,
+            [e.target.name]: e.target.files[0]
+        })
+    }
+
+    const uploadData = async () => {
+        try {
+            const fd = new FormData();
+            if (state.schoolName == "") {
+                alert("School Name is required")
+                return;
+            }
+            fd.append('schoolName', state.schoolName);
+            fd.append('image', state.schoolLogo);
+            setState({
+                ...state,
+                submitProcessing: true,
+            })
+            let response = await axios
+                .post(process.env.REACT_APP_NODE_URL + "/admin/addschoolname", fd)
+
+            if (response.data.status == "1") {
+                setState({
+                    ...state,
+                    countryName: "",
+                    countryFlag: "",
+                    list: [...state.list, response.data.details.newSchoolName],
+                    submitProcessing: false,
+                })
+            } else {
+                setState({
+                    ...state,
+                    submitProcessing: false,
+                })
+            }
+            alert(response.data.message)
+        } catch (error) {
+            console.log(error)
+            setState({
+                ...state,
+                submitProcessing: false,
+            })
+>>>>>>> 1364d015a9aa03628ea1ad4108e88de5fd5c486d
         }
       });
   }, []);
