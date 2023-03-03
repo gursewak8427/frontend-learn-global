@@ -4,6 +4,7 @@ import { Navigate, redirect } from "react-router-dom";
 import { authenticate } from "../../../helper/auth";
 import AuthScreen from "../Screens/Authentication/AuthScreen";
 import Dashboard from "../Screens/Dashboard/Dashboard";
+import { setCookie, getCookie } from "../../../helper/auth";
 
 const Login = (props) => {
     const [state, setState] = useState({
@@ -13,13 +14,15 @@ const Login = (props) => {
         isShowPassword: false,
         isCodeSend: false,
         code: "",
+        tokenPreserve: "",
+        isSave: false,
     })
 
     const LoginNow = async (e) => {
         e.preventDefault()
 
         const { email, password } = state;
-        const data = { email, password }
+        const data = { email, password, tokenPreserve: getCookie("admin-2fa") }
         const config = { 'content-type': 'application/json' }
         console.log({
             method: "POST",
@@ -40,18 +43,32 @@ const Login = (props) => {
                 alert(res.data.message)
                 setState({
                     ...state,
-                    submitProcessing: false,
+                    submitProcessing: false
                 })
                 return;
             }
-            // code send to email
-            // Show code input at frontend
-            alert("Verification Code Send Successfully")
-            setState({
-                ...state,
-                isCodeSend: true,
-                submitProcessing: false,
-            })
+
+            let mode = res.data.details.mode;
+            if (mode == "LOGIN") {
+                authenticate(res, "admin", () => {
+                    console.log("Login Successfully without 2FA")
+                    window.location.href = props.role == "ADMIN" ? "/d/admin/" : "/d/subadmin/"
+                })
+            } else if (mode == "2FA") {
+                // code send to email
+                // Show code input at frontend
+                alert("Verification Code Send Successfully")
+                setState({
+                    ...state,
+                    isCodeSend: true,
+                    submitProcessing: false,
+                    tokenPreserve: res.data.details.token,
+                })
+
+            } else {
+                console.log("Login mode not received from server")
+            }
+
 
             // authenticate(res, "admin", () => {
             //     // alert(res.data.message)
@@ -97,8 +114,14 @@ const Login = (props) => {
                 return;
             }
 
+
             authenticate(res, "admin", () => {
                 // alert(res.data.message)
+                console.log({ state })
+                if (state.isSave) {
+                    setCookie("admin-2fa", state.tokenPreserve)
+                }
+
                 console.log("Token added as admin_token")
                 window.location.href = props.role == "ADMIN" ? "/d/admin/" : "/d/subadmin/"
             })
@@ -126,11 +149,11 @@ const Login = (props) => {
                     <div>
                         {
                             state.isCodeSend ?
-                                <div className="md:grid md:grid-cols-3 md:gap-6">
-                                    <div className="mt-5 md:col-start-2 md:mt-0 m-auto w-full lg:w-9/12">
+                                <div className="">
+                                    <div className="form-login">
                                         <form key={"123"} onSubmit={VerifyCode}>
                                             <div className="shadow sm:overflow-hidden sm:rounded-md border-2 border-[gray] py-5 bg-white">
-                                                <div className="space-y-6 px-4 py-5 sm:p-6">
+                                                <div className="space-y-6 bg-white px-4 pb-2 pt-[20px]">
                                                     <p className="text-center text-gray my-2">An email with a verification code was just send to test****r@gmail.com</p>
                                                     <div className="col-span-3 sm:col-span-2">
                                                         <label htmlFor="company-website" className="block text-sm font-medium text-gray-700">
@@ -148,9 +171,18 @@ const Login = (props) => {
                                                             />
                                                         </div>
                                                         <div className="flex items-end justify-end">
-                                                            <span className="text-[#475569] hover:text-black hover:underline" onClick={LoginNow}>Resend</span>
+                                                            <span className="text-[#475569] hover:text-black hover:underline cursor-pointer" onClick={LoginNow}>Resend</span>
                                                         </div>
                                                     </div>
+                                                </div>
+                                                <div className="bg-gray-50 px-4 py-3 sm:px-6">
+                                                    <input type="checkbox" name="isSave" onChange={() => {
+                                                        setState({
+                                                            ...state,
+                                                            isSave: !state.isSave
+                                                        })
+                                                    }} id="isSave" />
+                                                    <label htmlFor="isSave" className="p-2">Save for this device</label>
                                                 </div>
                                                 <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
                                                     <button
@@ -180,10 +212,10 @@ const Login = (props) => {
                                         </form>
                                     </div>
                                 </div> :
-                                <div className="md:grid md:grid-cols-3 md:gap-6">
+                                <div className="">
                                     <div className="mt-5 md:col-start-2 md:mt-0 m-auto w-full lg:w-9/12">
                                         <form key={"1234"} onSubmit={LoginNow}>
-                                            <div className="shadow sm:overflow-hidden sm:rounded-md border-2 border-[gray] py-5 bg-white">
+                                            <div className="shadow sm:overflow-hidden sm:rounded-md border-2 border-[gray] py-5 bg-white form-login">
                                                 <div className="space-y-6 px-4 py-5 sm:p-6">
                                                     <div className="">
                                                         <div className="col-span-3 sm:col-span-2">

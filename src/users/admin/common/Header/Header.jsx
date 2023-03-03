@@ -21,6 +21,7 @@ const Header = () => {
         menu: -1,
         isWait: true,
     })
+
     const sidebarItems = [
         {
             label: "Dashboard",
@@ -39,7 +40,7 @@ const Header = () => {
             label: "Schools",
             permissions: "school_main",
             icon: <i class="fa-solid fa-school"></i>,
-            matchings: ["addcountry", "addschoolname", "schools", "schoolupdate"],
+            matchings: ["addcountry", "addschoolname", "schools", "schoolupdate", "intakes"],
             items: [
                 // {
                 //     label: "Add Country",
@@ -152,13 +153,25 @@ const Header = () => {
         {
             label: "Students",
             icon: <i class="fa-solid fa-person-rays"></i>,
-            matchings: ["assessmentforms", "serachqueries"],
+            matchings: ["students", "pending-programs", "approved-programs"],
             items: [
                 {
-                    label: "List",
+                    label: "All Students",
                     icon: <i class="fa-solid fa-graduation-cap"></i>,
                     matchings: ["students"],
                     path: "/d/admin/students",
+                },
+                {
+                    label: "Pending Programs",
+                    icon: <i class="fa-solid fa-graduation-cap"></i>,
+                    matchings: ["pending-programs"],
+                    path: "/d/admin/pending-programs",
+                },
+                {
+                    label: "Approved Programs",
+                    icon: <i class="fa-solid fa-graduation-cap"></i>,
+                    matchings: ["approved-programs"],
+                    path: "/d/admin/approved-programs",
                 },
             ]
         },
@@ -206,7 +219,8 @@ const Header = () => {
             }
             let index = sidebarItems.reduce((prev, curr, index) => {
                 return sidebarItems[index].matchings.includes(window.location.pathname.split("/")[3]) ? index : prev
-            })
+            }, 0)
+            console.log({ index })
             setState({
                 ...state,
                 menu: index,
@@ -239,11 +253,12 @@ const Header = () => {
         }
         let index = sidebarItems.reduce((prev, curr, index) => {
             return sidebarItems[index].matchings.includes(window.location.pathname.split("/")[3]) ? index : prev
-        })
+        }, 0)
 
         setState({
             ...state,
             isWait: false,
+            menu: index,
         })
 
     }, [window.location.href])
@@ -335,7 +350,7 @@ const Header = () => {
                                     if (!permissions.includes(singleItem.permissions) && !isAdmin && singleItem.permissions) return;
                                     return (
                                         <>
-                                            <div className={`mt-6 flex flex-col justify-start items-center pl-8 w-full border-gray-600 border-b space-y-3 pb-5 ${state.menu == index ? "active-link" : ""}`}>
+                                            <div className={`pt-6 flex flex-col justify-start items-center pl-8 w-full border-gray-600 border-b space-y-3 pb-5 ${state.menu == index ? "active-link" : ""}`}>
                                                 <button onClick={() => navigate(singleItem.path)} className="flex jusitfy-start items-center space-x-6 w-full  focus:outline-none  focus:text-indigo-400  text-white rounded ">
                                                     <span className="">{singleItem.icon}</span>
                                                     <p className="text-base leading-4">{singleItem.label}</p>

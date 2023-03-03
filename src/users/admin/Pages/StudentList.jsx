@@ -108,18 +108,18 @@ const StudentList = () => {
                                   </td>
                                   <td className="p-1 border-2 text-center">
                                     <span className="text-secondary text-xs font-weight-bold">
-                                      23/04/18
+                                      {(new Date(student.createdAt)).toLocaleString()}
                                     </span>
                                   </td>
                                   <td className="p-1 border-2 text-center">
-                                    <a
+                                    {/* <a
                                       href="javascript:;"
                                       className="text-secondary font-weight-bold text-xs"
                                       data-toggle="tooltip"
                                       data-original-title="Edit user"
                                     >
                                       Edit
-                                    </a>
+                                    </a> */}
                                   </td>
                                 </tr>
                               );

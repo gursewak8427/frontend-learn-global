@@ -10,6 +10,7 @@ const StudentConfirm = () => {
   const { token } = useParams();
   useEffect(() => {
     // verify now
+    // alert(token)
     if (token) {
       const config = { headers: { Authorization: `Bearer ${token}` } };
       axios
@@ -22,6 +23,7 @@ const StudentConfirm = () => {
           }, 2000);
         })
         .catch((err) => {
+          console.log({ err })
           console.log(err.response.data);
         });
     }

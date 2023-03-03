@@ -3,630 +3,634 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import {
-  Link,
-  Navigate,
-  redirect,
-  useNavigate,
-  useSearchParams,
+    Link,
+    Navigate,
+    redirect,
+    useNavigate,
+    useSearchParams
 } from "react-router-dom";
 import { authenticate, getToken } from "../../../helper/auth";
 import Dashboard from "../Screens/Dashboard/Dashboard";
 
 const AdminStudentProfile = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const [state, setState] = useState({
-    isWaiting: true,
-    studentProfile: {},
-    adminToken: getToken("admin"),
-    reason: "",
-    reasonType: -1,
-    remarkpopupActive: false,
-    remarkpopupActiveDocType: false,
-    baseUrl: "",
-    popup: false,
-    remark: "",
-    remarksList: [],
-    profileApproveLoading: false,
-  });
-
-  const toggleRemarkPopup = (type) => {
-    setState({
-      ...state,
-      remarkpopupActive: !state.remarkpopupActive,
-      remarkpopupActiveDocType: type,
+    const [searchParams, setSearchParams] = useSearchParams();
+    const navigate = useNavigate();
+    const [state, setState] = useState({
+        isWaiting: true,
+        studentProfile: {},
+        adminToken: getToken("admin"),
+        reason: "",
+        reasonType: -1,
+        remarkpopupActive: false,
+        remarkpopupActiveDocType: false,
+        baseUrl: "",
+        popup: false,
+        remark: "",
+        remarksList: [],
+        profileApproveLoading: false,
     });
-  };
 
-  const [tab, setTab] = useState(1);
-
-  const studentId = searchParams.get("id");
-
-  useEffect(() => {
-    if (studentId) {
-      const config = {
-        headers: { Authorization: `Bearer ${state.adminToken}` },
-      };
-      axios
-        .get(
-          process.env.REACT_APP_NODE_URL + "/student?id=" + studentId,
-          config
-        )
-        .then((res) => {
-          console.log(res.data.details);
-          axios
-            .post(
-              process.env.REACT_APP_NODE_URL +
-                "/student/getRemarks?id=" +
-                studentId,
-              {},
-              config
-            )
-            .then((remarksResponse) => {
-              setState({
-                ...state,
-                studentProfile: res.data.details.student,
-                isWaiting: false,
-                baseUrl: res.data.details.baseUrl,
-                remarksList: remarksResponse.data.details.remarks,
-              });
-            });
-        });
-    } else {
-      setState({
-        ...state,
-        isWaiting: false,
-      });
-    }
-  }, []);
-
-  // const AsideBarAgentDetails = () => <></>
-  // const AsideBarAgentDetails = () =>
-
-  const RemarkPopup = () => {
-    const changeReasonType = (e) => {
-      setState({
-        ...state,
-        [e.target.name]: e.target.value,
-      });
-    };
-
-    const submitNow = () => {
-      const remarkReason = document.getElementById("remarkReason").value;
-
-      let oldDocs = state.studentProfile.documents;
-      oldDocs[parseInt(state.remarkpopupActiveDocType)].document_status =
-        "UN_APPROVED";
-
-      const data = {
-        documents: oldDocs,
-        reason: state.reasonType == "Other" ? remarkReason : state.reasonType,
-        doc_title:
-          oldDocs[parseInt(state.remarkpopupActiveDocType)].document_title,
-      };
-
-      const config = {
-        headers: { Authorization: `Bearer ${state.adminToken}` },
-      };
-      axios
-        .patch(
-          process.env.REACT_APP_NODE_URL + "/student?id=" + studentId,
-          data,
-          config
-        )
-        .then((res) => {
-          if (res.data.status == "1") {
-            setState({
-              ...state,
-              studentProfile: {
-                ...state.studentProfile,
-                documents: oldDocs,
-              },
-              remarkpopupActive: false,
-              remarkpopupActiveDocType: false,
-            });
-          }
-          // setState({
-          //     ...state,
-          //     agentProfile: res.data.details.agent,
-          //     isWaiting: false,
-          // })
-        });
-    };
-    return (
-      <>
-        <div className={`remarkpopup ${state.remarkpopupActive && "active"}`}>
-          <div className="w-full">
-            <h1>
-              <span>Select Reason</span>
-              <div className="close" onClick={toggleRemarkPopup}>
-                <svg
-                  className="mr-2"
-                  style={{ width: "25px" }}
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 512 512"
-                >
-                  <path d="M256 512c141.4 0 256-114.6 256-256S397.4 0 256 0S0 114.6 0 256S114.6 512 256 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
-                </svg>
-              </div>
-            </h1>
-            <ul>
-              <div className="form-group">
-                {state.reasonType == "Not Visible" ? (
-                  <input
-                    type="radio"
-                    name="reasonType"
-                    id="1"
-                    value={"Not Visible"}
-                    onChange={changeReasonType}
-                    checked
-                  />
-                ) : (
-                  <input
-                    type="radio"
-                    name="reasonType"
-                    id="1"
-                    value={"Not Visible"}
-                    onChange={changeReasonType}
-                  />
-                )}
-                <label htmlFor="1">Not Visible </label>
-              </div>
-              <div className="form-group">
-                {state.reasonType == "Invalid Document" ? (
-                  <input
-                    type="radio"
-                    name="reasonType"
-                    id="2"
-                    value={"Invalid Document"}
-                    onChange={changeReasonType}
-                    checked
-                  />
-                ) : (
-                  <input
-                    type="radio"
-                    name="reasonType"
-                    id="2"
-                    value={"Invalid Document"}
-                    onChange={changeReasonType}
-                  />
-                )}
-                <label htmlFor="2">Invalid Document</label>
-              </div>
-              <div className="form-group">
-                {state.reasonType == "Other" ? (
-                  <input
-                    type="radio"
-                    name="reasonType"
-                    id="3"
-                    value={"Other"}
-                    onChange={changeReasonType}
-                    checked
-                  />
-                ) : (
-                  <input
-                    type="radio"
-                    name="reasonType"
-                    id="3"
-                    value={"Other"}
-                    onChange={changeReasonType}
-                  />
-                )}
-                <label htmlFor="3">Other</label>
-              </div>
-              <div
-                className={`form-group ${
-                  state.reasonType == "Other" ? "" : "hidden"
-                }`}
-              >
-                <input
-                  type="text"
-                  placeholder="Type Reason"
-                  className="form-control border-1 border-grey px-2 py-2 mb-3"
-                  id="remarkReason"
-                />
-              </div>
-              <div>
-                <button
-                  className="py-[4px] px-[12px] rounded-full text-black submitRemarkBtn"
-                  onClick={submitNow}
-                >
-                  Submit
-                </button>
-              </div>
-            </ul>
-          </div>
-        </div>
-      </>
-    );
-  };
-
-  const approveDocStatus = (index) => {
-    if (window.confirm("Are you sure ?")) {
-      // now update
-      const config = {
-        headers: { Authorization: `Bearer ${state.adminToken}` },
-      };
-      let oldDocs = state.studentProfile.documents;
-      oldDocs[index].document_status = "APPROVED";
-
-      const data = {
-        documents: oldDocs,
-        doc_title: oldDocs[index].document_title,
-      };
-
-      axios
-        .patch(
-          process.env.REACT_APP_NODE_URL + "/student?id=" + studentId,
-          data,
-          config
-        )
-        .then((res) => {
-          if (res.data.status == "1") {
-            setState({
-              ...state,
-              studentProfile: {
-                ...state.studentProfile,
-                documents: oldDocs,
-              },
-            });
-            return;
-          }
-          alert(res.data.message);
-
-          // setState({
-          //     ...state,
-          //     agentProfile: res.data.details.agent,
-          //     isWaiting: false,
-          // })
-        });
-    }
-  };
-
-  if (state.isWaiting) return "Waiting...";
-
-  const unApproveProfile = () => {
-    setState({
-      ...state,
-      profileApproveLoading: true,
-    });
-    if (!window.confirm("Are you sure ?")) return;
-
-    const config = { headers: { Authorization: `Bearer ${state.adminToken}` } };
-    const data = {};
-    axios
-      .post(
-        process.env.REACT_APP_NODE_URL +
-          "/student/approveProfile?id=" +
-          studentId,
-        data,
-        config
-      )
-      .then((res) => {
-        if (res.data.status == "1") {
-          alert(res.data.message);
-          setState({
-            ...state,
-            studentProfile: {
-              ...state.studentProfile,
-              status: "IN_PROCESS",
-            },
-            profileApproveLoading: false,
-          });
-          return;
-        }
-        alert(res.data.message);
-
-        // setState({
-        //    ...state,
-        //     agentProfile: res.data.details.agent,
-        //     isWaiting: false,
-        // })
-      });
-  };
-
-  const approveProfile = () => {
-    setState({
-      ...state,
-      profileApproveLoading: true,
-    });
-    if (!window.confirm("Are you sure ?")) return;
-
-    const config = { headers: { Authorization: `Bearer ${state.adminToken}` } };
-    const data = {};
-    axios
-      .post(
-        process.env.REACT_APP_NODE_URL +
-          "/student/approveProfile?id=" +
-          studentId,
-        data,
-        config
-      )
-      .then((res) => {
-        if (res.data.status == "1") {
-          alert(res.data.message);
-          setState({
-            ...state,
-            studentProfile: {
-              ...state.studentProfile,
-              status: "APPROVED",
-            },
-            profileApproveLoading: false,
-          });
-          return;
-        }
-        alert(res.data.message);
-
-        // setState({
-        //    ...state,
-        //     agentProfile: res.data.details.agent,
-        //     isWaiting: false,
-        // })
-      });
-  };
-
-  const handleInput = (event) => {
-    setState({
-      ...state,
-      [event.target.name]: event.target.value,
-    });
-  };
-  // const handleFile = (event) => {
-  //     setState({
-  //         ...state,
-  //         [event.target.name]: event.target.files[0]
-  //     })
-  // }
-
-  const addRemark = () => {
-    const config = { headers: { Authorization: `Bearer ${state.adminToken}` } };
-    let body = {
-      userId: studentId,
-      text: state.remark,
-    };
-    axios
-      .post(process.env.REACT_APP_NODE_URL + "/student/setRemark", body, config)
-      .then((res) => {
-        console.log(res.data.details);
+    const toggleRemarkPopup = (type) => {
         setState({
-          ...state,
-          remark: "",
-          popup: false,
-          remarksList: [res.data.details.newRemark, ...state.remarksList],
+            ...state,
+            remarkpopupActive: !state.remarkpopupActive,
+            remarkpopupActiveDocType: type
         });
-      });
-  };
+    };
 
-  return (
-    <>
-      <div heading_title={"Agent Profile"}>
+    const [tab, setTab] = useState(searchParams.get("tab") == "documents" ? 2 : 1);
+
+    const studentId = searchParams.get("id");
+
+    useEffect(() => {
+        if (studentId) {
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${state.adminToken
+                        }`
+                }
+            };
+            axios.get(process.env.REACT_APP_NODE_URL + "/student?id=" + studentId, config).then((res) => {
+                console.log(res.data.details);
+                axios.post(process.env.REACT_APP_NODE_URL + "/student/getRemarks?id=" + studentId, {}, config).then((remarksResponse) => {
+                    setState({
+                        ...state,
+                        studentProfile: res.data.details.student,
+                        isWaiting: false,
+                        baseUrl: res.data.details.baseUrl,
+                        remarksList: remarksResponse.data.details.remarks
+                    });
+                });
+            });
+        } else {
+            setState({
+                ...state,
+                isWaiting: false
+            });
+        }
+    }, []);
+
+    // const AsideBarAgentDetails = () => <></>
+    // const AsideBarAgentDetails = () =>
+
+    const RemarkPopup = () => {
+        const changeReasonType = (e) => {
+            setState({
+                ...state,
+                [e.target.name]: e.target.value
+            });
+        };
+
+        const submitNow = () => {
+            const remarkReason = document.getElementById("remarkReason").value;
+
+            let oldDocs = state.studentProfile.documents;
+            oldDocs[parseInt(state.remarkpopupActiveDocType)].document_status = "UN_APPROVED";
+
+            const data = {
+                documents: oldDocs,
+                reason: state.reasonType == "Other" ? remarkReason : state.reasonType,
+                doc_title: oldDocs[parseInt(state.remarkpopupActiveDocType)].document_title
+            };
+
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${state.adminToken
+                        }`
+                }
+            };
+            axios.patch(process.env.REACT_APP_NODE_URL + "/student?id=" + studentId, data, config).then((res) => {
+                if (res.data.status == "1") {
+                    setState({
+                        ...state,
+                        studentProfile: {
+                            ...state.studentProfile,
+                            documents: oldDocs
+                        },
+                        remarkpopupActive: false,
+                        remarkpopupActiveDocType: false
+                    });
+                }
+                // setState({
+                //     ...state,
+                //     agentProfile: res.data.details.agent,
+                //     isWaiting: false,
+                // })
+            });
+        };
+        return (
+            <>
+                <div className={
+                    `remarkpopup ${state.remarkpopupActive && "active"
+                    }`
+                }>
+                    <div className="w-full">
+                        <h1>
+                            <span>Select Reason</span>
+                            <div className="close"
+                                onClick={toggleRemarkPopup}>
+                                <svg className="mr-2"
+                                    style={
+                                        { width: "25px" }
+                                    }
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 512 512">
+                                    <path d="M256 512c141.4 0 256-114.6 256-256S397.4 0 256 0S0 114.6 0 256S114.6 512 256 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
+                                </svg>
+                            </div>
+                        </h1>
+                        <ul>
+                            <div className="form-group">
+                                {
+                                    state.reasonType == "Not Visible" ? (
+                                        <input type="radio" name="reasonType" id="1"
+                                            value={"Not Visible"}
+                                            onChange={changeReasonType}
+                                            checked />
+                                    ) : (
+                                        <input type="radio" name="reasonType" id="1"
+                                            value={"Not Visible"}
+                                            onChange={changeReasonType} />
+                                    )
+                                }
+                                <label htmlFor="1">Not Visible
+                                </label>
+                            </div>
+                            <div className="form-group">
+                                {
+                                    state.reasonType == "Invalid Document" ? (
+                                        <input type="radio" name="reasonType" id="2"
+                                            value={"Invalid Document"}
+                                            onChange={changeReasonType}
+                                            checked />
+                                    ) : (
+                                        <input type="radio" name="reasonType" id="2"
+                                            value={"Invalid Document"}
+                                            onChange={changeReasonType} />
+                                    )
+                                }
+                                <label htmlFor="2">Invalid Document</label>
+                            </div>
+                            <div className="form-group">
+                                {
+                                    state.reasonType == "Other" ? (
+                                        <input type="radio" name="reasonType" id="3"
+                                            value={"Other"}
+                                            onChange={changeReasonType}
+                                            checked />
+                                    ) : (
+                                        <input type="radio" name="reasonType" id="3"
+                                            value={"Other"}
+                                            onChange={changeReasonType} />
+                                    )
+                                }
+                                <label htmlFor="3">Other</label>
+                            </div>
+                            <div className={
+                                `form-group ${state.reasonType == "Other" ? "" : "hidden"
+                                }`
+                            }>
+                                <input type="text" placeholder="Type Reason" className="form-control border-1 border-grey px-2 py-2 mb-3" id="remarkReason" />
+                            </div>
+                            <div>
+                                <button className="py-[4px] px-[12px] rounded-full text-black submitRemarkBtn"
+                                    onClick={submitNow}>
+                                    Submit
+                                </button>
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+            </>
+        );
+    };
+
+    const approveDocStatus = (index) => {
+        if (window.confirm("Are you sure ?")) { // now update
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${state.adminToken
+                        }`
+                }
+            };
+            let oldDocs = state.studentProfile.documents;
+            oldDocs[index].document_status = "APPROVED";
+
+            const data = {
+                documents: oldDocs,
+                doc_title: oldDocs[index].document_title
+            };
+
+            axios.patch(process.env.REACT_APP_NODE_URL + "/student?id=" + studentId, data, config).then((res) => {
+                if (res.data.status == "1") {
+                    setState({
+                        ...state,
+                        studentProfile: {
+                            ...state.studentProfile,
+                            documents: oldDocs
+                        }
+                    });
+                    return;
+                }
+                alert(res.data.message);
+
+                // setState({
+                //     ...state,
+                //     agentProfile: res.data.details.agent,
+                //     isWaiting: false,
+                // })
+            });
+        }
+    };
+
+    if (state.isWaiting)
+        return "Waiting...";
+
+
+
+    const unApproveProfile = () => {
+        setState({
+            ...state,
+            profileApproveLoading: true
+        });
+        if (!window.confirm("Are you sure ?"))
+            return;
+
+
+
+        const config = {
+            headers: {
+                Authorization: `Bearer ${state.adminToken
+                    }`
+            }
+        };
+        const data = {};
+        axios.post(process.env.REACT_APP_NODE_URL + "/student/approveProfile?id=" + studentId, data, config).then((res) => {
+            if (res.data.status == "1") {
+                alert(res.data.message);
+                setState({
+                    ...state,
+                    studentProfile: {
+                        ...state.studentProfile,
+                        status: "IN_PROCESS"
+                    },
+                    profileApproveLoading: false
+                });
+                return;
+            }
+            alert(res.data.message);
+
+            // setState({
+            //    ...state,
+            //     agentProfile: res.data.details.agent,
+            //     isWaiting: false,
+            // })
+        });
+    };
+
+    const approveProfile = () => {
+        setState({
+            ...state,
+            profileApproveLoading: true
+        });
+        if (!window.confirm("Are you sure ?"))
+            return;
+
+
+
+        const config = {
+            headers: {
+                Authorization: `Bearer ${state.adminToken
+                    }`
+            }
+        };
+        const data = {};
+        axios.post(process.env.REACT_APP_NODE_URL + "/student/approveProfile?id=" + studentId, data, config).then((res) => {
+            if (res.data.status == "1") {
+                alert(res.data.message);
+                setState({
+                    ...state,
+                    studentProfile: {
+                        ...state.studentProfile,
+                        status: "APPROVED"
+                    },
+                    profileApproveLoading: false
+                });
+                return;
+            }
+            alert(res.data.message);
+
+            // setState({
+            //    ...state,
+            //     agentProfile: res.data.details.agent,
+            //     isWaiting: false,
+            // })
+        });
+    };
+
+    const handleInput = (event) => {
+        setState({
+            ...state,
+            [event.target.name]: event.target.value
+        });
+    };
+    // const handleFile = (event) => {
+    //     setState({
+    //         ...state,
+    //         [event.target.name]: event.target.files[0]
+    //     })
+    // }
+
+    const addRemark = () => {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${state.adminToken
+                    }`
+            }
+        };
+        let body = {
+            userId: studentId,
+            text: state.remark
+        };
+        axios.post(process.env.REACT_APP_NODE_URL + "/student/setRemark", body, config).then((res) => {
+            console.log(res.data.details);
+            setState({
+                ...state,
+                remark: "",
+                popup: false,
+                remarksList: [
+                    res.data.details.newRemark,
+                    ...state.remarksList
+                ]
+            });
+        });
+    };
+
+    return (
         <>
-          <div className={`agentDetailsAsideBar active`}>
-            {/* <h1>
+            <div heading_title={"Agent Profile"}>
+                <>
+                    <div className={`agentDetailsAsideBar active`}>
+                        {/* <h1>
                             Agent Details
                             <button onClick={() => {
                                 setState({ ...state, activeAgentDetails: null })
                                 navigate("/d/admin/manage?status=unapproved")
                             }}>Close</button>
                         </h1> */}
-            <div className="">
-              <table className="table-responsive">
-                <div className="tabs">
-                  <h2
-                    className={`${tab == 1 && "active"}`}
-                    onClick={() => setTab(1)}
-                  >
-                    Basic
-                  </h2>
-                  <h2
-                    className={`${tab == 2 && "active"}`}
-                    onClick={() => setTab(2)}
-                  >
-                    Documents
-                  </h2>
-                  <h2
-                    className={`${tab == 3 && "active"}`}
-                    onClick={() => setTab(3)}
-                  >
-                    Remarks
-                  </h2>
-                  {/* <h2 className={`${tab == 3 && "active"}`} onClick={() => setTab(3)}>Additional Details</h2> */}
-                </div>
-                <div className={`tabDetail ${tab == 1 && "active"}`}>
-                  <tr className="py-0">
-                    <div className="p-2 flex flex-col">
-                      <th>Email :</th>
-                      <td className="lowercase">
-                        {state.studentProfile?.email || ""}
-                      </td>
-                    </div>
-                  </tr>
-                  <tr>
-                    <div className="p-2 flex flex-col">
-                      <th>First Name :</th>
-                      <td>{state.studentProfile?.firstName}</td>
-                    </div>
-                    <div className="p-2 flex flex-col">
-                      <th>Last Name :</th>
-                      <td>{state.studentProfile?.lastName}</td>
-                    </div>
-                  </tr>
-                  <tr>
-                    <div className="p-2 flex flex-col">
-                      <th>Phone :</th>
-                      <td>{state.studentProfile?.phone || "---"}</td>
-                    </div>
-                    <div className="p-2 flex flex-col">
-                      <th></th>
-                      <td></td>
-                    </div>
-                  </tr>
-                  <tr>
-                    <div className="p-2 flex flex-col">
-                      <th>Street :</th>
-                      <td>{state.studentProfile?.street || "---"}</td>
-                    </div>
-                    <div className="p-2 flex flex-col">
-                      <th>City :</th>
-                      <td>{state.studentProfile?.city || "---"}</td>
-                    </div>
-                  </tr>
-                  <tr>
-                    <div className="p-2 flex flex-col">
-                      <th>State :</th>
-                      <td>{state.studentProfile?.state || "---"}</td>
-                    </div>
-                    <div className="p-2 flex flex-col">
-                      <th>Country :</th>
-                      <td>{state.studentProfile?.country || "---"}</td>
-                    </div>
-                  </tr>
-                  <tr>
-                    <div className="p-2 flex flex-col">
-                      <th>Postal Code :</th>
-                      <td>{state.studentProfile?.postal_code || "---"}</td>
-                    </div>
-                    <div className="p-2 flex flex-col">
-                      <th></th>
-                      <td></td>
-                    </div>
-                  </tr>
-                </div>
-                <div className={`tabDetail docs ${tab == 2 && "active"}`}>
-                  {state.studentProfile.documents.length == 0 ? (
-                    <div className="text-[red] w-full text-center m-3">
-                      No Documents
-                    </div>
-                  ) : (
-                    <div className="text-[red] w-full text-center m-3"></div>
-                  )}
-                  <div className="flex justify-end w-full">
-                    {state.studentProfile.status != "APPROVED" ? (
-                      <div className="flex items-center justify-center">
-                        <span className="text-[green] m-10 font-bold">
-                          In-Process
-                        </span>
-                        <button
-                          onClick={approveProfile}
-                          className="m-2 bg-gradient-primary px-4 py-2 rounded text-white"
-                        >
-                          {state.profileApproveLoading ? (
-                            <div aria-label="Loading..." role="status">
-                              <svg
-                                class="h-6 w-6 animate-spin"
-                                viewBox="3 3 18 18"
-                              >
-                                <path
-                                  class="fill-gray-200"
-                                  d="M12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5ZM3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12Z"
-                                ></path>
-                                <path
-                                  class="fill-gray-800"
-                                  d="M16.9497 7.05015C14.2161 4.31648 9.78392 4.31648 7.05025 7.05015C6.65973 7.44067 6.02656 7.44067 5.63604 7.05015C5.24551 6.65962 5.24551 6.02646 5.63604 5.63593C9.15076 2.12121 14.8492 2.12121 18.364 5.63593C18.7545 6.02646 18.7545 6.65962 18.364 7.05015C17.9734 7.44067 17.3403 7.44067 16.9497 7.05015Z"
-                                ></path>
-                              </svg>
-                            </div>
-                          ) : (
-                            <>Approve Profile</>
-                          )}
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="flex items-center justify-center">
-                        <span className="text-[green] m-10 font-bold">
-                          Student Approved
-                        </span>
-                        <button
-                          onClick={unApproveProfile}
-                          className="m-2 bg-[red] px-4 py-2 rounded text-white"
-                        >
-                          {state.profileApproveLoading ? (
-                            <div aria-label="Loading..." role="status">
-                              <svg
-                                class="h-6 w-6 animate-spin"
-                                viewBox="3 3 18 18"
-                              >
-                                <path
-                                  class="fill-gray-200"
-                                  d="M12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5ZM3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12Z"
-                                ></path>
-                                <path
-                                  class="fill-gray-800"
-                                  d="M16.9497 7.05015C14.2161 4.31648 9.78392 4.31648 7.05025 7.05015C6.65973 7.44067 6.02656 7.44067 5.63604 7.05015C5.24551 6.65962 5.24551 6.02646 5.63604 5.63593C9.15076 2.12121 14.8492 2.12121 18.364 5.63593C18.7545 6.02646 18.7545 6.65962 18.364 7.05015C17.9734 7.44067 17.3403 7.44067 16.9497 7.05015Z"
-                                ></path>
-                              </svg>
-                            </div>
-                          ) : (
-                            <>Switch To In-Process</>
-                          )}
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                  <table className="table-fixed w-full p-2 pt-0">
-                    <thead>
-                      <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {state.studentProfile.documents.map(
-                        (document, DocIndex) => {
-                          return (
-                            <tr key={DocIndex} className="px-2 docRow">
-                              <td className="flex items-center">
-                                <svg
-                                  className="mr-2"
-                                  style={{ width: "25px" }}
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  viewBox="0 0 512 512"
-                                >
-                                  <path d="M0 96C0 60.7 28.7 32 64 32H448c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM323.8 202.5c-4.5-6.6-11.9-10.5-19.8-10.5s-15.4 3.9-19.8 10.5l-87 127.6L170.7 297c-4.6-5.7-11.5-9-18.7-9s-14.2 3.3-18.7 9l-64 80c-5.8 7.2-6.9 17.1-2.9 25.4s12.4 13.6 21.6 13.6h96 32H424c8.9 0 17.1-4.9 21.2-12.8s3.6-17.4-1.4-24.7l-120-176zM112 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
-                                </svg>
-                                {document.document_title}
-                              </td>
+                        <div className="">
+                            <table className="table-responsive">
+                                <div className="tabs">
+                                    <h2 className={
+                                        `${tab == 1 && "active"
+                                        }`
+                                    }
+                                        onClick={
+                                            () => setTab(1)
+                                        }>
+                                        Basic
+                                    </h2>
+                                    <h2 className={
+                                        `${tab == 2 && "active"
+                                        }`
+                                    }
+                                        onClick={
+                                            () => setTab(2)
+                                        }>
+                                        Documents
+                                    </h2>
+                                    <h2 className={
+                                        `${tab == 3 && "active"
+                                        }`
+                                    }
+                                        onClick={
+                                            () => setTab(3)
+                                        }>
+                                        Remarks
+                                    </h2>
+                                    {/* <h2 className={`${tab == 3 && "active"}`} onClick={() => setTab(3)}>Additional Details</h2> */} </div>
+                                <div className={
+                                    `tabDetail ${tab == 1 && "active"
+                                    }`
+                                }>
+                                    <tr className="py-0">
+                                        <div className="p-2 flex flex-col">
+                                            <th>Email :</th>
+                                            <td className="lowercase">
+                                                {
+                                                    state.studentProfile?.email || ""
+                                                } </td>
+                                        </div>
+                                    </tr>
+                                    <tr>
+                                        <div className="p-2 flex flex-col">
+                                            <th>First Name :</th>
+                                            <td>{
+                                                state.studentProfile?.firstName
+                                            }</td>
+                                        </div>
+                                        <div className="p-2 flex flex-col">
+                                            <th>Last Name :</th>
+                                            <td>{
+                                                state.studentProfile?.lastName
+                                            }</td>
+                                        </div>
+                                    </tr>
+                                    <tr>
+                                        <div className="p-2 flex flex-col">
+                                            <th>Phone :</th>
+                                            <td>{
+                                                state.studentProfile?.phone || "---"
+                                            }</td>
+                                        </div>
+                                        <div className="p-2 flex flex-col">
+                                            <th></th>
+                                            <td></td>
+                                        </div>
+                                    </tr>
+                                    <tr>
+                                        <div className="p-2 flex flex-col">
+                                            <th>Street :</th>
+                                            <td>{
+                                                state.studentProfile?.street || "---"
+                                            }</td>
+                                        </div>
+                                        <div className="p-2 flex flex-col">
+                                            <th>City :</th>
+                                            <td>{
+                                                state.studentProfile?.city || "---"
+                                            }</td>
+                                        </div>
+                                    </tr>
+                                    <tr>
+                                        <div className="p-2 flex flex-col">
+                                            <th>State :</th>
+                                            <td>{
+                                                state.studentProfile?.state || "---"
+                                            }</td>
+                                        </div>
+                                        <div className="p-2 flex flex-col">
+                                            <th>Country :</th>
+                                            <td>{
+                                                state.studentProfile?.country || "---"
+                                            }</td>
+                                        </div>
+                                    </tr>
+                                    <tr>
+                                        <div className="p-2 flex flex-col">
+                                            <th>Postal Code :</th>
+                                            <td>{
+                                                state.studentProfile?.postal_code || "---"
+                                            }</td>
+                                        </div>
+                                        <div className="p-2 flex flex-col">
+                                            <th></th>
+                                            <td></td>
+                                        </div>
+                                    </tr>
+                                </div>
+                                <div className={
+                                    `tabDetail docs ${tab == 2 && "active"
+                                    }`
+                                }>
+                                    {
+                                        state.studentProfile.documents.length == 0 ? (
+                                            <div className="text-[red] w-full text-center m-3">
+                                                No Documents
+                                            </div>
+                                        ) : (
+                                            <div className="text-[red] w-full text-center m-3"></div>
+                                        )
+                                    }
+                                    <div className="flex justify-end w-full">
+                                        {
+                                            state.studentProfile.status != "APPROVED" ? (
+                                                <div className="flex items-center justify-center">
+                                                    <span className="text-[green] m-10 font-bold">
+                                                        In-Process
+                                                    </span>
+                                                    <button onClick={approveProfile}
+                                                        className="m-2 bg-gradient-primary px-4 py-2 rounded text-white">
+                                                        {
+                                                            state.profileApproveLoading ? (
+                                                                <div aria-label="Loading..." role="status">
+                                                                    <svg class="h-6 w-6 animate-spin" viewBox="3 3 18 18">
+                                                                        <path class="fill-gray-200" d="M12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5ZM3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12Z"></path>
+                                                                        <path class="fill-gray-800" d="M16.9497 7.05015C14.2161 4.31648 9.78392 4.31648 7.05025 7.05015C6.65973 7.44067 6.02656 7.44067 5.63604 7.05015C5.24551 6.65962 5.24551 6.02646 5.63604 5.63593C9.15076 2.12121 14.8492 2.12121 18.364 5.63593C18.7545 6.02646 18.7545 6.65962 18.364 7.05015C17.9734 7.44067 17.3403 7.44067 16.9497 7.05015Z"></path>
+                                                                    </svg>
+                                                                </div>
+                                                            ) : (
+                                                                <>Approve Profile</>
+                                                            )
+                                                        } </button>
+                                                </div>
+                                            ) : (
+                                                <div className="flex items-center justify-center">
+                                                    <span className="text-[green] m-10 font-bold">
+                                                        Student Approved
+                                                    </span>
+                                                    <button onClick={unApproveProfile}
+                                                        className="m-2 bg-[red] px-4 py-2 rounded text-white">
+                                                        {
+                                                            state.profileApproveLoading ? (
+                                                                <div aria-label="Loading..." role="status">
+                                                                    <svg class="h-6 w-6 animate-spin" viewBox="3 3 18 18">
+                                                                        <path class="fill-gray-200" d="M12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5ZM3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12Z"></path>
+                                                                        <path class="fill-gray-800" d="M16.9497 7.05015C14.2161 4.31648 9.78392 4.31648 7.05025 7.05015C6.65973 7.44067 6.02656 7.44067 5.63604 7.05015C5.24551 6.65962 5.24551 6.02646 5.63604 5.63593C9.15076 2.12121 14.8492 2.12121 18.364 5.63593C18.7545 6.02646 18.7545 6.65962 18.364 7.05015C17.9734 7.44067 17.3403 7.44067 16.9497 7.05015Z"></path>
+                                                                    </svg>
+                                                                </div>
+                                                            ) : (
+                                                                <>Switch To In-Process</>
+                                                            )
+                                                        } </button>
+                                                </div>
+                                            )
+                                        } </div>
+                                    <table className="table-fixed w-full p-2 pt-0">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody> {
+                                            state.studentProfile.documents.map((document, DocIndex) => {
+                                                return (
+                                                    <tr key={DocIndex}
+                                                        className="px-2 docRow">
+                                                        <td className="flex items-center">
+                                                            {
+                                                                document.document_title
+                                                            } </td>
 
-                              <td className="flex items-center justify-end">
-                                {document.document_status != "PENDING" ? (
-                                  <>
-                                    {document.document_status == "APPROVED" ? (
-                                      <div className="approved_status">
-                                        Approved
-                                      </div>
-                                    ) : (
-                                      <div className="declined_status">
-                                        Declined
-                                      </div>
-                                    )}
-                                  </>
-                                ) : (
-                                  <>
-                                    <button
-                                      className="approve"
-                                      onClick={() => approveDocStatus(DocIndex)}
-                                    >
-                                      Approve
-                                    </button>
-                                    <button
-                                      className="decline"
-                                      onClick={() =>
-                                        toggleRemarkPopup(DocIndex)
-                                      }
-                                    >
-                                      Decline
-                                    </button>
-                                  </>
-                                )}
-                              </td>
-                            </tr>
-                          );
-                        }
-                      )}
-                    </tbody>
-                  </table>
-                  {/* <div className="profile-image">
+                                                        <td className="flex items-center justify-end">
+                                                            {
+                                                                document.document_status == "PENDING" ? <>PENDING</> : document.document_status == "UNDER_VERIFICATION" ? (
+                                                                    <>
+                                                                        <button className="approve"
+                                                                            onClick={
+                                                                                () => approveDocStatus(DocIndex)
+                                                                            }>
+                                                                            Approve
+                                                                        </button>
+                                                                        <button className="decline"
+                                                                            onClick={
+                                                                                () => toggleRemarkPopup(DocIndex)
+                                                                            }>
+                                                                            Decline
+                                                                        </button>
+                                                                        <span className="flex items-center justify-end downloadSvg" title="Download">
+                                                                            <a href={
+                                                                                state.baseUrl + document.document_url
+                                                                            }
+                                                                                download="companylogo"
+                                                                                target={"_blank"}>
+                                                                                <svg style={
+                                                                                    { width: "20px" }
+                                                                                }
+                                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                                    viewBox="0 0 512 512"><path d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z" /></svg>
+                                                                            </a>
+                                                                        </span>
+                                                                    </>
+                                                                ) : (
+                                                                    <> {
+                                                                        document.document_status == "APPROVED" ? (
+                                                                            <div className="approved_status">
+                                                                                Approved
+                                                                            </div>
+                                                                        ) : (
+                                                                            <div className="declined_status">
+                                                                                Declined
+                                                                            </div>
+                                                                        )
+                                                                    }
+                                                                        <span className="flex items-center justify-end downloadSvg" title="Download">
+                                                                            <a href={
+                                                                                state.baseUrl + document.document_url
+                                                                            }
+                                                                                download="companylogo"
+                                                                                target={"_blank"}>
+                                                                                <svg style={
+                                                                                    { width: "20px" }
+                                                                                }
+                                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                                    viewBox="0 0 512 512"><path d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z" /></svg>
+                                                                            </a>
+                                                                        </span>
+                                                                    </>
+
+                                                                )
+                                                            }
+
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })
+                                        } </tbody>
+                                    </table>
+                                    {/* <div className="profile-image">
                                         <label htmlFor="">Profile Image</label>
                                         {
                                             state.studentProfile?.profile_image ?
@@ -653,78 +657,81 @@ const AdminStudentProfile = () => {
                                                 <>Pending</>
                                         }
 
-                                    </div> */}
-                </div>
-                <div className={`tabDetail ${tab == 3 && "active"}`}>
-                  <div
-                    className={`overlay ${state.popup == true ? "active" : ""}`}
-                    onClick={() => setState({ ...state, popup: false })}
-                  ></div>
-                  <div
-                    className={`pendingDocAlert popup  ${
-                      state.popup == true ? "active" : ""
-                    }`}
-                  >
-                    <div class="w-full">
-                      <h1 class="text-3xl font-bold mb-5 bg-[white] text-[black]">
-                        Send Remark
-                      </h1>
-                      <div class="mb-5">
-                        <label
-                          for="document-type"
-                          class="block font-medium mb-2"
-                        >
-                          Remark:
-                        </label>
-                        <input
-                          className="border px-4 py-2 w-full"
-                          type="text"
-                          name="remark"
-                          placeholder="Type here..."
-                          onChange={handleInput}
-                        />
-                      </div>
-                      <div className="flex justify-end">
-                        <button
-                          onClick={addRemark}
-                          type="submit"
-                          class="px-4 py-2 bg-gradient-primary text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-200"
-                        >
-                          Send
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex justify-end p-[10px] w-full">
-                    <button
-                      className="px-4 py-2 bg-gradient-primary text-white rounded"
-                      onClick={() => {
-                        setState({
-                          ...state,
-                          popup: true,
-                        });
-                      }}
-                    >
-                      Add Remark
-                    </button>
-                  </div>
-                  <ul className="remarks-list">
-                    {state.remarksList.map((remark, index) => {
-                      return (
-                        <li key={index}>
-                          <div>
-                            {index + 1}. {remark.text}
-                          </div>
-                          <div>
-                            {remark.user_details.first_name} (
-                            {remark.user_details.email})
-                          </div>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-                {/* <div className={`tabDetail ${tab == 3 && "active"}`}>
+                                    </div> */} </div>
+                                <div className={
+                                    `tabDetail ${tab == 3 && "active"
+                                    }`
+                                }>
+                                    <div className={
+                                        `overlay ${state.popup == true ? "active" : ""
+                                        }`
+                                    }
+                                        onClick={
+                                            () => setState({
+                                                ...state,
+                                                popup: false
+                                            })
+                                        }></div>
+                                    <div className={
+                                        `pendingDocAlert popup  ${state.popup == true ? "active" : ""
+                                        }`
+                                    }>
+                                        <div class="w-full">
+                                            <h1 class="text-3xl font-bold mb-5 bg-[white] text-[black]">
+                                                Send Remark
+                                            </h1>
+                                            <div class="mb-5">
+                                                <label for="document-type" class="block font-medium mb-2">
+                                                    Remark:
+                                                </label>
+                                                <input className="border px-4 py-2 w-full" type="text" name="remark" placeholder="Type here..."
+                                                    onChange={handleInput} />
+                                            </div>
+                                            <div className="flex justify-end">
+                                                <button onClick={addRemark}
+                                                    type="submit"
+                                                    class="px-4 py-2 bg-gradient-primary text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-200">
+                                                    Send
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="flex justify-end p-[10px] w-full">
+                                        <button className="px-4 py-2 bg-gradient-primary text-white rounded"
+                                            onClick={
+                                                () => {
+                                                    setState({
+                                                        ...state,
+                                                        popup: true
+                                                    });
+                                                }
+                                            }>
+                                            Add Remark
+                                        </button>
+                                    </div>
+                                    <ul className="remarks-list">
+                                        {
+                                            state.remarksList.map((remark, index) => {
+                                                return (
+                                                    <li key={index}>
+                                                        <div> {
+                                                            index + 1
+                                                        }. {
+                                                                remark.text
+                                                            } </div>
+                                                        <div> {
+                                                            remark.user_details.first_name
+                                                        }
+                                                            ( {
+                                                                remark.user_details.email
+                                                            })
+                                                        </div>
+                                                    </li>
+                                                );
+                                            })
+                                        } </ul>
+                                </div>
+                                {/* <div className={`tabDetail ${tab == 3 && "active"}`}>
                                     <tr>
                                         <div className="p-2 flex flex-col">
                                             <th>Principal Country of Business :</th>
@@ -829,15 +836,14 @@ const AdminStudentProfile = () => {
                                             <td className="lowercase">{state.agentProfile?.reference_website || "---"}</td>
                                         </div>
                                     </tr>
-                                </div> */}
-              </table>
+                                </div> */} </table>
+                        </div>
+                    </div>
+                </>
             </div>
-          </div>
+            <RemarkPopup />
         </>
-      </div>
-      <RemarkPopup />
-    </>
-  );
+    );
 };
 
 export default AdminStudentProfile;

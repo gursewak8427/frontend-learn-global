@@ -42,9 +42,9 @@ const ProgramsList = (props) => {
             ...state,
             isWaiting: true,
         })
-        // var schoolName = state.first ? id : document.getElementById("schoolName").value;
+        var schoolName = state.first ? id : document.getElementById("schoolName").value;
         // var country = document.getElementById("country").value;
-        var schoolName = "";
+        // var schoolName = "";
         var country = "";
         var searchItem = document.getElementById("searchItem").value;
         const config = { headers: { "Authorization": `Bearer ${state.adminToken}` } }
@@ -53,7 +53,7 @@ const ProgramsList = (props) => {
         console.log({ country })
         let data = { currentPage: page, schoolName, country, searchItem }
         axios.post(process.env.REACT_APP_NODE_URL + "/admin/getprograms", data, config).then(res => {
-            console.log({ res })
+            console.log({ programs: res })
 
             // get country
 

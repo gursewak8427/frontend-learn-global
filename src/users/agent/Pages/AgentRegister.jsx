@@ -54,10 +54,10 @@ const AgentRegister = (props) => {
         <>
             <AgentAuthScreen>
                 <>   <div className="row">
-                    <div className="md:grid md:grid-cols-3 md:gap-6">
+                    <div className="">
                         <div className="mt-5 md:col-start-2 md:mt-0 m-auto w-full lg:w-12/12">
-                            <div className="shadow sm:overflow-hidden sm:rounded-md">
-                                <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
+                            <div className="">
+                                <div className="space-y-6 bg-white px-4 pb-5 pt-[20px] sm:p-6 form-login">
 
                                     <div className="">
 

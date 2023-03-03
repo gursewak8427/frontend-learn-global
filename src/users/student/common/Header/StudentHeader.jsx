@@ -41,16 +41,16 @@ const StudentHeader = () => {
   });
 
   const sidebarItems = [
-    {
-      label: "Dashboard",
-      icon: (
-        <>
-          <i class="fa-solid fa-chart-line"></i>
-        </>
-      ),
-      path: "/d/student/dashboard",
-      matchings: [""],
-    },
+    // {
+    //   label: "Dashboard",
+    //   icon: (
+    //     <>
+    //       <i class="fa-solid fa-chart-line"></i>
+    //     </>
+    //   ),
+    //   path: "/d/student/dashboard",
+    //   matchings: [""],
+    // },
     {
       label: "Enrolled Programs",
       icon: <i class="fa-solid fa-file-csv"></i>,

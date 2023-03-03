@@ -248,23 +248,6 @@ const AccordionExampleStandard = () => {
     return "Loading..."
   }
 
-  const uploadQueryNow = async () => {
-    let api_data = {
-      nationality: formData.nationality,
-      highesteducation: formData.highestEducation,
-      grading_scheme: formData.gradingScheme,
-      destination_country: formData.country_to_go,
-      grade_avg: formData.gradeAverage,
-      phone: formData.phoneNumber,
-      email: formData.email,
-      fullname: formData.name,
-      created: Date.now(),
-    }
-    axios.post(`${process.env.REACT_APP_NODE_URL}/student/fillsearchqueries`, api_data).then(response => {
-      console.log(response)
-    });
-  }
-
 
   return (
     <Accordion className="shadow-xl p-4 border-2 border-[#1c3479] rounded-lg">

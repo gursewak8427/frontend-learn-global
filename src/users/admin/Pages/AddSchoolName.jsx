@@ -246,9 +246,8 @@ const Addschoolname = () => {
         <>
           <div className="row addCountryPage flex flex-row">
             <div
-              className={`w-5/12 mx-auto my-4 createSchoolNamePopup ${
-                state.showPopup && "active"
-              }`}
+              className={`w-5/12 mx-auto my-4 createSchoolNamePopup ${state.showPopup && "active"
+                }`}
             >
               <label htmlFor="">
                 <div className="flex justify-between align-center">
@@ -259,6 +258,13 @@ const Addschoolname = () => {
                       setState({
                         ...state,
                         showPopup: false,
+                        schoolName: "",
+                        schoolLogo: "",
+                        countryLogo: "",
+                        countryId: "",
+                        stateId: "",
+                        cityId: "",
+                        updatedId: null,
                       });
                     }}
                   >
@@ -291,11 +297,13 @@ const Addschoolname = () => {
                   )}
                 </div>
 
-                <label>School Logo</label>
-                <div className="mb-3">
-                  <input
-                    type="file"
-                    className="form-control
+                <div className="flex">
+                  <div className="w-6/12 mr-1">
+                    <label>School Logo</label>
+                    <div className="mb-3">
+                      <input
+                        type="file"
+                        className="form-control
                                     block
                                     w-full
                                     px-3
@@ -310,34 +318,40 @@ const Addschoolname = () => {
                                     ease-in-out
                                     m-0
                                     focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                    name="schoolLogo"
-                    onChange={handleFileChange}
-                  />
+                        name="schoolLogo"
+                        onChange={handleFileChange}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="w-6/12 ml-1">
+                    <label>Country Logo</label>
+                    <div className="mb-3">
+                      <input
+                        type="file"
+                        className="form-control
+                                    block
+                                    w-full
+                                    px-3
+                                    py-1.5
+                                    text-base
+                                    font-normal
+                                    text-gray-700
+                                    bg-white bg-clip-padding
+                                    border border-solid border-gray-300
+                                    rounded
+                                    transition
+                                    ease-in-out
+                                    m-0
+                                    focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                        name="countryLogo"
+                        onChange={handleFileChange}
+                      />
+                    </div>
+                  </div>
+
                 </div>
 
-                <label>Country Logo</label>
-                <div className="mb-3">
-                  <input
-                    type="file"
-                    className="form-control
-                                    block
-                                    w-full
-                                    px-3
-                                    py-1.5
-                                    text-base
-                                    font-normal
-                                    text-gray-700
-                                    bg-white bg-clip-padding
-                                    border border-solid border-gray-300
-                                    rounded
-                                    transition
-                                    ease-in-out
-                                    m-0
-                                    focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                    name="countryLogo"
-                    onChange={handleFileChange}
-                  />
-                </div>
 
                 {state.updatedId == null && (
                   <>
@@ -366,67 +380,74 @@ const Addschoolname = () => {
                   </>
                 )}
 
-                {state.updatedId == null && (
-                  <>
-                    <label>State</label>
-                    <div className="mb-3">
-                      {/* <input
+
+                <div className="flex">
+                  <div className="w-6/12 mr-1">
+                    {state.updatedId == null && (
+                      <>
+                        <label>State</label>
+                        <div className="mb-3">
+                          {/* <input
                                         placeholder="Enter School Name"
                                         type="text" className="block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm   " name="countryId" value={state.countryId} onChange={handleChange} /> */}
 
-                      <select
-                        className="block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm"
-                        name="stateId"
-                        value={state.stateId}
-                        onChange={handleChange}
-                      >
-                        <option value="">Choose</option>
-                        {state.stateList.map((state) => {
-                          return (
-                            <option value={state.stateId}>
-                              {state.stateName}
-                            </option>
-                          );
-                        })}
-                      </select>
-                    </div>
-                  </>
-                )}
+                          <select
+                            className="block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm"
+                            name="stateId"
+                            value={state.stateId}
+                            onChange={handleChange}
+                          >
+                            <option value="">Choose</option>
+                            {state.stateList.map((state) => {
+                              return (
+                                <option value={state.stateId}>
+                                  {state.stateName}
+                                </option>
+                              );
+                            })}
+                          </select>
+                        </div>
+                      </>
+                    )}
+                  </div>
 
-                {state.updatedId == null && (
-                  <>
-                    <label>City</label>
-                    <div className="mb-3">
-                      {/* <input
+                  <div className="w-6/12 mr-1">
+                    {state.updatedId == null && (
+                      <>
+                        <label>City</label>
+                        <div className="mb-3">
+                          {/* <input
                                         placeholder="Enter School Name"
                                         type="text" className="block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm   " name="countryId" value={state.countryId} onChange={handleChange} /> */}
 
-                      <select
-                        className="block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm"
-                        name="cityId"
-                        value={state.cityId}
-                        onChange={handleChange}
-                      >
-                        <option value="">Choose</option>
-                        {state.cityList.map((city) => {
-                          return (
-                            <option value={city.cityId}>{city.cityName}</option>
-                          );
-                        })}
-                      </select>
-                    </div>
-                  </>
-                )}
+                          <select
+                            className="block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm"
+                            name="cityId"
+                            value={state.cityId}
+                            onChange={handleChange}
+                          >
+                            <option value="">Choose</option>
+                            {state.cityList.map((city) => {
+                              return (
+                                <option value={city.cityId}>{city.cityName}</option>
+                              );
+                            })}
+                          </select>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
 
                 <button
                   type="button"
-                  class="btn bg-gradient-primary w-100 ml-2 mt-4 text-white px-2 py-1 rounded mb-0"
+                  class="btn bg-gradient-primary w-100 ml-0 mt-4 text-white px-2 py-1 rounded mb-0 text-lg"
                   onClick={() =>
                     state.submitProcessing
                       ? null
                       : state.updatedId != null
-                      ? updateData()
-                      : uploadData()
+                        ? updateData()
+                        : uploadData()
                   }
                 >
                   {state.submitProcessing ? (
@@ -452,7 +473,7 @@ const Addschoolname = () => {
                 {state.updatedId != null && (
                   <button
                     type="button"
-                    className="btn bg-[red] w-100 ml-2 mt-4 text-white px-2 py-1 rounded mb-0"
+                    className="btn bg-[red] w-100 ml-2 mt-4 text-white px-2 py-1 rounded mb-0 text-lg"
                     onClick={removeUpdate}
                   >
                     Cancel
@@ -519,8 +540,8 @@ const Addschoolname = () => {
                                       !school.schoolLogo
                                         ? "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/No_image_available_600_x_200.svg/1200px-No_image_available_600_x_200.svg.png"
                                         : process.env.REACT_APP_NODE_URL +
-                                          "/uploads/agent/" +
-                                          school.schoolLogo
+                                        "/uploads/agent/" +
+                                        school.schoolLogo
                                     }
                                     alt=""
                                   />
@@ -532,8 +553,8 @@ const Addschoolname = () => {
                                       !school.countryLogo
                                         ? "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/No_image_available_600_x_200.svg/1200px-No_image_available_600_x_200.svg.png"
                                         : process.env.REACT_APP_NODE_URL +
-                                          "/uploads/agent/" +
-                                          school.countryLogo
+                                        "/uploads/agent/" +
+                                        school.countryLogo
                                     }
                                     alt=""
                                   />
@@ -563,14 +584,14 @@ const Addschoolname = () => {
                         </tbody>
                       </table>
                       {state.isWait ? (
-                          <div>
-                            <center className="w-full my-10">
-                                <img width={100} src="https://i.gifer.com/ZZ5H.gif" alt="" />
-                            </center>
-                          </div>
-                        ) : (
-                          <></>
-                        )}
+                        <div>
+                          <center className="w-full my-10">
+                            <img width={100} src="https://i.gifer.com/ZZ5H.gif" alt="" />
+                          </center>
+                        </div>
+                      ) : (
+                        <></>
+                      )}
                     </div>
                   </div>
                 </div>

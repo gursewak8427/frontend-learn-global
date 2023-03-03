@@ -18,6 +18,7 @@ const AssessmentForm = ({ popup, closeForm }) => {
     phone: "",
     destination_country: "",
     aggree_to_privacy_policy: false,
+    btnLoading: true,
   });
 
   const handleFormData = (e) => {
@@ -26,6 +27,32 @@ const AssessmentForm = ({ popup, closeForm }) => {
       [e.target.name]: e.target.value,
     });
   };
+
+  function ValidateEmail(mail) {
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
+      return {
+        status: true,
+      };
+    }
+    return {
+      status: false,
+      message: "You have entered an invalid email address!",
+    };
+  }
+
+  function phoneNumberValidation(inputtxt) {
+    var phoneno = /^\d{10}$/;
+    if (phoneno.test(inputtxt)) {
+      return {
+        status: true,
+      };
+    } else {
+      return {
+        status: false,
+        message: "Please enter a valid phone number!",
+      };
+    }
+  }
 
   const getErrors = () => {
     var isError = false;
@@ -50,11 +77,44 @@ const AssessmentForm = ({ popup, closeForm }) => {
       isError = true;
       document.getElementById("email").style.borderWidth = "2px";
       document.getElementById("email").style.borderColor = "red";
+    } else {
+      const result = ValidateEmail(formdata.email);
+      if (!result.status) {
+        isError = true;
+        document.getElementById("email_error").innerText = result.message;
+        document.getElementById("email_error").style.color = "red";
+        document.getElementById("email").style.borderWidth = "2px";
+        document.getElementById("email").style.borderColor = "red";
+        document.getElementById("email").style.marginBottom = "0px";
+      } else {
+        document.getElementById("email_error").innerText = "";
+        document.getElementById("email_error").style.color = "red";
+        document.getElementById("email").style.borderWidth = "2px";
+        document.getElementById("email").style.borderColor = "black";
+        document.getElementById("email").style.marginBottom = "15px";
+      }
     }
     if (formdata.phone == "") {
       isError = true;
       document.getElementById("phone").style.borderWidth = "2px";
       document.getElementById("phone").style.borderColor = "red";
+    } else {
+      const result = phoneNumberValidation(parseInt(formdata.phone));
+      console.log({result})
+      if (!result.status) {
+        isError = true;
+        document.getElementById("phone_error").innerText = result.message;
+        document.getElementById("phone_error").style.color = "red";
+        document.getElementById("phone").style.borderWidth = "2px";
+        document.getElementById("phone").style.borderColor = "red";
+        document.getElementById("phone").style.marginBottom = "0px";
+      } else {
+        document.getElementById("phone_error").innerText = "";
+        document.getElementById("phone_error").style.color = "red";
+        document.getElementById("phone").style.borderWidth = "2px";
+        document.getElementById("phone").style.borderColor = "black";
+        document.getElementById("phone").style.marginBottom = "15px";
+      }
     }
     if (formdata.destination_country == "") {
       isError = true;
@@ -73,6 +133,11 @@ const AssessmentForm = ({ popup, closeForm }) => {
   const submitForm = () => {
     if (getErrors()) return;
 
+    setState({
+      ...state,
+      btnLoading: true,
+    });
+
     axios
       .post(
         `${process.env.REACT_APP_NODE_URL}/student/fillassessmentform`,
@@ -80,6 +145,10 @@ const AssessmentForm = ({ popup, closeForm }) => {
       )
       .then((response) => {
         alert(response.data.message);
+        setState({
+          ...state,
+          btnLoading: false,
+        });
         closeForm();
         // setLocalStorage("assessmentform", { visited: true })
       });
@@ -87,8 +156,9 @@ const AssessmentForm = ({ popup, closeForm }) => {
 
   return (
     <>
+      <div className={`${popup ? "active" : ""} overlay`}></div>
       <div className={`${popup ? "popup" : ""} pop-form`}>
-        <h4 className="bg-[#333333] text-white flex items-center justify-between p-[10px]">
+        <h4 className="flex items-center justify-between p-[10px]">
           <span>
             <small>Visa Assessment Form</small>
           </span>
@@ -128,6 +198,7 @@ const AssessmentForm = ({ popup, closeForm }) => {
           id="email"
           name="email"
         />
+        <p className="mx-[10px]" id="email_error"></p>
         <input
           type="text"
           placeholder="Phone*"
@@ -136,6 +207,7 @@ const AssessmentForm = ({ popup, closeForm }) => {
           id="phone"
           name="phone"
         />
+        <p className="mx-[10px]" id="phone_error"></p>
         <p className="mb-0 mx-[10px]">Your preferred study destination</p>
         <select
           onChange={handleFormData}
@@ -167,8 +239,25 @@ const AssessmentForm = ({ popup, closeForm }) => {
           <a href="#">Terms</a>&nbsp;and<a href="#">&nbsp;Privacy Policy </a>
         </p>
         <p className="mx-[10px]" id="aggree_to_privacy_policy"></p>
-        <button type="button" onClick={submitForm}>
-          Register Now
+        <button type="button" onClick={state.btnLoading ? null : submitForm}>
+          {state.btnLoading ? (
+            <center>
+              <div aria-label="Loading..." role="status">
+                <svg class="h-4 w-4 animate-spin" viewBox="3 3 18 18">
+                  <path
+                    class="fill-gray-200"
+                    d="M12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5ZM3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12Z"
+                  ></path>
+                  <path
+                    class="fill-gray-800"
+                    d="M16.9497 7.05015C14.2161 4.31648 9.78392 4.31648 7.05025 7.05015C6.65973 7.44067 6.02656 7.44067 5.63604 7.05015C5.24551 6.65962 5.24551 6.02646 5.63604 5.63593C9.15076 2.12121 14.8492 2.12121 18.364 5.63593C18.7545 6.02646 18.7545 6.65962 18.364 7.05015C17.9734 7.44067 17.3403 7.44067 16.9497 7.05015Z"
+                  ></path>
+                </svg>
+              </div>
+            </center>
+          ) : (
+            <>Register Now</>
+          )}
         </button>
       </div>
     </>

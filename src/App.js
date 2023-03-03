@@ -45,7 +45,7 @@ import IntakesManagement from "./users/admin/Pages/IntakesManagement";
 // import DataTable from "./users/admin/Pages/DataTable";
 import SchoolUpdate from "./users/admin/Pages/SchoolUpdate";
 import AssessmentForms from "./users/admin/Pages/AssessmentForms";
-import SearchQueriyForms from "./users/admin/Pages/SearchQueryForms";
+import SearchQueryForms from "./users/admin/Pages/SearchQueryForms";
 import StudentEnrolled from "./users/student/Pages/StudentEnrolled";
 import StudentDocuments from "./users/student/Pages/StudentDocuments";
 import AdminStudentProfile from "./users/admin/Pages/AdminStudentProfile";
@@ -394,7 +394,7 @@ const App = () => {
                 role={"admin"}
                 permissions={state.currentPermissions}
               >
-                <SearchQueriyForms />
+                <SearchQueryForms />
               </ProtectedRoute>
             }
           />
@@ -480,21 +480,15 @@ const App = () => {
         </Route>
 
         {/* student routes */}
+        <Route path="/d/student/confirm/:token" element={<StudentConfirm />} />
         <Route path="/d/student" element={<StudentDashboard />}>
           <Route
             index
             element={
-              <ProtectedRoute token={state.tokenStudent} role={"student"}>
-                {
-                  <>
-                    {" "}
-                    <h1 className="text-xl m-3 font-black">Dashboard</h1>{" "}
-                  </>
-                }
-              </ProtectedRoute>
+              <StudentEnrolled />
             }
           />
-          <Route
+          {/* <Route
             path="dashboard"
             element={
               <ProtectedRoute token={state.tokenStudent} role={"student"}>
@@ -506,10 +500,9 @@ const App = () => {
                 }
               </ProtectedRoute>
             }
-          />
+          /> */}
           <Route path="login" element={<StudentLogin />} />
           <Route path="register" element={<StudentRegister />} />
-          <Route path="confirm/:token" element={<StudentConfirm />} />
           <Route path="forgot/" element={<StudentForgot />} />
           <Route path="forgot/:token" element={<StudentForgot />} />
           <Route path="enrolled" element={<StudentEnrolled />} />

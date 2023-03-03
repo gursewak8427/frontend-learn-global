@@ -18,12 +18,19 @@ const Navbar = ({ heading_title }) => {
         })
     }, [])
 
+    const toggleSidebar = () => {
+        document.getElementById("aside").classList.toggle("hide-sidebar")
+        document.getElementsByTagName("main")[0].classList.toggle("hide-sidebar")
+    }
+
     return (
         <>
             <nav className="">
                 <div className="flex p-3 flex-row justify-between items-center bg-[#e2e8f0]">
                     <span className="breadcrumb flex items-center justify-center">
-                        <h6 className="font-bold flex items-center justify-center text-[#2a276b] mb-0">{heading_title || ""}</h6>
+                        {/* menu icon */}
+                        <i className="fas fa-bars text-xl cursor-pointer" onClick={toggleSidebar}></i>
+                        {/* <h6 className="font-bold flex items-center justify-center text-[#2a276b] mb-0">{heading_title || ""}</h6> */}
                     </span>
                     <div>
                         <ul className="flex items-center justify-center">

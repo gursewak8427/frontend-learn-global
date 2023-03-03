@@ -18,6 +18,7 @@ const StudentDashboard = ({ children }) => {
     isWait: true,
     token: getToken("student"),
     student: "",
+    isPendingProgramPopupShow: false,
   });
 
   useEffect(() => {
@@ -38,7 +39,6 @@ const StudentDashboard = ({ children }) => {
             student: res.data.details.student,
           });
         } else {
-          alert("Not Verify");
           setState({
             ...state,
             isEmailVerified: false,
@@ -71,23 +71,31 @@ const StudentDashboard = ({ children }) => {
         ""
       )}
 
-      {state.student.status == "PENDING" &&
-      (window.location.href.split("/")[5] == "" ||
-        window.location.href.split("/")[5] == "dashboard") ? (
-        <div className="overlay active">
+      {state.isPendingProgramPopupShow && state.student.status == "PENDING" &&
+        (window.location.href.split("/")[5] == "" ||
+          window.location.href.split("/")[5] == "enrolled") ? (
+        <>
+          <div className="overlay active" onClick={() => setState({ ...state, isPendingProgramPopupShow: false, })}>
+          </div>
           <div className="pendingDocAlert popup active">
+            {/* <div className="cross flex justify-end">
+              <span className="mb-2 rounded-full w-[40px] h-[40px] bg-[red] text-[white] items-center justify-center flex cursor-pointer hover:bg-[darkred]">X</span>
+            </div> */}
             <div class="pending-documents">
               <i class="fas fa-exclamation-circle"></i>
               <h2>Pending Documents</h2>
               <p>
                 Please Uploads required documents to approve your application.
               </p>
-              <button onClick={() => navigate("/d/student/documents")}>
+              <button onClick={() => {
+                setState({ ...state, isPendingProgramPopupShow: false, })
+                navigate("/d/student/documents")
+              }}>
                 Upload Documents
               </button>
             </div>
           </div>
-        </div>
+        </>
       ) : (
         <></>
       )}
@@ -99,7 +107,7 @@ const StudentDashboard = ({ children }) => {
           <div style={{ minHeight: "85vh" }}>
             <Outlet />
           </div>
-          
+
           <StudentFooter />
         </div>
       </main>

@@ -12,6 +12,27 @@ body {
   font-size: 80% !important;
 }
 
+/* side bar hiding functionallity */
+
+#aside.hide-sidebar {
+  position: absolute;
+  transform: translateX(-100%);
+  transition: .4s ease-in-out;
+}
+
+main.hide-sidebar {
+  transition: .4s ease-in-out;
+  margin-left: 0 !important;
+}
+
+main,
+#aside {
+  transition: .4s ease-in-out;
+}
+
+/* END side bar hiding functionallity */
+
+
 .lll:hover {
   color: red;
 }
@@ -451,7 +472,7 @@ main .container-fluid {
 .statusCell>span {
   cursor: pointer;
   background: #1a7335;
-  color:#fff;
+  color: #fff;
 }
 
 .statusCell>span:hover,
@@ -514,10 +535,10 @@ td.max-width {
 .loginSelectionDiv {
   width: 100%;
   min-height: 100vh;
-  display: flex;
+  
   align-items: center;
-  margin-top: 40px;
-  flex-direction: column;
+  /* margin-top: 40px;
+  flex-direction: column; */
 }
 
 .loginSelectionDiv>.row {
@@ -732,12 +753,23 @@ td.max-width {
 
 .loginTabs span {
   cursor: pointer;
-  color: black !important;
+  color: #fff !important;
+  background: black;
+  width:50%;
+  margin: 0;
+    border-radius: 0;
 }
 
 .loginTabs span.active {
-  background: black;
-  color: white !important;
+ color: #fff!important;
+    width: 50%;
+    background: #1a7335;
+}
+
+.loginTabs {
+  width: 100%;
+  max-width: 500px;
+  margin: 0;
 }
 
 .socialBtns {
@@ -984,6 +1016,7 @@ footer {
   background: rgba(128, 128, 128, 0.268);
   margin: 10px 0;
 }
+
 
 .agentDetailsAsideBar .tabDetail td button {
   padding: 5px 10px;
@@ -1246,6 +1279,11 @@ footer {
   background: rgba(128, 128, 128, 0.334);
 }
 
+#aside .active-link button,
+#aside .active-link button .text-base {
+  color: white !important;
+}
+
 #aside .active-link-group>button {
   background: rgba(255, 255, 255, 0.207);
 }
@@ -1337,6 +1375,7 @@ footer {
   padding: 10px 20px;
   border-radius: 5px;
 }
+
 .schoolFilters .filter-group select,
 .schoolFilters .filter-group input {
   border-radius: 5px;
@@ -1547,6 +1586,7 @@ footer {
   border-radius: 50%;
   font-size: 80%;
 }
+
 .pendingDocAlert.popup.active {
   display: block;
 }
@@ -1565,7 +1605,7 @@ footer {
   /* Set the z-index higher than any other element on the page */
 }
 
-.overlay.active{
+.overlay.active {
   display: block;
 }
 
@@ -1629,24 +1669,26 @@ footer {
   background-color: #dc3545;
 }
 
-.remarks-list{
+.remarks-list {
   width: 100%;
 }
 
-.remarks-list li{
+.remarks-list li {
   padding: 10px;
 }
-.remarks-list li:nth-child(even){
+
+.remarks-list li:nth-child(even) {
   background: rgba(128, 128, 128, 0.444);
 }
-.remarks-list li div:nth-child(1){
+
+.remarks-list li div:nth-child(1) {
   font-weight: bolder;
 }
-.remarks-list li div:nth-child(2){
+
+.remarks-list li div:nth-child(2) {
   color: grey;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   margin-left: 14px;
 }
-  

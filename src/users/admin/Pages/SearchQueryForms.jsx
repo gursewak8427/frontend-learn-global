@@ -5,7 +5,7 @@ import { Navigate, redirect } from "react-router-dom";
 import { authenticate, getToken } from "../../../helper/auth";
 import Dashboard from "../Screens/Dashboard/Dashboard";
 
-const SearchQueriyForms = () => {
+const SearchQueryForms = () => {
     const [state, setState] = useState({
         isWaiting: false,
         students: [],
@@ -162,4 +162,4 @@ const SearchQueriyForms = () => {
     )
 }
 
-export default SearchQueriyForms;
+export default SearchQueryForms;

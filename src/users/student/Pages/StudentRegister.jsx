@@ -5,12 +5,18 @@ import { useState } from "react";
 import { Link, Navigate, redirect } from "react-router-dom";
 import { authenticate } from "../../../helper/auth";
 import AuthScreen from "../Screens/Authentication/StudentAuthScreen";
+import ButtonPrimary from "../../../common/Buttons/ButtonPrimary";
 
 const StudentRegister = (props) => {
     const [state, setState] = useState({
         email: "",
         password: "",
         submitProcessing: false,
+
+        redirect: props.redirect,
+        type: props.type,
+        school: props.school,
+        program: props.program,
     })
 
     const RegisterNow = async (values) => {
@@ -25,11 +31,19 @@ const StudentRegister = (props) => {
 
         axios.post(process.env.REACT_APP_NODE_URL + "/student/register", data).then(res => {
             console.log({ register: res })
-            if(res.data.status == "0"){
+            if (res.data.status == "0") {
                 alert(res.data.message)
+                setState({
+                    ...state,
+                    submitProcessing: false,
+                })
                 return;
             }
-            window.location.href = "/d?user=student"
+            if (state.redirect == "true") {
+                window.location.href = "/d?user=student&redirect=true&type=enroll&school=" + state.school + "&program=" + state.program
+            } else {
+                window.location.href = "/d?user=student"
+            }
         }).catch(err => {
             console.log(err.response.data)
             if (err.response.data.name == "ValidationError") {
@@ -70,10 +84,10 @@ const StudentRegister = (props) => {
             <AuthScreen>
                 <>
                     <div className="row">
-                        <div className="md:grid md:grid-cols-3 md:gap-6">
+                        <div className="">
                             <div className="mt-5 md:col-start-2 md:mt-0 m-auto w-full lg:w-12/12">
-                                <div className="shadow sm:overflow-hidden sm:rounded-md">
-                                    <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
+                                <div className="">
+                                    <div className="space-y-6 bg-white px-4 pb-5 pt-[20px] form-login">
                                         <div className="">
                                             <Formik
                                                 initialValues={{ email: "", password: "", firstName: "", lastName: "", phone: "", confirmPassword: "" }}
@@ -149,7 +163,8 @@ const StudentRegister = (props) => {
                                                             />
                                                         </div>
                                                         <div className="text-center">
-                                                            <button type="submit" className="bg-gradient-primary text-white px-4 py-1 mt-4 mb-0 text-white rounded-full">Register</button>
+                                                            <ButtonPrimary title={"Register"} loading={state.submitProcessing} type="submit"/>
+                                                            {/* <button type="submit" className="bg-gradient-primary text-white px-4 py-1 mt-4 mb-0 text-white rounded-full">Register</button> */}
                                                         </div>
                                                     </Form>
                                                 }}

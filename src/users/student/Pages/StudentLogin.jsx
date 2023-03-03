@@ -8,6 +8,7 @@ import Dashboard from "../Screens/Dashboard/StudentDashboard";
 // firebase
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { firebaseAuth } from "../../../firebase"
+import ButtonPrimary from "../../../common/Buttons/ButtonPrimary";
 const provider = new GoogleAuthProvider();
 
 const StudentLogin = (props) => {
@@ -35,6 +36,10 @@ const StudentLogin = (props) => {
             console.log(res)
             if (res.data.status == "0") {
                 alert(res.data.message)
+                setState({
+                    ...state,
+                    submitProcessing: false,
+                })
                 return;
             }
             authenticate(res, "student", () => {
@@ -50,7 +55,18 @@ const StudentLogin = (props) => {
                     axios.post(`${process.env.REACT_APP_NODE_URL}/student/enroll`, api_data, config).then(response => {
                         console.log(response)
                         alert(response.data.message)
+
+                        setState({
+                            ...state,
+                            submitProcessing: false,
+                        })
+
                         window.location.href = "/d/student/"
+                    }).catch(err => {
+                        setState({
+                            ...state,
+                            submitProcessing: false,
+                        })
                     });
                 } else {
 
@@ -73,6 +89,11 @@ const StudentLogin = (props) => {
     }
 
     const signin = () => {
+        setState({
+            ...state,
+            submitProcessing: true,
+        })
+
         signInWithPopup(firebaseAuth, provider).then(res => {
             const userDtl = res.user.providerData[0]
             console.log(res)
@@ -89,10 +110,15 @@ const StudentLogin = (props) => {
             }
             const config = { 'content-type': 'application/json' }
 
+
             axios.post(process.env.REACT_APP_NODE_URL + "/student/student_google_login", data).then(res => {
                 console.log({ res11: res })
                 if (res.data.status == "0") {
                     alert(res.data.message)
+                    setState({
+                        ...state,
+                        submitProcessing: false,
+                    })
                     return;
                 }
 
@@ -115,7 +141,10 @@ const StudentLogin = (props) => {
                             window.location.href = "/d/student/"
                         });
                     } else {
-
+                        setState({
+                            ...state,
+                            submitProcessing: false,
+                        })
                         console.log("Token added as agent_token")
                         window.location.href = "/d/student/"
                     }
@@ -131,11 +160,25 @@ const StudentLogin = (props) => {
                         console.log([key, errors[key]])
                     }
                     alert(msg)
+                    setState({
+                        ...state,
+                        submitProcessing: false,
+                    })
                     return;
                 }
+                setState({
+                    ...state,
+                    submitProcessing: false,
+                })
                 alert(err.response.data.message)
             })
-        }).catch(alert);
+        }).catch((err) => {
+            alert(err.message)
+            setState({
+                ...state,
+                submitProcessing: false,
+            })
+        });
     }
 
     return (
@@ -143,10 +186,10 @@ const StudentLogin = (props) => {
             <AuthScreen>
                 <>
                     <div className="">
-                        <div className="md:grid md:grid-cols-3 md:gap-6">
+                        <div className="">
                             <div className="mt-5 md:col-start-2 md:mt-0 m-auto w-full lg:w-9/12">
-                                <div className="shadow sm:overflow-hidden sm:rounded-md">
-                                    <div className="space-y-6 bg-white px-4 py-2 sm:p-2">
+                                <div className="">
+                                    <div className="space-y-6 bg-white px-4 pb-2 pt-[20px] form-login">
                                         <div className="">
                                             <div className="col-span-3 sm:col-span-2">
                                                 <label htmlFor="company-website" className="block text-sm font-medium text-gray-700">
@@ -183,13 +226,14 @@ const StudentLogin = (props) => {
                                         </div>
                                     </div>
                                     <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
-                                        <button
+                                        <ButtonPrimary title={"Login"} onclick={LoginNow} loading={state.submitProcessing} />
+                                        {/* <button
                                             type="button"
                                             onClick={LoginNow}
                                             className="bg-gradient-primary inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                         >
                                             Login
-                                        </button>
+                                        </button> */}
                                     </div>
                                     <hr />
                                     <div className="socialBtns">
