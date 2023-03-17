@@ -8,6 +8,7 @@ import ButtonPrimary from "../../../common/Buttons/ButtonPrimary"
 // firebase
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { firebaseAuth } from "../../../firebase";
+import { toast } from "react-toastify";
 const provider = new GoogleAuthProvider();
 
 const StudentDocuments = (props) => {
@@ -63,6 +64,10 @@ const StudentDocuments = (props) => {
 
     // add document to database with axios and form data, get doc detail from state.documents array
     const addDocument = async (e) => {
+        if(state.document == ""){
+            toast.error("Please select a file")
+            return;
+        }
         e.preventDefault();
         const formData = new FormData();
         formData.append("document", state.document);
@@ -82,9 +87,13 @@ const StudentDocuments = (props) => {
                 ...state,
                 documentsList: oldDocs,
                 popup: false,
-                activeDocIndex: -1
+                activeDocIndex: -1,
+                document: "",
+                title: ""
             })
+            document.getElementById("document-file").value = ""
         }).catch((err) => {
+            document.getElementById("document-file").value = ""
             console.log(err);
         });
     };
@@ -107,6 +116,14 @@ const StudentDocuments = (props) => {
     };
 
     const submitAllDocs = () => {
+        let pendingDocs = state.documentsList.filter(doc => doc.document_status == "PENDING")
+        console.log({ pendingDocs })
+        if (pendingDocs.length != 0) {
+            alert("All Documents are required")
+            return;
+        }
+        // get all docs verification
+
         const config = {
             headers: {
                 Authorization: `Bearer ${getToken("student")
@@ -168,7 +185,8 @@ const StudentDocuments = (props) => {
                                         Document File:
                                     </label>
                                     <input type="file" id="document-file" name="document" className="border px-4 py-2 w-full"
-                                        onChange={handleFile} />
+                                        onChange={handleFile}
+                                        />
                                 </div>
                                 <div className="flex justify-end">
                                     <button onClick={addDocument}
@@ -181,7 +199,7 @@ const StudentDocuments = (props) => {
                         </div>
                         <div className="flex align-end w-full justify-end p-[10px]">
                             {
-                                state?.student?.status == "IN_PROCESS" || state?.student?.status == "PENDING" ? (
+                                state?.student?.status != "APPROVED" ? (
                                     <>
                                         {/* <button onClick={
                                             () => {
@@ -195,10 +213,13 @@ const StudentDocuments = (props) => {
                                             className="px-4 py-2 bg-gradient-primary text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-200">
                                             Add New
                                         </button> */}
-                                        <button onClick={submitAllDocs}
-                                            className="ml-[10px] px-4 py-2 bg-[green] text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-200">
-                                            Submit Documents
-                                        </button>
+                                        {
+                                            state.documentsList.length != 0 &&
+                                            <button onClick={submitAllDocs}
+                                                className="ml-[10px] px-4 py-2 bg-[green] text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-200">
+                                                Submit Documents
+                                            </button>
+                                        }
                                     </>
                                 ) : (
                                     <span className="text-[green] m-10 font-bold text-xl">
@@ -227,6 +248,7 @@ const StudentDocuments = (props) => {
                                             </th>
                                         </tr>
                                     </thead>
+
                                     <tbody> {
                                         state.documentsList.map((document, index) => {
                                             return (
@@ -281,6 +303,11 @@ const StudentDocuments = (props) => {
                                         })
                                     } </tbody>
                                 </table>
+
+                                {
+                                    state.documentsList.length == 0 &&
+                                    <center><div className="text-[red] p-[30px]">No Documents</div></center>
+                                }
                             </div>
                         </div>
                     </>

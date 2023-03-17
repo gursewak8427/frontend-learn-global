@@ -4,6 +4,7 @@ import Header from "../../common/Header/Header";
 import Navbar from "../../common/Header/Navbar";
 import { Helmet } from "react-helmet";
 import { useEffect } from "react";
+import { ToastContainer } from "react-toastify";
 
 const Dashboard = ({ children, heading_title }) => {
     return (
@@ -19,6 +20,7 @@ const Dashboard = ({ children, heading_title }) => {
                 </div>
             </main>
             {/* <Footer /> */}
+            <ToastContainer />
         </>
     );
 }

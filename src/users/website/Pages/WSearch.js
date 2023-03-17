@@ -20,6 +20,7 @@ export default function WSearch() {
     noMore: false,
     buttonLoading: true,
     filterLoading: false,
+    baseUrl: ""
   })
   useEffect(() => {
     let api_data = JSON.parse(query)
@@ -39,6 +40,7 @@ export default function WSearch() {
         noMore: response.data.details.noMore,
         buttonLoading: false,
         currentPage: 1,
+        baseUrl: response.data.details.baseUrl,
       })
       console.log(response)
     });
@@ -47,12 +49,8 @@ export default function WSearch() {
   }, [])
 
   const handleToggle = (index) => {
-    const element = document.getElementById("toggleEligibleBox_" + index);
-    if (element.classList.value.includes("open-data")) {
-      element.classList.remove("open-data");
-    } else {
-      element.classList.add("open-data");
-    }
+    var element = document.getElementById("toggleEligibleBox_" + index);
+    element.classList.toggle("open-data")
   };
 
   const filterNow = (api_data) => {
@@ -161,7 +159,8 @@ export default function WSearch() {
                             <div className=" border-2 border-[#1c3479] shadow p-8 rounded-sm mb-8">
                               <div className="flex">
                                 <div>
-                                  <img className="un-logo rouded-full  p-2" src={Un_logo} />
+                                  <img className="un-logo rouded-full  p-2"
+                                    src={state.baseUrl + school.school_meta_details.schoolLogo} />
                                 </div>
                                 <div className="pl-3 edu-content">
                                   <h2 className="text-left text-black text-xl  font-bold capitalize">
@@ -171,7 +170,7 @@ export default function WSearch() {
                                   <p className="flex items-center country-text font-bold capitalize">
                                     <img
                                       className="w-10 mr-2 border border-current"
-                                      src={Aus}
+                                      src={state.baseUrl + school.school_meta_details.countryLogo}
                                     />
                                     {school.country}
                                   </p>
@@ -251,7 +250,7 @@ export default function WSearch() {
                                         <li className="mb-5">
                                           <p className="text-left">
                                             <h1 className="font-bold text-xl mb-2">{program.program_name}</h1>
-                                            <p className="text-lg mb-2">Program Level : <span className="font-bold">{program.credentials}</span></p>
+                                            <p className="text-lg mb-2">Certificate : <span className="font-bold">{program.credentials}</span></p>
                                             <table className="programTable">
                                               <tr className="m-1">
                                                 <th className="pe-3 m-1 mr-3"><span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#149449" class="w-6 h-6">
@@ -277,7 +276,7 @@ export default function WSearch() {
                                               <tr>
                                                 <td className="pe-3 m-1 mr-2">{program.min_tution_fee_per_semester}-{parseInt(program.max_tution_fee) + 1000}</td>
                                                 <td className="px-3 m-1 mr-2">{program.application_fee == 0 ? "Free" : program.application_fee}</td>
-                                                <td className="px-3 m-1 mr-2">{program.duration} Years</td>
+                                                <td className="px-3 m-1 mr-2">{program.duration}</td>
                                                 <td className="px-3 m-1 mr-2">{program.grade_score}%</td>
                                               </tr>
                                             </table>

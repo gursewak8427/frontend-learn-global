@@ -8,13 +8,14 @@ import Papa from "papaparse";
 import Dashboard from "../Screens/Dashboard/Dashboard";
 // import "./AddSchools.css";
 import { useDropzone } from 'react-dropzone'
+import { Buffer } from 'buffer';
 
 // web-socket
 import socketIOClient from "socket.io-client";
 
 // const ENDPOINT = process.env.REACT_APP_NODE_URL + "/";
-// const ENDPOINT = "https://learn-global-backend.onrender.com/";
-const ENDPOINT = "http://localhost:3006/";
+const ENDPOINT = "https://learn-global-backend.onrender.com/";
+// const ENDPOINT = "http://localhost:3006/";
 
 console.log("COnnecting", ENDPOINT)
 var socket = socketIOClient(ENDPOINT);
@@ -29,6 +30,23 @@ var socket = socketIOClient(ENDPOINT);
 //     });
 //     console.log("Tryping to connect with old ID", socketId)
 // }
+const escape_html = str => {
+
+    if ((str === null) || (str === ''))
+        return false;
+    else
+        str = str.toString();
+
+    var map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+
+    return str.replace(/[&<>"']/g, function (m) { return map[m]; });
+}
 
 const AddSchools = () => {
     const onDrop = useCallback((acceptedFiles) => {
@@ -309,6 +327,7 @@ const AddSchools = () => {
         visitedSchools = [] // again empty visibleSchoolsList
         visitedSchoolPrograms = [] // again empty visibleSchoolsList
         Papa.parse(value, {
+            encoding: "ISO-8859-1", // #SpecialCharacters - encoding UTF-8 Not works
             complete: function (results) {
                 setState({
                     ...state,
@@ -460,32 +479,36 @@ const AddSchools = () => {
                                                     let thisrow = false;
                                                     if (schoolDataArr.length == 1 && schoolDataArr[0] == '') return;
 
-                                                    let isDoubleProgram = false;
+                                                    let isDoubleProgram = -1;
                                                     if (visitedSchoolPrograms.includes(`${schoolDataArr[0]}-${schoolDataArr[14]}`)) {
                                                         isDoubleProgram = visitedSchoolPrograms.indexOf(`${schoolDataArr[0]}-${schoolDataArr[14]}`);
                                                         if (!thisrow) {
                                                             errorFieds++;
+                                                            console.log(this)
                                                             thisrow = true;
                                                         }
                                                     } else {
                                                         visitedSchoolPrograms[index] = `${schoolDataArr[0]}-${schoolDataArr[14]}`
                                                     }
 
+                                                    console.log({ isDoubleProgram })
 
-                                                    return <tr className={`${isDoubleProgram != false ? "doubleProgramRow text-white" : ""}`} title={`${isDoubleProgram != false ? `Double Program name to row number ${isDoubleProgram + 1}` : ""}`}>
+
+                                                    return <tr className={`${isDoubleProgram != -1 ? "doubleProgramRow text-white" : ""}`} title={`${isDoubleProgram != -1 ? `Double Program name to row number ${isDoubleProgram + 1}` : ""}`}>
                                                         <td className="p-2 text-center">{index + 1}</td>
                                                         <td className="p-2" id={`uploadStatus_${index}`}>
                                                             {
-                                                                isDoubleProgram != false &&
+                                                                isDoubleProgram != -1 &&
                                                                 <>Error</>
-
                                                             }
                                                         </td>
                                                         {
                                                             schoolDataArr.map((item, index) => {
+                                                                if (index == 15)
                                                                 if (state.requiredColumns.includes(index) && item == "") {
                                                                     if (!thisrow) {
                                                                         errorFieds++;
+                                                                        console.log("required column")
                                                                         thisrow = true;
                                                                     }
                                                                     return <td className="p-2 myCell required_missing">{item}</td>
@@ -493,6 +516,7 @@ const AddSchools = () => {
 
                                                                 if (!state.schoolsList.includes(item.toLowerCase()) && index == 0) {
                                                                     if (!thisrow) {
+                                                                        console.log("Unknown school name")
                                                                         errorFieds++;
                                                                         thisrow = true;
                                                                     }
@@ -507,7 +531,7 @@ const AddSchools = () => {
                                                                 //     return <td title={`Unknown Country Name : ${item}`} className="p-2 myCell required_missing">{item}</td>
                                                                 // }
 
-                                                                return <td className="p-2" title={item}>{item}</td>
+                                                                return <td className="p-2" title={escape_html(item)}>{item}</td>
                                                             })
                                                         }
                                                     </tr>

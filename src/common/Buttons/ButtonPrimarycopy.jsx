@@ -1,11 +1,11 @@
 import React from 'react';
 
-const ButtonPrimary = ({ title, loading = false, onclick, type = "button", theme="primary" }) => {
+const ButtonPrimaryCopy = ({ title, loading = false, onclick, type = "button" }) => {
     return (
-        <button className={`${theme == "danger" ? "bg-[red]" : "bg-gradient-primary"} inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`} onClick={onclick} type={type}>
+        <button className="log-btn w-full py-4 text-white mt-4 rounded-lg" onClick={onclick} type={type}>
             {
                 loading ? <div aria-label="Loading..." role="status">
-                    <svg class="h-5 w-5 animate-spin" viewBox="3 3 18 18">
+                    <svg class="h-4 w-4 animate-spin" viewBox="3 3 18 18">
                         <path
                             class="fill-gray-200"
                             d="M12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5ZM3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12Z"></path>
@@ -19,4 +19,4 @@ const ButtonPrimary = ({ title, loading = false, onclick, type = "button", theme
     )
 }
 
-export default ButtonPrimary;
+export default ButtonPrimaryCopy;

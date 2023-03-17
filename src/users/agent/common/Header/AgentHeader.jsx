@@ -29,9 +29,38 @@ const AgentHeader = () => {
             path: "/d/agent/profile",
             matchings: ["profile"]
         },
+        {
+            label: "Students",
+            permissions: "school_main",
+            icon: <i class="fa-solid fa-school"></i>,
+            matchings: ["addstudent", "getstudents"],
+            items: [
+                {
+                    label: "New Student",
+                    icon: <i class="fa-solid fa-school-lock"></i>,
+                    permissions: "sp_school_names",
+                    matchings: ["addstudent"],
+                    path: "/d/agent/addstudent",
+                },
+                {
+                    label: "All Students",
+                    icon: <i class="fa-solid fa-school"></i>,
+                    permissions: "sp_list",
+                    matchings: ["getstudents"],
+                    path: "/d/agent/getstudents",
+                },
+            ]
+        },
+        {
+            label: "Find Programs",
+            icon: <i class="fa-solid fa-file-csv"></i>,
+            permissions: "csv_programs",
+            path: "/d/agent/findprograms",
+            matchings: ["findprograms"]
+        },
     ]
 
-    
+
     const openMenu = menuNumber => {
         setState({
             ...state,

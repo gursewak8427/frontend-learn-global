@@ -52,6 +52,17 @@ import AdminStudentProfile from "./users/admin/Pages/AdminStudentProfile";
 import StudentNotifications from "./users/student/Pages/StudentNotifications";
 import StudentHistory from "./users/student/Pages/StudentHistory";
 import StudentRemarks from "./users/student/Pages/StudentRemarks";
+import FilesList from "./users/admin/Pages/FilesList";
+import Login2 from "./users/admin/Pages/Login2";
+
+import Login3 from "./users/admin/Pages/Login3";
+
+import { Profile } from "./users/admin/Pages/Pofile";
+import AgentFindProgram from "./users/agent/Pages/AgentFindPrograms";
+import AgentProgramsList from "./users/agent/Pages/AgentProgramsList";
+import { StudentProfile } from "./users/student/Pages/StudentProfile";
+import { Security } from "./users/admin/Pages/Security";
+
 
 // web-socket
 // import socketIOClient from "socket.io-client";
@@ -76,7 +87,6 @@ const App = () => {
   // }, []);
 
   useEffect(() => {
-
     let tokenAdmin = getToken("admin");
     let tokenAgent = getToken("agent");
     let tokenStudent = getToken("student");
@@ -94,7 +104,7 @@ const App = () => {
             config
           )
           .then((res) => {
-            console.log({ res });
+            console.log({ tokennnn: res });
             if (res.data.status == "0") {
               setState({
                 ...state,
@@ -155,7 +165,7 @@ const App = () => {
             return;
           })
           .catch((err) => {
-            console.log(err.response.data);
+            console.log({err});
           });
       });
     } else {
@@ -184,13 +194,23 @@ const App = () => {
     <>
       <Notification />
       <Routes>
-        <Route path="/d/" element={<Home isAdmin={false} />} />
+
+        <Route path="/d/" element={<Login3 />} />
+        <Route
+          path="/d/adminlogin123"
+          element={
+            <Login2 />
+          }
+        />
+
+        {/* <Route path="/d/" element={<Home isAdmin={false} />} />
         <Route
           path="/d/adminlogin123"
           element={
             <Home isAdmin={true} role="ADMIN" token={state.tokenAdmin} />
           }
-        />
+        /> */}
+
         <Route path="/d/admin" element={<Dashboard />}>
           <Route
             index
@@ -205,6 +225,23 @@ const App = () => {
             element={
               <ProtectedRoute token={state.tokenAdmin} role={"admin"}>
                 <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route
+            path="profile"
+            element={
+              <ProtectedRoute token={state.tokenAdmin} role={"admin"}>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="security"
+            element={
+              <ProtectedRoute token={state.tokenAdmin} role={"admin"}>
+                <Security />
               </ProtectedRoute>
             }
           />
@@ -435,6 +472,25 @@ const App = () => {
             }
           />
 
+          <Route path="pending-files" element={<FilesList type="PENDING" />} />
+          <Route
+            path="under-verification-files"
+            element={<FilesList type="UNDER_VERIFICATION" />}
+          />
+          <Route
+            path="fees-pending"
+            element={<FilesList type="FEES_PENDING" />}
+          />
+          <Route
+            path="in-processing-files"
+            element={<FilesList type="IN_PROCESSING" />}
+          />
+          <Route path="closed-files" element={<FilesList type="CLOSED" />} />
+          <Route
+            path="rejected-files"
+            element={<FilesList type="REJECTED" />}
+          />
+
           {/* demo */}
           {/* <Route path="demodatatable" element={<ProtectedRoute token={state.tokenAdmin} role={"admin"} permissions={state.currentPermissions}><DataTable /></ProtectedRoute>} /> */}
         </Route>
@@ -461,6 +517,9 @@ const App = () => {
           <Route path="register" element={<AgentRegister />} />
           <Route path="addstudent" element={<AgentAddStudent />} />
           <Route path="getstudents" element={<AgentGetStudent />} />
+          <Route path="findprograms" element={<AgentFindProgram />} />
+          <Route path="findprograms/search/:query" element={<AgentProgramsList />} />
+
           <Route
             path="profile"
             element={
@@ -481,13 +540,16 @@ const App = () => {
 
         {/* student routes */}
         <Route path="/d/student/confirm/:token" element={<StudentConfirm />} />
+
+        <Route path="/login2" element={<Login2 />} />
+        <Route path="/d/student/forgot/" element={<StudentForgot />} />
+        <Route path="/d/student/forgot/:token" element={<Login3 />} />
+
         <Route path="/d/student" element={<StudentDashboard />}>
-          <Route
-            index
-            element={
-              <StudentEnrolled />
-            }
-          />
+
+
+          <Route index element={<StudentEnrolled />} />
+          <Route path="profile" element={<StudentProfile />} />
           {/* <Route
             path="dashboard"
             element={
@@ -501,15 +563,19 @@ const App = () => {
               </ProtectedRoute>
             }
           /> */}
-          <Route path="login" element={<StudentLogin />} />
-          <Route path="register" element={<StudentRegister />} />
-          <Route path="forgot/" element={<StudentForgot />} />
-          <Route path="forgot/:token" element={<StudentForgot />} />
+          {/* <Route path="login" element={<StudentLogin />} />
+          <Route path="register" element={<StudentRegister />} /> */}
           <Route path="enrolled" element={<StudentEnrolled />} />
           <Route path="documents" element={<StudentDocuments />} />
           <Route path="notifications" element={<StudentNotifications />} />
           <Route path="history" element={<StudentHistory />} />
-          <Route path="remarks" element={<StudentRemarks />} />
+          <Route path="remarks/:fileId" element={<StudentRemarks />} />
+
+          <Route path="login2" element={<Login2 />} />
+
+
+
+
         </Route>
 
         {/* <Route path="*" element={<><center className="pt-5 text-danger text-bold text-decoration-underline">404 Not Found</center></>} /> */}

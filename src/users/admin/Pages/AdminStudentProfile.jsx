@@ -9,6 +9,9 @@ import {
     useNavigate,
     useSearchParams
 } from "react-router-dom";
+import { toast } from "react-toastify";
+import { BigLoading } from "../../../common/BigLoading";
+import ButtonPrimary from "../../../common/Buttons/ButtonPrimary";
 import { authenticate, getToken } from "../../../helper/auth";
 import Dashboard from "../Screens/Dashboard/Dashboard";
 
@@ -18,6 +21,7 @@ const AdminStudentProfile = () => {
     const [state, setState] = useState({
         isWaiting: true,
         studentProfile: {},
+        enrolledList: [],
         adminToken: getToken("admin"),
         reason: "",
         reasonType: -1,
@@ -28,6 +32,9 @@ const AdminStudentProfile = () => {
         remark: "",
         remarksList: [],
         profileApproveLoading: false,
+        fileId: null,
+        approveFileLoading: false,
+        bigLoading: false,
     });
 
     const toggleRemarkPopup = (type) => {
@@ -56,6 +63,7 @@ const AdminStudentProfile = () => {
                     setState({
                         ...state,
                         studentProfile: res.data.details.student,
+                        enrolledList: res.data.details.enrolledList,
                         isWaiting: false,
                         baseUrl: res.data.details.baseUrl,
                         remarksList: remarksResponse.data.details.remarks
@@ -82,6 +90,10 @@ const AdminStudentProfile = () => {
         };
 
         const submitNow = () => {
+            setState({
+                ...state,
+                bigLoading: true,
+            })
             const remarkReason = document.getElementById("remarkReason").value;
 
             let oldDocs = state.studentProfile.documents;
@@ -108,7 +120,8 @@ const AdminStudentProfile = () => {
                             documents: oldDocs
                         },
                         remarkpopupActive: false,
-                        remarkpopupActiveDocType: false
+                        remarkpopupActiveDocType: false,
+                        bigLoading: false,
                     });
                 }
                 // setState({
@@ -118,8 +131,12 @@ const AdminStudentProfile = () => {
                 // })
             });
         };
+
         return (
             <>
+                {
+                    state.bigLoading && <BigLoading />
+                }
                 <div className={
                     `remarkpopup ${state.remarkpopupActive && "active"
                     }`
@@ -207,6 +224,10 @@ const AdminStudentProfile = () => {
 
     const approveDocStatus = (index) => {
         if (window.confirm("Are you sure ?")) { // now update
+            setState({
+                ...state,
+                bigLoading: true,
+            })
             const config = {
                 headers: {
                     Authorization: `Bearer ${state.adminToken
@@ -223,22 +244,80 @@ const AdminStudentProfile = () => {
 
             axios.patch(process.env.REACT_APP_NODE_URL + "/student?id=" + studentId, data, config).then((res) => {
                 if (res.data.status == "1") {
+                    toast(res.data.message);
                     setState({
                         ...state,
+                        bigLoading: false,
                         studentProfile: {
                             ...state.studentProfile,
                             documents: oldDocs
-                        }
+                        },
                     });
                     return;
                 }
-                alert(res.data.message);
+                setState({
+                    ...state,
+                    bigLoading: false,
+                })
+                toast.error(res.data.message);
 
                 // setState({
                 //     ...state,
                 //     agentProfile: res.data.details.agent,
                 //     isWaiting: false,
                 // })
+            });
+        }
+    };
+
+
+    const approveFileNow = () => {
+        if (state?.fileId == null) {
+            toast.error("Please Choose a File")
+            return;
+        }
+
+        if (window.confirm("Are you sure ?")) { // now update
+            setState({
+                ...state,
+                approveFileLoading: true,
+            });
+
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${state.adminToken
+                        }`
+                }
+            };
+            const data = {
+                fileId: state.fileId,
+                status: "FEES_PENDING"
+            };
+
+            axios.patch(process.env.REACT_APP_NODE_URL + "/admin/updateEnrollStatus", data, config).then((res) => {
+
+                setState({
+                    ...state,
+                    approveFileLoading: false,
+                });
+                if (res.data.status == "1") {
+                    toast(res.data.message);
+                    navigate("/d/admin/fees-pending")
+                } else {
+                    toast.error(res.data.message);
+                }
+                // setState({
+                //     ...state,
+                //     agentProfile: res.data.details.agent,
+                //     isWaiting: false,
+                // })
+            }).catch(err => {
+                console.log({ updateEnrollStatus_Error: err });
+                toast.error("Something went wrong");
+                setState({
+                    ...state,
+                    approveFileLoading: false,
+                });
             });
         }
     };
@@ -399,7 +478,7 @@ const AdminStudentProfile = () => {
                                         }>
                                         Documents
                                     </h2>
-                                    <h2 className={
+                                    {/* <h2 className={
                                         `${tab == 3 && "active"
                                         }`
                                     }
@@ -407,7 +486,7 @@ const AdminStudentProfile = () => {
                                             () => setTab(3)
                                         }>
                                         Remarks
-                                    </h2>
+                                    </h2> */}
                                     {/* <h2 className={`${tab == 3 && "active"}`} onClick={() => setTab(3)}>Additional Details</h2> */} </div>
                                 <div className={
                                     `tabDetail ${tab == 1 && "active"
@@ -502,7 +581,7 @@ const AdminStudentProfile = () => {
                                             <div className="text-[red] w-full text-center m-3"></div>
                                         )
                                     }
-                                    <div className="flex justify-end w-full">
+                                    {/* <div className="flex justify-end w-full">
                                         {
                                             state.studentProfile.status != "APPROVED" ? (
                                                 <div className="flex items-center justify-center">
@@ -545,7 +624,7 @@ const AdminStudentProfile = () => {
                                                         } </button>
                                                 </div>
                                             )
-                                        } </div>
+                                        } </div> */}
                                     <table className="table-fixed w-full p-2 pt-0">
                                         <thead>
                                             <tr>
@@ -630,6 +709,24 @@ const AdminStudentProfile = () => {
                                             })
                                         } </tbody>
                                     </table>
+                                    <div className="w-full p-[10px] flex justify-end">
+                                        <div class="relative mr-2">
+                                            <select name="fileId" onChange={handleInput} class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
+                                                <option>--Select File--</option>
+                                                {
+                                                    state.enrolledList.map((file, index) => {
+                                                        return (
+                                                            <option key={index} value={file._id}>{file.school_details.school_name}({file.school_details.country}) - {file.school_details.school_programs.program_name}</option>
+                                                        )
+                                                    })
+                                                }
+                                            </select>
+                                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
+                                            </div>
+                                        </div>
+                                        <ButtonPrimary title={"Approve"} onclick={approveFileNow} loading={state.approveFileLoading} />
+                                    </div>
                                     {/* <div className="profile-image">
                                         <label htmlFor="">Profile Image</label>
                                         {
@@ -658,7 +755,7 @@ const AdminStudentProfile = () => {
                                         }
 
                                     </div> */} </div>
-                                <div className={
+                                {/* <div className={
                                     `tabDetail ${tab == 3 && "active"
                                     }`
                                 }>
@@ -730,7 +827,7 @@ const AdminStudentProfile = () => {
                                                 );
                                             })
                                         } </ul>
-                                </div>
+                                </div> */}
                                 {/* <div className={`tabDetail ${tab == 3 && "active"}`}>
                                     <tr>
                                         <div className="p-2 flex flex-col">

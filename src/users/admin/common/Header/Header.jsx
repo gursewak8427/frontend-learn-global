@@ -153,7 +153,7 @@ const Header = () => {
         {
             label: "Students",
             icon: <i class="fa-solid fa-person-rays"></i>,
-            matchings: ["students", "pending-programs", "approved-programs"],
+            matchings: ["students", "pending-files", "rejected-files", "under-verification-files", "fees-pending", "in-processing-files", "closed-files"],
             items: [
                 {
                     label: "All Students",
@@ -162,16 +162,40 @@ const Header = () => {
                     path: "/d/admin/students",
                 },
                 {
-                    label: "Pending Programs",
+                    label: "Pending Files",
                     icon: <i class="fa-solid fa-graduation-cap"></i>,
-                    matchings: ["pending-programs"],
-                    path: "/d/admin/pending-programs",
+                    matchings: ["pending-files"],
+                    path: "/d/admin/pending-files",
                 },
                 {
-                    label: "Approved Programs",
+                    label: "Document Verification",
                     icon: <i class="fa-solid fa-graduation-cap"></i>,
-                    matchings: ["approved-programs"],
-                    path: "/d/admin/approved-programs",
+                    matchings: ["under-verification-files"],
+                    path: "/d/admin/under-verification-files",
+                },
+                {
+                    label: "Rejected Documents",
+                    icon: <i class="fa-solid fa-graduation-cap"></i>,
+                    matchings: ["rejected-files"],
+                    path: "/d/admin/rejected-files",
+                },
+                {
+                    label: "Fees Pending",
+                    icon: <i class="fa-solid fa-graduation-cap"></i>,
+                    matchings: ["fees-pending"],
+                    path: "/d/admin/fees-pending",
+                },
+                {
+                    label: "In-Process Files",
+                    icon: <i class="fa-solid fa-graduation-cap"></i>,
+                    matchings: ["in-processing-files"],
+                    path: "/d/admin/in-processing-files",
+                },
+                {
+                    label: "Completed Files",
+                    icon: <i class="fa-solid fa-graduation-cap"></i>,
+                    matchings: ["closed-files"],
+                    path: "/d/admin/closed-files",
                 },
             ]
         },
@@ -203,11 +227,13 @@ const Header = () => {
     useEffect(() => {
         const config = { headers: { "Authorization": `Bearer ${getToken("admin")}` } }
         axios.post(process.env.REACT_APP_NODE_URL + "/admin/verifyToken", {}, config).then(res => {
-            document.getElementById("notificationCountSpan").innerText = res.data.details.userData.notificationsCount > 99 ? "99+" : res.data.details.userData.notificationsCount
+            console.log(res.data.details.userData.role == "ADMIN")
             setPermissions(res.data.details.userData.permissions)
             setRole(res.data.details.userData.role)
             setFirstName(res.data.details.userData.firstName)
             setIsAdmin(res.data.details.userData.role == "ADMIN")
+            // add this line here.. bottom of role or permission management
+            // document.getElementById("notificationCountSpan").innerText = res.data.details.userData.notificationsCount > 99 ? "99+" : res.data.details.userData.notificationsCount
 
             // SET ACTIVE MENUS OF SIDEBAR
             if (window.location.pathname.split("/")[3] == "manage" && searchParams.get("status") && searchParams.get("status") == "unapproved") {
@@ -235,7 +261,7 @@ const Header = () => {
                 ...state,
                 isWait: false,
             })
-            console.log(err.response.data)
+            console.log({ err })
         })
 
     }, [])
@@ -312,7 +338,7 @@ const Header = () => {
                     <p className="roleStyle">
                         {
                             firstName ?
-                                <span>Welcome, {firstName}</span> :
+                                <span>Welcome, <span id="header-firstname">{firstName}</span> </span> :
                                 <span>Welcome</span>
                         }
                         {/* <p>{role}</p> */}
@@ -323,6 +349,7 @@ const Header = () => {
 
                                 if (singleItem?.items) {
                                     // multi level sidebar
+                                    console.log({ isAdmin })
                                     if (!permissions.includes(singleItem.permissions) && !isAdmin) return;
 
                                     return <div className={`flex flex-col justify-start items-center border-b border-gray-600 w-full ${state.menu == index ? "active-link-group" : ""}`}>
@@ -347,7 +374,7 @@ const Header = () => {
                                     </div>
                                 } else {
                                     // single sidebar
-                                    if (!permissions.includes(singleItem.permissions) && !isAdmin && singleItem.permissions) return;
+                                    // if (!permissions.includes(singleItem.permissions) && !isAdmin && singleItem.permissions) return;
                                     return (
                                         <>
                                             <div className={`pt-6 flex flex-col justify-start items-center pl-8 w-full border-gray-600 border-b space-y-3 pb-5 ${state.menu == index ? "active-link" : ""}`}>

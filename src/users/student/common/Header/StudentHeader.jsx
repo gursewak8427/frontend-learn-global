@@ -32,7 +32,7 @@ const StudentHeader = () => {
       })
       .catch((err) => {
         setIsWait(false);
-        console.log(err.response.data);
+        console.log(err);
       });
   }, [window.location.href]);
 
@@ -61,16 +61,16 @@ const StudentHeader = () => {
       icon: <i class="fa-solid fa-file-csv"></i>,
       path: "/d/student/documents",
     },
-    {
-      label: "History",
-      icon: <i class="fa-solid fa-file-csv"></i>,
-      path: "/d/student/history",
-    },
-    {
-      label: "Remarks",
-      icon: <i class="fa-solid fa-file-csv"></i>,
-      path: "/d/student/remarks",
-    },
+    // {
+    //   label: "History",
+    //   icon: <i class="fa-solid fa-file-csv"></i>,
+    //   path: "/d/student/history",
+    // },
+    // {
+    //   label: "Remarks",
+    //   icon: <i class="fa-solid fa-file-csv"></i>,
+    //   path: "/d/student/remarks",
+    // },
     // {
     //     label: "Schools",
     //     permissions: "school_main",

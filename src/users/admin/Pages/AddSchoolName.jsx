@@ -8,6 +8,8 @@ import Papa from "papaparse";
 import Dashboard from "../Screens/Dashboard/Dashboard";
 // import "./Addschoolname.css";
 import { useDropzone } from "react-dropzone";
+import { toast } from "react-toastify";
+import ButtonPrimary from "../../../common/Buttons/ButtonPrimary";
 
 // web-socket
 // import socketIOClient from "socket.io-client";
@@ -84,16 +86,32 @@ const Addschoolname = () => {
   const uploadData = async () => {
     try {
       const fd = new FormData();
+
+      let requiredError = [];
       if (state.schoolName == "") {
-        alert("School Name is required");
+        requiredError.push("School name");
+      }
+      if (state.countryId == "") {
+        requiredError.push("Country");
+      }
+      if (state.stateId == "") {
+        requiredError.push("State");
+      }
+      if (state.cityId == "") {
+        requiredError.push("City");
+      }
+      if (requiredError.length > 0) {
+        toast.error(requiredError.join(", ") + " is required");
         return;
       }
+
       fd.append("schoolName", state.schoolName);
       fd.append("schoolLogo", state.schoolLogo);
       fd.append("countryLogo", state.countryLogo);
       fd.append("countryId", state.countryId);
       fd.append("stateId", state.stateId);
       fd.append("cityId", state.cityId);
+
       setState({
         ...state,
         submitProcessing: true,
@@ -102,6 +120,10 @@ const Addschoolname = () => {
         process.env.REACT_APP_NODE_URL + "/admin/addschoolname",
         fd
       );
+      console.log("im here");
+      console.log(document.getElementById("countryLogoInput"));
+      document.getElementById("countryLogoInput").value = "";
+      document.getElementById("schoolLogoInput").value = "";
 
       if (response.data.status == "1") {
         setState({
@@ -122,8 +144,13 @@ const Addschoolname = () => {
           submitProcessing: false,
         });
       }
-      alert(response.data.message);
+      if (response.data.status == "1") {
+        toast(response.data.message);
+      } else {
+        toast.error(response.data.message);
+      }
     } catch (error) {
+      toast.error("Something went wrong");
       console.log(error);
       setState({
         ...state,
@@ -149,9 +176,25 @@ const Addschoolname = () => {
         fd
       );
 
+      console.log("im here");
+      console.log(document.getElementById("countryLogoInput"));
+      document.getElementById("countryLogoInput").value = "";
+      document.getElementById("schoolLogoInput").value = "";
+      if (response.data.status == "1") {
+        toast(response.data.message);
+      } else {
+        toast.error(response.data.message);
+      }
       if (response.data.status == "1") {
         let oldData = state.list;
         oldData[index] = response.data.details.updatedSchoolName;
+        oldData = oldData.map((data) => {
+          if (data.country == response.data.details.updatedSchoolName.country) {
+            data.countryLogo =
+              response.data.details.updatedSchoolName.countryLogo;
+          }
+          return data;
+        });
 
         setState({
           ...state,
@@ -172,8 +215,8 @@ const Addschoolname = () => {
           submitProcessing: false,
         });
       }
-      alert(response.data.message);
     } catch (error) {
+      toast.error("Something went wrong");
       console.log(error);
       setState({
         ...state,
@@ -240,14 +283,37 @@ const Addschoolname = () => {
       });
   };
 
+  const deleteNow = async (school, index) => {
+    if (window.confirm(`Are you confirm to delete ${school.schoolName} ?`)) {
+      // deleteSchoolName api
+      axios
+        .delete(
+          process.env.REACT_APP_NODE_URL +
+            "/admin/deleteschoolname/" +
+            school._id
+        )
+        .then((res) => {
+          if (res.data.status == "1") {
+            let oldData = state.list;
+            oldData.splice(index, 1);
+            setState({
+              ...state,
+              list: oldData,
+            });
+          }
+        });
+    }
+  };
+
   return (
     <>
       <div heading_title={"Add School Detail"}>
         <>
           <div className="row addCountryPage flex flex-row">
             <div
-              className={`w-5/12 mx-auto my-4 createSchoolNamePopup ${state.showPopup && "active"
-                }`}
+              className={`w-5/12 mx-auto my-4 createSchoolNamePopup ${
+                state.showPopup && "active"
+              }`}
             >
               <label htmlFor="">
                 <div className="flex justify-between align-center">
@@ -319,6 +385,7 @@ const Addschoolname = () => {
                                     m-0
                                     focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                         name="schoolLogo"
+                        id="schoolLogoInput"
                         onChange={handleFileChange}
                       />
                     </div>
@@ -345,13 +412,12 @@ const Addschoolname = () => {
                                     m-0
                                     focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                         name="countryLogo"
+                        id="countryLogoInput"
                         onChange={handleFileChange}
                       />
                     </div>
                   </div>
-
                 </div>
-
 
                 {state.updatedId == null && (
                   <>
@@ -379,7 +445,6 @@ const Addschoolname = () => {
                     </div>
                   </>
                 )}
-
 
                 <div className="flex">
                   <div className="w-6/12 mr-1">
@@ -429,7 +494,9 @@ const Addschoolname = () => {
                             <option value="">Choose</option>
                             {state.cityList.map((city) => {
                               return (
-                                <option value={city.cityId}>{city.cityName}</option>
+                                <option value={city.cityId}>
+                                  {city.cityName}
+                                </option>
                               );
                             })}
                           </select>
@@ -439,7 +506,22 @@ const Addschoolname = () => {
                   </div>
                 </div>
 
-                <button
+                <div className="flex">
+                  {state.updatedId != null ? (
+                    <ButtonPrimary
+                      title={"Update"}
+                      onclick={updateData}
+                      loading={state.submitProcessing}
+                    />
+                  ) : (
+                    <ButtonPrimary
+                      title={"Save"}
+                      onclick={uploadData}
+                      loading={state.submitProcessing}
+                    />
+                  )}
+
+                  {/* <button
                   type="button"
                   class="btn bg-gradient-primary w-100 ml-0 mt-4 text-white px-2 py-1 rounded mb-0 text-lg"
                   onClick={() =>
@@ -449,6 +531,7 @@ const Addschoolname = () => {
                         ? updateData()
                         : uploadData()
                   }
+
                 >
                   {state.submitProcessing ? (
                     <div aria-label="Loading..." role="status">
@@ -468,20 +551,28 @@ const Addschoolname = () => {
                   ) : (
                     <>Save</>
                   )}
-                </button>
+                </button> */}
 
-                {state.updatedId != null && (
-                  <button
-                    type="button"
-                    className="btn bg-[red] w-100 ml-2 mt-4 text-white px-2 py-1 rounded mb-0 text-lg"
-                    onClick={removeUpdate}
-                  >
-                    Cancel
-                  </button>
-                )}
+                  {state.updatedId != null && (
+                    <div className="ml-1">
+                      <ButtonPrimary
+                        title={"Cancel"}
+                        onclick={removeUpdate}
+                        theme="danger"
+                      />
+                    </div>
+                    // <button
+                    //   type="button"
+                    //   className="btn bg-[red] w-100 ml-2 mt-4 text-white px-2 py-1 rounded mb-0 text-lg"
+                    //   onClick={removeUpdate}
+                    // >
+                    //   Cancel
+                    // </button>
+                  )}
+                </div>
               </div>
             </div>
-            <div className="mx-auto w-full my-4 p-2">
+            <div className="mx-auto w-full my-4 p-45">
               <div className="flex justify-end">
                 <button
                   className="addNewBtn"
@@ -498,7 +589,7 @@ const Addschoolname = () => {
               <div class="flex flex-col">
                 <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
                   <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
-                    <div class="overflow-hidden">
+                    <div class="overflow-hidden shadow-lg p-4 border border-2">
                       <table class="min-w-full designedTable">
                         <thead class="bg-white border-b">
                           <tr>
@@ -523,7 +614,9 @@ const Addschoolname = () => {
                             <th class="capitalize text-sm font-medium text-gray-900 px-6 py-4 text-left font-bold">
                               city
                             </th>
-                            <th></th>
+                            <th class="capitalize text-sm font-medium text-gray-900 px-6 py-4 text-center font-bold">
+                              Actions
+                            </th>
                           </tr>
                         </thead>
                         <tbody>
@@ -540,8 +633,8 @@ const Addschoolname = () => {
                                       !school.schoolLogo
                                         ? "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/No_image_available_600_x_200.svg/1200px-No_image_available_600_x_200.svg.png"
                                         : process.env.REACT_APP_NODE_URL +
-                                        "/uploads/agent/" +
-                                        school.schoolLogo
+                                          "/uploads/agent/" +
+                                          school.schoolLogo
                                     }
                                     alt=""
                                   />
@@ -553,8 +646,8 @@ const Addschoolname = () => {
                                       !school.countryLogo
                                         ? "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/No_image_available_600_x_200.svg/1200px-No_image_available_600_x_200.svg.png"
                                         : process.env.REACT_APP_NODE_URL +
-                                        "/uploads/agent/" +
-                                        school.countryLogo
+                                          "/uploads/agent/" +
+                                          school.countryLogo
                                     }
                                     alt=""
                                   />
@@ -563,20 +656,26 @@ const Addschoolname = () => {
                                   {school.schoolName}
                                 </td>
                                 <td className="text-sm text-gray-900 font-light p-2 whitespace-nowrap capitalize">
-                                  {school?.countryDetails[0].countryName ||
+                                  {school?.countryDetails[0]?.countryName ||
                                     "--"}
                                 </td>
                                 <td className="text-sm text-gray-900 font-light p-2 whitespace-nowrap capitalize">
-                                  {school?.stateDetails[0].stateName || "--"}
+                                  {school?.stateDetails[0]?.stateName || "--"}
                                 </td>
                                 <td className="text-sm text-gray-900 font-light p-2 whitespace-nowrap capitalize">
-                                  {school?.cityDetails[0].cityName || "--"}
+                                  {school?.cityDetails[0]?.cityName || "--"}
                                 </td>
                                 <td className="text-sm text-gray-900 font-light p-2 whitespace-nowrap">
-                                  <i
-                                    className="fa-solid fa-pen-to-square cursor-pointer"
-                                    onClick={() => setUpdate(index)}
-                                  ></i>
+                                  <div className="action-icons-list">
+                                    <i
+                                      className="action-icon fa-solid fa-pen-to-square cursor-pointer"
+                                      onClick={() => setUpdate(index)}
+                                    ></i>
+                                    <i
+                                      className="action-icon fa-solid fa-trash cursor-pointer text-[red]"
+                                      onClick={() => deleteNow(school, index)}
+                                    ></i>
+                                  </div>
                                 </td>
                               </tr>
                             );
@@ -586,7 +685,11 @@ const Addschoolname = () => {
                       {state.isWait ? (
                         <div>
                           <center className="w-full my-10">
-                            <img width={100} src="https://i.gifer.com/ZZ5H.gif" alt="" />
+                            <img
+                              width={100}
+                              src="https://i.gifer.com/ZZ5H.gif"
+                              alt=""
+                            />
                           </center>
                         </div>
                       ) : (

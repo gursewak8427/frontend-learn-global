@@ -10,6 +10,7 @@ import StudentEmailConfirmationReminder from "../../common/StudentEmailConfirmat
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { getToken } from "../../../../helper/auth";
+import { ToastContainer } from "react-toastify";
 
 const StudentDashboard = ({ children }) => {
   const navigate = useNavigate();
@@ -63,6 +64,7 @@ const StudentDashboard = ({ children }) => {
 
   return (
     <>
+      <ToastContainer />
       {!state.isEmailVerified ? (
         <>
           <StudentEmailConfirmationReminder />

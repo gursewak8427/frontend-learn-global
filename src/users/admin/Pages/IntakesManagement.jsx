@@ -415,7 +415,7 @@ const IntakesManagement = (props) => {
                   <div className="schoolFilters">
                     <div className="left">
                       <div className="filter-group w-4/12">
-                        <label htmlFor="" className="text-[white]">
+                        <label htmlFor="" className="">
                           Country
                         </label>
                         <select
@@ -449,7 +449,7 @@ const IntakesManagement = (props) => {
                         </select>
                       </div>
                       <div className="filter-group col-3">
-                        <label htmlFor="" className="text-[white]">
+                        <label htmlFor="" className="">
                           School
                         </label>
                         <select
@@ -545,9 +545,7 @@ const IntakesManagement = (props) => {
                                               monthIndex
                                             )
                                           }
-                                          className={
-                                            "cursor-pointer hover:bg-[grey]"
-                                          }
+                                          className={"cursor-pointer"}
                                         >
                                           {month != false ? (
                                             <i

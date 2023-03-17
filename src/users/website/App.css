@@ -638,7 +638,6 @@ button.load-more-btn {
   margin: 20px 0px 0px;
 }
 
-
 @media (min-width: 1300px) and (max-width: 1399px) {
   .edu-content {
     width: 100%;
@@ -849,14 +848,16 @@ p.global-text a {
 .multi-form {
   max-width: 800px;
   min-height: 350px;
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+    rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
 }
 
-.multi-form>label,
-.multi-form>div>label {
+.multi-form > label,
+.multi-form > div > label {
   background: #181739;
   color: white;
-  border-radius: 5px 5px 0 0 ;
+  border-radius: 5px 5px 0 0;
   height: 100px;
   display: flex !important;
   align-items: center;
@@ -953,7 +954,6 @@ p.global-text a {
 .static-header {
   background: #000;
 }
-
 
 @media (max-width: 767px) {
   .home-hero h1 {
@@ -1052,6 +1052,6 @@ div#toggleEligibleBox_0 ul li {
   border-bottom: 1px solid #ccc;
 }
 
-div#toggleEligibleBox_0 ul>div:nth-last-child(1) li {
+div#toggleEligibleBox_0 ul > div:nth-last-child(1) li {
   border-bottom: 0;
 }

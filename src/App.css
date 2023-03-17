@@ -606,6 +606,7 @@ button.close-btn {
   border: 1px solid #cdcdcd;
   padding: 15px;
   border-radius: 5px;
+  width: 100%;
 }
 
 .filter-part .right-part .title:nth-child(13) {
@@ -644,32 +645,75 @@ button.load-more-btn {
   min-height: 100vh;
   height: auto;
   background-position: center;
-    background-repeat: no-repeat;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
-
 
 .ryt-log .form-login {
   max-width: 500px;
   margin: 0px auto;
 }
 
-
-
-@media (min-width: 1300px) and (max-width: 1399px) {
-  .edu-content {
-    width: 100%;
-    max-width: 380px;
-  }
-
-  img.un-logo {
-    max-width: 120px;
-  }
-
-  button.view-program {
-    font-size: 13px;
-    margin-top: 10px;
-  }
+.text-info {
+  color: #1a7335;
 }
+
+.left-log .slick-slider.slick-initialized {
+  max-width: 600px;
+  margin: 0px auto;
+}
+
+.left-log .slick-slider.slick-initialized img {
+  width: 100%;
+}
+
+.logo-side {
+  top: 40px;
+  left: 40px;
+}
+
+.left-log .slick-dots {
+  position: static !important;
+}
+
+.left-log .slick-dots li button:before {
+  opacity: 1 !important;
+  color: #fff !important;
+  font-size: 15px !important;
+}
+
+.left-log .slick-dots li.slick-active button:before {
+  color: #1a7335 !important;
+}
+
+.left-log .slick-prev,
+.slick-next {
+  display: none !important;
+}
+
+.loginTabs span {
+  font-size: 15px;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.ryt-log .form-login button {
+  background: #1a7335 !important;
+  font-size: 15px;
+  letter-spacing: 2px;
+  padding: 10px 30px;
+}
+
+.main-login-box {
+  height: auto;
+  min-height: 550px;
+}
+
+/* .main-login-box {
+    height: auto;
+    min-height: 500px;
+} */
 
 .programsList li {
   border-bottom: 1px solid #cdcdcd;
@@ -865,14 +909,16 @@ p.global-text a {
 .multi-form {
   max-width: 800px;
   min-height: 350px;
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+    rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
 }
 
 .multi-form>label,
 .multi-form>div>label {
   background: #181739;
   color: white;
-  border-radius: 5px 5px 0 0 ;
+  border-radius: 5px 5px 0 0;
   height: 100px;
   display: flex !important;
   align-items: center;
@@ -970,6 +1016,226 @@ p.global-text a {
   background: #000;
 }
 
+.singleStep {
+  display: none;
+}
+
+.singleStep.active {
+  display: flex;
+  flex-direction: column;
+}
+
+div#toggleEligibleBox_0 ul li {
+  border-bottom: 1px solid #ccc;
+}
+
+div#toggleEligibleBox_0 ul>div:nth-last-child(1) li {
+  border-bottom: 0;
+}
+
+button.list-emp {
+  background: #1a7335;
+}
+
+
+.card-body.create-employe {
+  max-width: 800px;
+  margin: 0px auto;
+}
+
+.card-body.create-employe label {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.card-body.create-employe button {
+  background: #1a7335 !important;
+  padding: 7px 25px;
+  font-size: 15px;
+}
+
+.agent-table tr {
+  border-bottom: 10px solid #fff;
+}
+
+.agent-table td {
+  border: 0px;
+}
+
+.agent-table table td img {
+  border-radius: 50px;
+}
+
+.agent-table select {
+  background: transparent;
+}
+
+table tr:last-child {
+  border: 0 !important;
+}
+
+.new-left {
+  min-height: 100vh;
+  height: auto;
+}
+
+.new-main {
+  background: #e5e5e5;
+}
+
+.new-right h2 {
+  font-size: 50px;
+  line-height: normal;
+}
+
+.new-right h2 b {
+  color: #1c3479;
+}
+
+.new-right {
+  height: auto;
+  min-height: 100vh;
+}
+
+.part-cont:before {
+  content: "";
+  display: block;
+  position: absolute;
+  background: #bfbfbf;
+  height: 1px;
+  width: 100%;
+  top: 8px;
+}
+
+/* .input-content {
+  background: #ececec;
+} */
+
+.input-content input::placeholder {
+  color: #000;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.forgot-link {
+  color: #6358dc;
+}
+
+button.log-btn {
+  background: #1c3479;
+  font-size: 15px;
+}
+
+.inner-form-data {
+  max-width: 700px;
+}
+
+
+.login-part-modal {
+  display: block !important;
+}
+
+.login-part-modal input {
+  width: 30px;
+  border: 1px solid #ababab;
+}
+
+.login-part-modal button {
+  width: 200px;
+  background: #059669;
+  color: #fff;
+  padding: 12px 0px;
+  border-radius: 10px;
+  margin: 20px auto 0px;
+  font-size: 18px;
+  display: block;
+}
+
+.login-part-modal svg {
+  top: -22px !important;
+  right: -10px !important;
+}
+
+.adcol-btn {
+  background: #059669 !important;
+  margin: 20px 0px 0px;
+  font-size: 15px;
+}
+
+.filter-group.wid-label {
+  margin: 25px 0px 0px;
+}
+
+@media (max-width: 1024px) {
+  .modal_inner {
+    width: 95% !important;
+  }
+}
+
+.button-part button {
+  border: 1px solid #059669;
+  border-radius: 5px;
+  color: #059669;
+}
+
+.button-part button:hover {
+  background-color: #059669;
+  color: #fff;
+}
+
+.profile-main button {
+  background: #1a7335;
+  color: #fff;
+}
+
+.profile-form {
+  max-width: 415px !important;
+  width: 100%;
+}
+
+
+
+
+
+@media (min-width: 1300px) and (max-width: 1399px) {
+  .edu-content {
+    width: 100%;
+    max-width: 380px;
+  }
+
+  img.un-logo {
+    max-width: 120px;
+  }
+
+  button.view-program {
+    font-size: 13px;
+    margin-top: 10px;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1024px) {
+  .left-log .slick-slider.slick-initialized {
+    max-width: 100%;
+  }
+
+  .loginTabs {
+    max-width: 381px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .left-log {
+    overflow-x: hidden;
+  }
+
+  .ryt-log .form-login {
+    max-width: 100%;
+  }
+
+  .loginTabs {
+    max-width: 100%;
+  }
+}
 
 @media (max-width: 767px) {
   .home-hero h1 {
@@ -1054,26 +1320,223 @@ p.global-text a {
     line-height: normal;
   }
 
-  .left-log{
+  .left-log {
     min-height: 110px;
   }
 
+  .logo-side {
+    position: static;
+  }
 
+  .left-log .slick-slider.slick-initialized {
+    max-width: 100%;
+  }
+
+  .left-log .slick-dots {
+    padding-bottom: 20px;
+  }
+
+  .left-log {
+    overflow-x: hidden;
+  }
+
+  .ryt-log .form-login {
+    max-width: 100%;
+  }
+
+  .loginTabs {
+    max-width: 100%;
+  }
+
+  main.ml-\[255px\] {
+    margin-left: 0;
+  }
+
+  .table-responsive {
+    overflow-x: scroll;
+  }
+
+  .new-left {
+    min-height: auto;
+  }
+
+  .new-right {
+    min-height: auto;
+  }
+
+  .new-right h2 {
+    font-size: 35px;
+  }
+
+  .modal_inner {
+    width: 95% !important;
+  }
+
+  .button-part button {
+    padding: 10px;
+  }
+
+  .select-col-popup div {
+    margin: 0 0 5px 0;
+  }
 }
 
-.singleStep {
-  display: none;
+/* new */
+.field_eye_view {
+  position: relative;
 }
 
-.singleStep.active {
-  display: flex;
-  flex-direction: column;
+.icon.icon-eye {
+  position: absolute;
+  right: 5px;
+  top: -33px;
+  cursor: pointer;
 }
 
-div#toggleEligibleBox_0 ul li {
-  border-bottom: 1px solid #ccc;
+button#google_login_a {
+  border: 1px solid #c1c1c1;
+  border-radius: 6px;
 }
 
-div#toggleEligibleBox_0 ul>div:nth-last-child(1) li {
-  border-bottom: 0;
+.login_method_btns {
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.login_method_btns button {
+  background: #000;
+  font-size: 16px;
+  padding: 10px;
+  color: #fff;
+  width: 50%;
+}
+
+button.click1 {
+  background: #1c3479;
+}
+
+#bt {
+  width: 100% !important;
+  background: #1c3479 !important;
+  padding: 15px 0px !important;
+}
+
+.modal_cover {
+  background-color: rgba(0, 0, 0, 0.3);
+  height: 100vh;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+}
+
+.modal_inner {
+  background-color: #fff;
+  border-radius: 6px;
+  left: 50%;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 33%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+}
+
+.header_modal {
+  /* display: flex; */
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.header_modal h1 {
+  font-size: 25px;
+}
+
+.header_modal svg {
+  cursor: pointer;
+  position: absolute;
+  top: -30px;
+  font-size: 32px;
+  right: -30px;
+  background: #ffffff;
+  color: #000;
+  padding: 8px;
+  border-radius: 30px;
+  box-shadow: 0px 4px 7px -3px #000;
+}
+
+/* css for custom input type */
+.custom-field {
+  position: relative;
+  display: inline-block;
+  --field-padding: 12px;
+}
+
+.custom-field input {
+  border: none;
+  -webkit-appearance: none;
+  -ms-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: #f2f2f2;
+  padding: var(--field-padding);
+  border-radius: 3px;
+  outline: none;
+  font-size: 14px;
+}
+
+.custom-field .placeholder {
+  position: absolute;
+  left: var(--field-padding);
+  width: calc(100% - (var(--field-padding) * 2));
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  top: 22px;
+  line-height: 100%;
+  transform: translateY(-50%);
+  color: #000;
+  transition:
+    top 0.3s ease,
+    color 0.3s ease,
+    font-size 0.3s ease;
+}
+
+.custom-field input.dirty+.placeholder,
+.custom-field input:focus+.placeholder,
+.custom-field input:not(:placeholder-shown)+.placeholder {
+  top: -10px;
+  font-size: 10px;
+  color: #222;
+}
+
+/* ONE */
+.custom-field.one input {
+  background: none;
+  border: 1px solid #919191;
+  transition: border-color 0.3s ease;
+}
+
+.custom-field.one input+.placeholder {
+  left: 8px;
+  padding: 0 5px;
+}
+
+.custom-field.one input.dirty,
+.custom-field.one input:not(:placeholder-shown),
+.custom-field.one input:focus {
+  border-color: #222;
+  transition-delay: 0.1s
+}
+
+.custom-field.one input.dirty+.placeholder,
+.custom-field.one input:not(:placeholder-shown)+.placeholder,
+.custom-field.one input:focus+.placeholder {
+  top: 0;
+  font-size: 10px;
+  color: #222;
+  background: #fff;
+  width: auto
 }

@@ -355,18 +355,18 @@ const Manage = () => {
       <div heading_title={"Agents List"}>
         <>
           <div className="row px-4">
-            <div className="w-full">
-              <div className="shadow-lg mb-4 mt-4">
+            <div className="w-full p-45 mt-10">
+              <div className="shadow-lg mb-4 mt-4 agent-table">
                 <div className="px-0 pt-0 pb-2">
                   <div className="table-responsive p-0">
                     <table className="table w-full mb-0">
                       <thead>
                         <tr>
-                          <th className="border-2">Id</th>
-                          <th className="text-left p-3 border-2">Name</th>
-                          <th className="border-2">Phone</th>
-                          <th className="border-2">Approved</th>
-                          <th className="text-secondary opacity-7 border-2" />
+                          <th className="">Id</th>
+                          <th className="text-left p-3">Name</th>
+                          <th className="">Phone</th>
+                          <th className="">Approved</th>
+                          <th className="text-secondary opacity-7" />
                         </tr>
                       </thead>
                       <tbody>

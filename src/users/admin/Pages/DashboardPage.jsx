@@ -1,9 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import Dashboard from "../Screens/Dashboard/Dashboard";
 
 const DashboardPage = () => {
+    const navigate = useNavigate()
     const [state, setState] = useState({
         totalAgents: null,
         approvedAgents: null,
@@ -39,7 +40,7 @@ const DashboardPage = () => {
         <>
             <div heading_title={"Dashboard"}>
                 <div className="dashboardItemsList">
-                    <div class="card dashboardItem">
+                    <div class="card dashboardItem" onClick={() => navigate("/d/admin/manage")}>
                         <h5 class="card-title text-bold">
                             {
                                 state.totalAgents == null ? "--" : state.totalAgents == -1 ? "--" : state.totalAgents
@@ -48,7 +49,7 @@ const DashboardPage = () => {
                         <p class="card-text">Total Agent</p>
                         <i class="fa-solid fa-users"></i>
                     </div>
-                    <div class="card dashboardItem">
+                    {/* <div class="card dashboardItem">
                         <h5 class="card-title text-bold">
                             {
                                 state.approvedAgents == null ? "--" : state.approvedAgents == -1 ? "--" : state.approvedAgents
@@ -65,8 +66,8 @@ const DashboardPage = () => {
                         </h5>
                         <p class="card-text">Unapproved Agent</p>
                         <i class="fa-solid fa-thumbs-down"></i>
-                    </div>
-                    <div class="card dashboardItem">
+                    </div> */}
+                    <div class="card dashboardItem" onClick={() => navigate("/d/admin/manage")}>
                         <h5 class="card-title text-bold">
                             {
                                 state.agentStudents == null ? "--" : state.agentStudents == -1 ? "--" : state.agentStudents
@@ -75,7 +76,7 @@ const DashboardPage = () => {
                         <p class="card-text">Agent Student</p>
                         <i class="fa-solid fa-users-viewfinder"></i>
                     </div>
-                    <div class="card dashboardItem">
+                    <div class="card dashboardItem" onClick={() => navigate("/d/admin/students")}>
                         <h5 class="card-title text-bold">
                             {
                                 state.totalStudents == null ? "--" : state.totalStudents == -1 ? "--" : state.totalStudents
@@ -84,7 +85,7 @@ const DashboardPage = () => {
                         <p class="card-text">Total Student</p>
                         <i class="fa-solid fa-graduation-cap"></i>
                     </div>
-                    <div class="card dashboardItem">
+                    {/* <div class="card dashboardItem">
                         <h5 class="card-title text-bold">
                             {
                                 state.blockStudents == null ? "--" : state.blockStudents == -1 ? "--" : state.blockStudents
@@ -101,8 +102,8 @@ const DashboardPage = () => {
                         </h5>
                         <p class="card-text">Unblock Student</p>
                         <i class="fa-solid fa-face-smile-beam"></i>
-                    </div>
-                    <div class="card dashboardItem">
+                    </div> */}
+                    <div class="card dashboardItem" onClick={() => navigate("/d/admin/schools")}>
                         <h5 class="card-title text-bold">
                             {
                                 state.totalSchools == null ? "--" : state.totalSchools == -1 ? "--" : state.totalSchools
@@ -111,7 +112,7 @@ const DashboardPage = () => {
                         <i class="fa-solid fa-school-circle-check"></i>
                         <p class="card-text">Total Schools</p>
                     </div>
-                    <div class="card dashboardItem">
+                    <div class="card dashboardItem" onClick={() => navigate("/d/admin/programs")}>
                         <h5 class="card-title text-bold">
                             {
                                 state.totalPrograms == null ? "--" : state.totalPrograms == -1 ? "--" : state.totalPrograms

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link, Navigate, redirect, useNavigate } from "react-router-dom";
+import { Link, Navigate, redirect, useNavigate, useParams } from "react-router-dom";
 import { authenticate, getToken } from "../../../helper/auth";
 import StudentDashboard from "../Screens/Dashboard/StudentDashboard";
 
@@ -9,22 +9,27 @@ const StudentRemarks = (props) => {
 
   const [state, setState] = useState({
     isWaiting: true,
-    remarks: [],
+    history: [],
     baseUrl: "",
   });
+
+  const { fileId } = useParams()
 
   useEffect(() => {
     // get enrolled list data from api using axios
     const config = {
       headers: { Authorization: `Bearer ${getToken("student")}` },
     };
+    let body = {
+      fileId
+    }
     axios
-      .post(process.env.REACT_APP_NODE_URL + "/student/getRemarks", {}, config)
+      .post(process.env.REACT_APP_NODE_URL + "/student/getRemarks", body, config)
       .then((res) => {
         console.log(res);
         setState({
           ...state,
-          remarks: res.data.details.remarks,
+          history: res.data.details.history,
           isWaiting: false,
           // baseUrl: res.data.details.baseUrl
         });
@@ -58,13 +63,25 @@ const StudentRemarks = (props) => {
                         className="border-2 border-black p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
                         scope="col"
                       >
-                        Remark
+                        Program
                       </th>
                       <th
                         className="border-2 border-black p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
                         scope="col"
                       >
-                        Sender
+                        School
+                      </th>
+                      <th
+                        className="border-2 border-black p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
+                        scope="col"
+                      >
+                        History
+                      </th>
+                      <th
+                        className="border-2 border-black p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
+                        scope="col"
+                      >
+                        User
                       </th>
                       <th
                         className="border-2 border-black p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
@@ -78,17 +95,15 @@ const StudentRemarks = (props) => {
                     {state.isWaiting ? (
                       <></>
                     ) : (
-                      state.remarks.map((remarks, index) => {
+                      state.history.map((history, index) => {
                         return (
-                          <tr key={remarks._id}>
+                          <tr key={history._id}>
                             <td className="p-2 border-2">{index + 1}</td>
-                            <td className="p-2 border-2">{remarks.text}</td>
-                            <td className="p-2 border-2">
-                              {remarks.user_details.email}
-                            </td>
-                            <td className="p-2 border-2">
-                              {new Date(remarks.created).toLocaleString()}
-                            </td>
+                            <td className="p-2 border-2">{history.content}</td>
+                            <td className="p-2 border-2"></td>
+                            <td className="p-2 border-2"></td>
+                            <td className="p-2 border-2"></td>
+                            <td className="p-2 border-2">{(history.createdAt)}</td>
                           </tr>
                         );
                       })
