@@ -6,7 +6,7 @@ import { getToken } from "../../../../helper/auth";
 import axios from "axios";
 var firstTime = true;
 
-const AgentHeader = () => {
+const AgentHeader = ({agentPending}) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const navigate = useNavigate()
     const [active, setActive] = useState("Dashboard");
@@ -15,25 +15,29 @@ const AgentHeader = () => {
         menu: -1,
         isWait: false,
     })
+
     const sidebarItems = [
         {
             label: "Dashboard",
             icon: <><i class="fa-solid fa-chart-line"></i></>,
             path: "/d/agent/dashboard",
-            matchings: ["dashboard"]
+            matchings: ["dashboard"],
+            protected: false,
         },
         {
             label: "Profile",
             icon: <i class="fa-solid fa-file-csv"></i>,
             permissions: "csv_programs",
             path: "/d/agent/profile",
-            matchings: ["profile"]
+            matchings: ["profile"],
+            protected: false,
         },
         {
             label: "Students",
             permissions: "school_main",
             icon: <i class="fa-solid fa-school"></i>,
             matchings: ["addstudent", "getstudents"],
+            protected: true,
             items: [
                 {
                     label: "New Student",
@@ -56,7 +60,16 @@ const AgentHeader = () => {
             icon: <i class="fa-solid fa-file-csv"></i>,
             permissions: "csv_programs",
             path: "/d/agent/findprograms",
-            matchings: ["findprograms"]
+            matchings: ["findprograms"],
+            protected: true,
+        },
+        {
+            label: "Enrolled List",
+            icon: <i class="fa-solid fa-file-csv"></i>,
+            permissions: "enrolled_list",
+            path: "/d/agent/enrolled-list",
+            matchings: ["enrolled-list"],
+            protected: true,
         },
     ]
 
@@ -117,6 +130,8 @@ const AgentHeader = () => {
                     {
                         state.isWait ? <></> :
                             sidebarItems.map((singleItem, index) => {
+                                if(singleItem.protected && agentPending) return; // One line for protected data
+                                
                                 if (singleItem?.items) {
                                     // multi level sidebar
                                     return <div className={`flex flex-col justify-start items-center border-b border-gray-600 w-full ${state.menu == index ? "active-link-group" : ""}`}>

@@ -62,7 +62,17 @@ import AgentFindProgram from "./users/agent/Pages/AgentFindPrograms";
 import AgentProgramsList from "./users/agent/Pages/AgentProgramsList";
 import { StudentProfile } from "./users/student/Pages/StudentProfile";
 import { Security } from "./users/admin/Pages/Security";
-
+import Wabout from "./users/website/Pages/Wabout";
+import Wdiscover from "./users/website/Pages/Wdiscover";
+import Wcontact from "./users/website/Pages/Wcontact";
+import AgentSubProgramsList from "./users/agent/Pages/AgentSubProgramsList";
+import AgentEnrolledList from "./users/agent/Pages/AgentEnrolledList";
+import AgentStudentDocuments from "./users/agent/Pages/AgentStudentDocuments";
+import Wcountry1 from "./users/website/Pages/Wcountry1";
+import Wviewdetails from "./users/website/Pages/Wviewdetails";
+import AgentStudentRemarks from "./users/agent/Pages/AgentStudentRemarks";
+import AddCurrency from "./users/admin/Pages/AddCurrency";
+import ProgramUpdate from "./users/admin/Pages/ProgramUpdate";
 
 // web-socket
 // import socketIOClient from "socket.io-client";
@@ -165,7 +175,7 @@ const App = () => {
             return;
           })
           .catch((err) => {
-            console.log({err});
+            console.log({ err });
           });
       });
     } else {
@@ -194,14 +204,9 @@ const App = () => {
     <>
       <Notification />
       <Routes>
-
         <Route path="/d/" element={<Login3 />} />
-        <Route
-          path="/d/adminlogin123"
-          element={
-            <Login2 />
-          }
-        />
+        <Route path="/d/adminlogin123" element={<Login2 />} />
+        <Route path="/d/admin/forgot/:token" element={<Login2 />} />
 
         {/* <Route path="/d/" element={<Home isAdmin={false} />} />
         <Route
@@ -228,7 +233,7 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-          
+
           <Route
             path="profile"
             element={
@@ -471,7 +476,19 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-
+          <Route
+            path="programupdate/:schoolId/:programId"
+            element={
+              <ProtectedRoute
+                token={state.tokenAdmin}
+                role={"admin"}
+                permissions={state.currentPermissions}
+              >
+                <ProgramUpdate />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="enrolled-files" element={<FilesList type="ALL" />} />
           <Route path="pending-files" element={<FilesList type="PENDING" />} />
           <Route
             path="under-verification-files"
@@ -491,6 +508,9 @@ const App = () => {
             element={<FilesList type="REJECTED" />}
           />
 
+          {/* Currency Routes */}
+          <Route path="currency" element={<AddCurrency />} />
+
           {/* demo */}
           {/* <Route path="demodatatable" element={<ProtectedRoute token={state.tokenAdmin} role={"admin"} permissions={state.currentPermissions}><DataTable /></ProtectedRoute>} /> */}
         </Route>
@@ -499,6 +519,11 @@ const App = () => {
         <Route path="/" element={<WHome />} />
         <Route path="/eligible" element={<WEligible />} />
         <Route path="/search/:query" element={<WSearch />} />
+        <Route path="/about" element={<Wabout />} />
+        <Route path="/discover" element={<Wdiscover />} />
+        <Route path="/contact" element={<Wcontact />} />
+        <Route path="/countries" element={<Wcountry1 />} />
+        <Route path="/viewdetails" element={<Wviewdetails />} />
 
         {/* <Route path="/" element={<Home />} /> */}
 
@@ -517,8 +542,22 @@ const App = () => {
           <Route path="register" element={<AgentRegister />} />
           <Route path="addstudent" element={<AgentAddStudent />} />
           <Route path="getstudents" element={<AgentGetStudent />} />
+          <Route path="enrolled-list" element={<AgentEnrolledList />} />
           <Route path="findprograms" element={<AgentFindProgram />} />
-          <Route path="findprograms/search/:query" element={<AgentProgramsList />} />
+          <Route
+            path="documents/:studentId"
+            element={<AgentStudentDocuments />}
+          />
+          <Route path="remarks/:fileId" element={<AgentStudentRemarks />} />
+
+          <Route
+            path="findprograms/search/:query"
+            element={<AgentProgramsList />}
+          />
+          <Route
+            path="findprograms/search/p/:schoolId"
+            element={<AgentSubProgramsList />}
+          />
 
           <Route
             path="profile"
@@ -546,8 +585,6 @@ const App = () => {
         <Route path="/d/student/forgot/:token" element={<Login3 />} />
 
         <Route path="/d/student" element={<StudentDashboard />}>
-
-
           <Route index element={<StudentEnrolled />} />
           <Route path="profile" element={<StudentProfile />} />
           {/* <Route
@@ -572,10 +609,6 @@ const App = () => {
           <Route path="remarks/:fileId" element={<StudentRemarks />} />
 
           <Route path="login2" element={<Login2 />} />
-
-
-
-
         </Route>
 
         {/* <Route path="*" element={<><center className="pt-5 text-danger text-bold text-decoration-underline">404 Not Found</center></>} /> */}

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import { Link, Navigate, redirect, useNavigate, useParams } from "react-router-dom";
+import { Link, Navigate, redirect, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { authenticate, getToken } from "../../../helper/auth";
 import AgentDashboard from "../Screens/Dashboard/AgentDashboard";
 
@@ -13,6 +13,7 @@ const AgentProgramsList = () => {
     const { query } = useParams()
     const navigate = useNavigate()
     const [tab, setTab] = useState(0)
+    const [searchParams, setSearchParams] = useSearchParams();
 
     const [state, setState] = useState({
         agentToken: getToken("agent"),
@@ -23,7 +24,9 @@ const AgentProgramsList = () => {
         noMore: false,
         buttonLoading: true,
         filterLoading: false,
-        baseUrl: ""
+        baseUrl: "",
+        student: searchParams.get("student" || null),
+        api_data: JSON.parse(query)
     })
 
     useEffect(() => {
@@ -83,7 +86,14 @@ const AgentProgramsList = () => {
                                         <td>Type</td>
                                         <td>{school.type}</td>
                                     </div>
-                                    <button>
+                                    <button onClick={() => {
+                                        if (state.student) {
+                                            navigate(`/d/agent/findprograms/search/p/${school._id}?student=${state.student}`)
+                                        } else {
+                                            navigate(`/d/agent/findprograms/search/p/${school._id}?query=${query}`)
+                                            // navigate(`/d/agent/findprograms/search/p/${school._id}?fname=${state.api_data.first_name}&lname=${state.api_data.last_name}&email=${state.api_data.email}&phone=${state.api_data.phone}`)
+                                        }
+                                    }}>
                                         Eligible Programs {school.school_programs.length}
                                     </button>
                                 </div>

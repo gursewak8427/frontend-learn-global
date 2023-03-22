@@ -193,8 +193,8 @@ const FilesList = ({ type }) => {
           <div className="files row min-height-vh-100 mt-10">
             <div className="row p-45">
               <div className="w-full">
-                <div className="shadow-lg mb-4 border border-2">
-                  <div className="px-0 pt-0 pb-2 agent-table designedTable">
+                <div className="shadow-lg mb-4">
+                  <div className="px-0 pt-0 pb-2 agent-table border">
                     <div className="overflow-auto">
                       <table className="table-auto overflow-scroll w-full files-table">
                         <thead>
@@ -215,7 +215,7 @@ const FilesList = ({ type }) => {
                               className="border-black p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
                               scope="col"
                             >
-                              Student
+                              Student Name
                             </th>
                             <th
                               className="border-black p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
@@ -307,6 +307,7 @@ const FilesList = ({ type }) => {
                                 Completed
                               </th>
                             )}
+                            <th>Documents</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -344,13 +345,7 @@ const FilesList = ({ type }) => {
                                   {enroll.fileId}
                                 </td>
                                 <td
-                                  className="p-2 border-2 td-hover"
-                                  onClick={() =>
-                                    navigate(
-                                      "/d/admin/studentprofile?id=" +
-                                        enroll.student_details._id
-                                    )
-                                  }
+                                  className="p-2 border-2"
                                 >
                                   <span className="capitalize">
                                     {enroll.student_details.firstName}{" "}
@@ -388,7 +383,8 @@ const FilesList = ({ type }) => {
                                       {
                                         enroll.school_details?.school_programs
                                           ?.application_fee
-                                      } INR
+                                      }{" "}
+                                      INR
                                     </>
                                   )}
                                 </td>
@@ -398,17 +394,17 @@ const FilesList = ({ type }) => {
                                 </td>
                                 {(type == "IN_PROCESSING" ||
                                   type == "CLOSED") && (
-                                  <td className="p-2 border-2">
-                                    {enroll?.payment_id || "--"}
-                                  </td>
-                                )}
+                                    <td className="p-2 border-2">
+                                      {enroll?.payment_id || "--"}
+                                    </td>
+                                  )}
                                 {(type == "IN_PROCESSING" ||
                                   type == "CLOSED") && (
-                                  <td className="p-2 border-2">
-                                    {`${enroll?.intake?.year}-${enroll?.intake?.month}` ||
-                                      "--"}
-                                  </td>
-                                )}
+                                    <td className="p-2 border-2">
+                                      {`${enroll?.intake?.year}-${enroll?.intake?.month}` ||
+                                        "--"}
+                                    </td>
+                                  )}
                                 {type == "UNDER_VERIFICATION" && (
                                   <td className="border-2">
                                     <span className="flex align-center justify-center">
@@ -473,6 +469,20 @@ const FilesList = ({ type }) => {
                                     </span>
                                   </td>
                                 )}
+                                <td className="p-2 border-2">
+                                  <ButtonPrimary
+                                    title={"Documents"}
+                                    onclick={() =>
+                                      navigate(
+                                        "/d/admin/studentprofile?tab=documents&id=" +
+                                        enroll.student_details._id
+                                      )
+                                    }
+                                    loading={
+                                      state.approveFileLoading == index
+                                    }
+                                  />
+                                </td>
                               </tr>
                             );
                           })}

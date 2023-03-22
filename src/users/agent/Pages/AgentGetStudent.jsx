@@ -57,7 +57,7 @@ const AgentGetStudent = () => {
         }
         var jsondata = JSON.stringify(api_data);
         // await uploadQueryNow()
-        navigate("/d/agent/findprograms/search/" + jsondata)
+        navigate("/d/agent/findprograms/search/" + jsondata + "?student=" + student._id)
     }
 
     return (
@@ -66,101 +66,96 @@ const AgentGetStudent = () => {
                 <>
                     <div className="row">
                         <div className="row">
-                            <div className="col-12">
-                                <div className="card mb-4">
-                                    <div className="card-header pb-0">
-                                        {/* filters & Search Here */}
-                                        <div className="search col-3 mb-2" style={{ float: "right" }}>
-                                            <input type="text" className="form-control" placeholder="Serach" />
-                                        </div>
-                                    </div>
-                                    <div className="card-body px-0 pt-0 pb-2">
-                                        <div className="table-responsive p-4">
-                                            <table className="table mb-0 w-full">
-                                                <thead>
-                                                    <tr className="bg-[gray]">
-                                                        <th className="p-2 text-left">Id</th>
-                                                        <th className="p-2 text-left">Name</th>
-                                                        <th className="p-2 text-left">Email</th>
-                                                        <th className="p-2 text-left">Phone</th>
-                                                        <th className="p-2 text-left">Email Verification</th>
-                                                        {/* <th className="p-2 align-middle text-center ">Status</th> */}
-                                                        <th className="p-2 align-middle text-center ">Joining</th>
-                                                        <th className="p-2 text-secondary opacity-7" />
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
+                            <div className="overflow-auto card shadow-lg m-4 col-12 px-0 pt-0 pb-2 agent-table border">
+                                <table className="table-auto overflow-scroll w-full files-table">
+                                    <thead>
+                                        <tr>
+                                            <th className="p-2 text-left">Id</th>
+                                            <th className="p-2 text-left">Name</th>
+                                            <th className="p-2 text-left">Email</th>
+                                            <th className="p-2 text-left">Phone</th>
+                                            <th className="p-2 text-left">Email Verification</th>
+                                            {/* <th className="p-2 align-middle text-center ">Status</th> */}
+                                            <th className="p-2 align-middle text-center ">Joining</th>
+                                            <th className="p-2 text-secondary opacity-7" />
+                                            <th className="p-2 text-secondary opacity-7" />
+                                        </tr>
+                                    </thead>
+                                    <tbody>
 
-                                                    {
-                                                        state.students.map((student, index) => {
-                                                            return <tr>
-                                                                <td className="p-2 max-width">
-                                                                    <p className="text-xs font-weight-bold mb-0">{index + 1}</p>
-                                                                    {/* <p className="text-xs text-secondary mb-0"><b>ID:</b> {student._id}</p> */}
-                                                                </td>
-                                                                <td className="p-2 text-left">
-                                                                    <p className="text-xs font-weight-bold mb-0 capitalize">
-                                                                        {student.firstName || "--"}
-                                                                    </p>
-                                                                </td>
-                                                                <td className="p-2 text-left">
-                                                                    <p className="text-xs font-weight-bold mb-0">
-                                                                        {student.email || "--"}
-                                                                    </p>
-                                                                </td>
-                                                                <td className="p-2 text-left">
-                                                                    <p className="text-xs font-weight-bold mb-0">
-                                                                        {student.phone || "--"}
-                                                                    </p>
-                                                                </td>
-                                                                <td className="p-2 text-left">
-                                                                    <p className="text-xs font-weight-bold mb-0">
-                                                                        {student.emailVerified == "UN_VERIFIED" ? "Not Verified" : "Verified" || "--"}
-                                                                    </p>
-                                                                </td>
-                                                                {/* <td className="p-2 text-center">
+                                        {
+                                            state.students.map((student, index) => {
+                                                return <tr>
+                                                    <td className="p-2 max-width">
+                                                        <p className="text-xs font-weight-bold mb-0">{index + 1}</p>
+                                                        {/* <p className="text-xs text-secondary mb-0"><b>ID:</b> {student._id}</p> */}
+                                                    </td>
+                                                    <td className="p-2 text-left">
+                                                        <p className="text-xs font-weight-bold mb-0 capitalize">
+                                                            {student.firstName || "--"}
+                                                        </p>
+                                                    </td>
+                                                    <td className="p-2 text-left">
+                                                        <p className="text-xs font-weight-bold mb-0">
+                                                            {student.email || "--"}
+                                                        </p>
+                                                    </td>
+                                                    <td className="p-2 text-left">
+                                                        <p className="text-xs font-weight-bold mb-0">
+                                                            {student.phone || "--"}
+                                                        </p>
+                                                    </td>
+                                                    <td className="p-2 text-left">
+                                                        <p className="text-xs font-weight-bold mb-0">
+                                                            {student.emailVerified == "UN_VERIFIED" ? "Not Verified" : "Verified" || "--"}
+                                                        </p>
+                                                    </td>
+                                                    {/* <td className="p-2 text-center">
                                                                     <span className="badge badge-sm bg-gradient-success">Active</span>
                                                                 </td> */}
-                                                                <td className="align-middle text-center">
-                                                                    <span className="text-secondary text-xs font-weight-bold">23/04/18</span>
-                                                                </td>
-                                                                <td className="align-middle p-[10px]">
-                                                                    <ButtonPrimary
-                                                                        title={"Find Programs"}
-                                                                        onclick={() => findPrograms(student)}
-                                                                    />
-                                                                </td>
-                                                            </tr>
-                                                        })
-                                                    }
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div className="card-footer pb-0">
-                                        {/* pagination is here */}
-                                        <div className="pagination">
-                                            <div className="pages">
-                                                <ReactPaginate
-                                                    breakLabel="..."
-                                                    nextLabel="next"
-                                                    onPageChange={(event) => {
-                                                        getPaginationData(event.selected + 1)
-                                                    }}
-                                                    pageRangeDisplayed={2}
-                                                    pageCount={state.totalPages}
-                                                    previousLabel="prev"
-                                                    renderOnZeroPageCount={null}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
+                                                    <td className="align-middle text-center">
+                                                        <span className="text-secondary text-xs font-weight-bold">23/04/18</span>
+                                                    </td>
+                                                    <td className="align-middle p-[10px]">
+                                                        <ButtonPrimary
+                                                            title={"Find Programs"}
+                                                            onclick={() => findPrograms(student)}
+                                                        />
+                                                    </td>
+                                                    <td className="align-middle p-[10px]">
+                                                        <ButtonPrimary
+                                                            title={"Documents"}
+                                                            onclick={() => navigate("/d/agent/documents/" + student._id)}
+                                                        />
+                                                    </td>
+                                                </tr>
+                                            })
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div className="card-footer pb-0">
+                            {/* pagination is here */}
+                            <div className="pagination">
+                                <div className="pages">
+                                    <ReactPaginate
+                                        breakLabel="..."
+                                        nextLabel="next"
+                                        onPageChange={(event) => {
+                                            getPaginationData(event.selected + 1)
+                                        }}
+                                        pageRangeDisplayed={2}
+                                        pageCount={state.totalPages}
+                                        previousLabel="prev"
+                                        renderOnZeroPageCount={null}
+                                    />
                                 </div>
                             </div>
                         </div>
                     </div>
                 </>
-            </div>
+            </div >
         </>
     )
 }

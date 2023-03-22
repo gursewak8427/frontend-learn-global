@@ -18,28 +18,26 @@ export default function Header({ page }) {
   const handleScroll = (headerClassName) => {
     if (headerClassName !== "menuscroll" && window.pageYOffset >= 100) {
       setHeaderClassName("menuscroll");
-      setIsDark(false)
+      setIsDark(false);
     } else if (headerClassName === "menuscroll" && window.pageYOffset < 100) {
       setHeaderClassName("");
-      setIsDark(true)
+      setIsDark(true);
     }
-  }
+  };
 
   React.useEffect(() => {
     window.onscroll = () => handleScroll(headerClassName);
   }, [headerClassName]);
 
   return (
-    <div className={
-      page != "home" && isDark
-        ? "header-bg-dark"
-        : ""
-    }>
+    <div className={page != "home" && isDark ? "header-bg-dark" : ""}>
       <div
         className={
           headerClassName
             ? `${headerClassName}` + "header-part "
-            : page == "home" ? "header-part " : ""
+            : page == "home"
+            ? "header-part "
+            : ""
         }
         id="header_menu"
       >
@@ -168,33 +166,32 @@ export default function Header({ page }) {
                 </li>
                 <li>
                   <a
-                    href="#"
+                    href="/discover"
                     class="block text-sm py-2 pr-4 pl-3  border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0  md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
                   >
                     Discover School
                   </a>
                 </li>
                 <li>
-                  {
-                    getToken("student") ?
-                      <Link
-                        to={"/d/student"}
-                        class="block text-sm py-2 pr-4 pl-3  border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0  md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-                      >
-                        Dashboard
-                      </Link>
-                      :
-                      <Link
-                        to={"/d/"}
-                        class="block text-sm py-2 pr-4 pl-3  border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0  md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-                      >
-                        Login/Signup
-                      </Link>
-                  }
+                  {getToken("student") ? (
+                    <Link
+                      to={"/d/student"}
+                      class="block text-sm py-2 pr-4 pl-3  border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0  md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                    >
+                      Dashboard
+                    </Link>
+                  ) : (
+                    <Link
+                      to={"/d/"}
+                      class="block text-sm py-2 pr-4 pl-3  border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0  md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                    >
+                      Login/Signup
+                    </Link>
+                  )}
                 </li>
                 <li>
                   <a
-                    href="#"
+                    href="/contact"
                     class="block text-sm py-2 pr-4 pl-3  border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0  md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
                   >
                     Contact
@@ -222,10 +219,10 @@ export default function Header({ page }) {
                     </svg>
                     <ul className="head-sub-menus absolute">
                       <li>
-                        <a className="flex items-center" href="#">
+                        <Link className="flex items-center" to="/countries">
                           <img src={Can} alt="" />
-                          canada
-                        </a>
+                          Canada
+                        </Link>
                       </li>
                       <li>
                         <a className="flex items-center" href="#">

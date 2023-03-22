@@ -350,8 +350,8 @@ const EmployeeList = () => {
           <div className="w-full">
             <div className="w-full">
               <div className="w-full">
-                <div className="shadow-lg m-5 border border-2 p-4">
-                  <div className="p-4 h-[80vh]">
+                <div className="shadow-lg lg:m-5 lg:border lg:border-2 lg:p-4">
+                  <div className="p-1 lg:p-4   mt-6  h-[80vh]">
                     <table className="table w-full mb-0">
                       <thead>
                         <tr className="">

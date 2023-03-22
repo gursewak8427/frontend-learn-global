@@ -13,6 +13,13 @@ body {
 }
 
 /* side bar hiding functionallity */
+#aside::-webkit-scrollbar {
+  width: 0;
+}
+
+#aside::-webkit-scrollbar-thumb {
+  width: 0;
+}
 
 #aside.hide-sidebar {
   position: absolute;
@@ -374,7 +381,6 @@ main.full_screen {
     rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
 }
 
-
 .dashboardItem h5 {
   color: #2a276b;
   font-size: 170%;
@@ -611,7 +617,7 @@ td.max-width {
 .schoolFilters .filter-group {
   display: flex;
   flex-direction: column;
-  width: 300px;
+  /* width: 300px; */
 }
 
 .dropZone {
@@ -1369,9 +1375,9 @@ footer {
   padding: 10px 5px;
 }
 
-.designedTable tr th:nth-last-child(1){
+.designedTable tr th:nth-last-child(1) {
   background: none;
-} 
+}
 
 .designedTable tr th {
   border: 1px solid #e5e2e2;
@@ -1749,6 +1755,16 @@ footer {
   color: white;
 }
 
+.max-two-line {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  /* number of lines to show */
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
 .max-two-line-text {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1800,7 +1816,6 @@ footer {
   display: block;
 }
 
-
 /* .agent */
 .studentAddForm .tab-list {
   display: flex;
@@ -1834,6 +1849,8 @@ footer {
 
 .agent .programs-list {
   width: 100%;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .agent .programs-list .program {
@@ -1907,29 +1924,30 @@ footer {
   margin-top: 10px;
 }
 
-.action-icons-list{
+.action-icons-list {
   display: flex;
   justify-content: center;
 }
-.action-icon{
+
+.action-icon {
   fill: #2a276b;
   width: 18px;
   cursor: pointer;
-  transition: .25s;
-  -webkit-transition: .25s;
-  -moz-transition: .25s;
-  -ms-transition: .25s;
-  -o-transition: .25s;
+  transition: 0.25s;
+  -webkit-transition: 0.25s;
+  -moz-transition: 0.25s;
+  -ms-transition: 0.25s;
+  -o-transition: 0.25s;
   margin-left: 5px;
   margin-right: 5px;
 }
-.action-icon:hover{
+
+.action-icon:hover {
   transform: scale(1.1);
 }
 
-
 /* bigLoading */
-.bigLoading{
+.bigLoading {
   position: fixed;
   top: 0;
   left: 0;
@@ -1940,4 +1958,24 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+
+.filter_model .modal_inner {
+  width: 60%;
+}
+
+.columns-popup {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px;
+}
+
+.columns-popup p {
+  width: 33%;
+  margin: 5px 0;
+}
+
+.columns-popup p input {
+  margin-right: 10px;
 }

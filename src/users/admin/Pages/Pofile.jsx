@@ -57,7 +57,7 @@ export const Profile = () => {
         }
       })
       toast.error(err?.response?.data?.message || "Something went wrong");
-      console.log(err.response.data)
+      console.log(err)
       // alert(err.response.data.message)
     })
   }

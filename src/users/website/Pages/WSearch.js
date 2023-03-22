@@ -276,7 +276,7 @@ export default function WSearch() {
                                               <tr>
                                                 <td className="pe-3 m-1 mr-2">{program.min_tution_fee_per_semester}-{parseInt(program.max_tution_fee) + 1000}</td>
                                                 <td className="px-3 m-1 mr-2">{program.application_fee == 0 ? "Free" : program.application_fee}</td>
-                                                <td className="px-3 m-1 mr-2">{program.duration}</td>
+                                                <td className="px-3 m-1 mr-2">{program["duration"] + " Year" || program?.duration}</td>
                                                 <td className="px-3 m-1 mr-2">{program.grade_score}%</td>
                                               </tr>
                                             </table>

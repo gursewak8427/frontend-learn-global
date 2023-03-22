@@ -962,7 +962,8 @@ const Login3 = (props) => {
                 ) : (
                   ""
                 )}
-                {StudentForgotPassword ? (
+                {/* Forgot Password Popup */}
+                {StudentForgotPassword && (
                   <div className="modal_cover">
                     <div className="modal_inner">
                       <div className="header_modal login-part-modal">
@@ -1108,9 +1109,8 @@ const Login3 = (props) => {
                       </AuthScreen>
                     </div>
                   </div>
-                ) : (
-                  ""
                 )}
+                {/* End - Forgot Password Popup */}
                 {studentRegisterSide ? (
                   <AuthScreen>
                     <>

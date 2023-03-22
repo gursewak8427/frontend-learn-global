@@ -73,12 +73,17 @@ const StudentDashboard = ({ children }) => {
         ""
       )}
 
-      {state.isPendingProgramPopupShow && state.student.status == "PENDING" &&
-        (window.location.href.split("/")[5] == "" ||
-          window.location.href.split("/")[5] == "enrolled") ? (
+      {state.isPendingProgramPopupShow &&
+      state.student.status == "PENDING" &&
+      (window.location.href.split("/")[5] == "" ||
+        window.location.href.split("/")[5] == "enrolled") ? (
         <>
-          <div className="overlay active" onClick={() => setState({ ...state, isPendingProgramPopupShow: false, })}>
-          </div>
+          <div
+            className="overlay active"
+            onClick={() =>
+              setState({ ...state, isPendingProgramPopupShow: false })
+            }
+          ></div>
           <div className="pendingDocAlert popup active">
             {/* <div className="cross flex justify-end">
               <span className="mb-2 rounded-full w-[40px] h-[40px] bg-[red] text-[white] items-center justify-center flex cursor-pointer hover:bg-[darkred]">X</span>
@@ -89,10 +94,12 @@ const StudentDashboard = ({ children }) => {
               <p>
                 Please Uploads required documents to approve your application.
               </p>
-              <button onClick={() => {
-                setState({ ...state, isPendingProgramPopupShow: false, })
-                navigate("/d/student/documents")
-              }}>
+              <button
+                onClick={() => {
+                  setState({ ...state, isPendingProgramPopupShow: false });
+                  navigate("/d/student/documents");
+                }}
+              >
                 Upload Documents
               </button>
             </div>
@@ -106,7 +113,7 @@ const StudentDashboard = ({ children }) => {
       <main className="ml-[255px]">
         <StudentNavbar />
         <div className="innerBox">
-          <div style={{ minHeight: "85vh" }}>
+          <div style={{ minHeight: "" }}>
             <Outlet />
           </div>
 

@@ -4,7 +4,7 @@ const ButtonPrimary = ({ title, loading = false, onclick, type = "button", theme
     return (
         <button className={`${theme == "danger" ? "bg-[red]" : "bg-gradient-primary"} inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`} onClick={onclick} type={type}>
             {
-                loading ? <div aria-label="Loading..." role="status">
+                loading ? <div>
                     <svg class="h-5 w-5 animate-spin" viewBox="3 3 18 18">
                         <path
                             class="fill-gray-200"

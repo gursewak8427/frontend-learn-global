@@ -52,7 +52,7 @@ const SearchQueriyForms = () => {
                 <div className="card mb-4 mt-4">
                   <div className="card-body px-0 pt-0 pb-2">
                     <div className="table-responsive p-0">
-                      <table className="table w-full mb-0 designedTable">
+                      <table className="table w-full mb-0 agent-table">
                         <thead>
                           <tr>
                             <th className="text-left  p-2">Sr.</th>

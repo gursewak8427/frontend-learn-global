@@ -40,7 +40,7 @@ const Header = () => {
             label: "Schools",
             permissions: "school_main",
             icon: <i class="fa-solid fa-school"></i>,
-            matchings: ["addcountry", "addschoolname", "schools", "schoolupdate", "intakes"],
+            matchings: ["addcountry", "addschoolname", "schools", "schoolupdate", "intakes", "programs"],
             items: [
                 // {
                 //     label: "Add Country",
@@ -67,7 +67,7 @@ const Header = () => {
                     label: "All Schools",
                     icon: <i class="fa-solid fa-school"></i>,
                     permissions: "sp_list",
-                    matchings: ["schools", "schoolupdate"],
+                    matchings: ["schools", "schoolupdate", "programs"],
                     path: "/d/admin/schools",
                 },
             ]
@@ -153,13 +153,19 @@ const Header = () => {
         {
             label: "Students",
             icon: <i class="fa-solid fa-person-rays"></i>,
-            matchings: ["students", "pending-files", "rejected-files", "under-verification-files", "fees-pending", "in-processing-files", "closed-files"],
+            matchings: ["students", "enrolled-files", "pending-files", "rejected-files", "under-verification-files", "fees-pending", "in-processing-files", "closed-files"],
             items: [
                 {
                     label: "All Students",
                     icon: <i class="fa-solid fa-graduation-cap"></i>,
                     matchings: ["students"],
                     path: "/d/admin/students",
+                },
+                {
+                    label: "Enrolled Files",
+                    icon: <i class="fa-solid fa-graduation-cap"></i>,
+                    matchings: ["enrolled-files"],
+                    path: "/d/admin/enrolled-files",
                 },
                 {
                     label: "Pending Files",
@@ -222,6 +228,19 @@ const Header = () => {
                 },
             ]
         },
+        {
+            label: "Settings",
+            icon: <i class="fa-solid fa-person-rays"></i>,
+            matchings: ["currency"],
+            items: [
+                {
+                    label: "Currency Management",
+                    icon: <i class="fa-solid fa-person-rays"></i>,
+                    matchings: ["currency"],
+                    path: "/d/admin/currency",
+                }
+            ]
+        },
     ]
 
     useEffect(() => {
@@ -233,7 +252,7 @@ const Header = () => {
             setFirstName(res.data.details.userData.firstName)
             setIsAdmin(res.data.details.userData.role == "ADMIN")
             // add this line here.. bottom of role or permission management
-            // document.getElementById("notificationCountSpan").innerText = res.data.details.userData.notificationsCount > 99 ? "99+" : res.data.details.userData.notificationsCount
+            document.getElementById("notificationCountSpan").innerText = res.data.details.userData.notificationsCount > 99 ? "99+" : res.data.details.userData.notificationsCount
 
             // SET ACTIVE MENUS OF SIDEBAR
             if (window.location.pathname.split("/")[3] == "manage" && searchParams.get("status") && searchParams.get("status") == "unapproved") {

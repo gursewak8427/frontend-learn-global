@@ -55,9 +55,9 @@ const StudentList = () => {
           <div className="row min-height-vh-100 mt-10">
             <div className="row p-45">
               <div className="w-full">
-                <div className="shadow-lg mb-4 mt-4 border  border-2">
+                <div className="shadow-lg mb-4 mt-4 border">
                   <div className="px-0 pt-0 pb-2">
-                    <div className="table-responsive p-0 agent-table designedTable">
+                    <div className="table-responsive p-0 agent-table">
                       <table className="table w-full mb-0">
                         <thead>
                           <tr>

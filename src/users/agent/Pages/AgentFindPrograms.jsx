@@ -40,7 +40,9 @@ const AgentFindProgram = () => {
     }, [])
 
     const ValidationSchema = Yup.object().shape({
-        name: Yup.string().required("Student Name is required"),
+        firstName: Yup.string().required("Student First Name is required"),
+        lastName: Yup.string().required("Student Last Name is required"),
+        phone: Yup.string().required("Phone is required"),
         email: Yup.string()
             .email("Invalid email address format")
             .required("Email is required"),
@@ -82,6 +84,11 @@ const AgentFindProgram = () => {
 
     const searchNow = async values => {
         var api_data = {
+            "first_name": values.firstName,
+            "last_name": values.lastName,
+            "email": values.email,
+            "phone": values.phone,
+            "highest_education": values.highestEducation,
             "highest_education": values.highestEducation,
             "country_to_go": values.country_to_go,
             "exam": {
@@ -111,8 +118,10 @@ const AgentFindProgram = () => {
 
                                 <Formik
                                     initialValues={{
-                                        name: "",
+                                        firstName: "",
+                                        lastName: "",
                                         email: "",
+                                        phone: "",
                                         highestEducation: "",
                                         gradeAverage: "",
                                         country_to_go: "",
@@ -144,18 +153,53 @@ const AgentFindProgram = () => {
                                                         <div className="m-2 w-6/12">
                                                             <Field
                                                                 type="text"
-                                                                className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${touched.name && errors.name
+                                                                className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${touched.firstName && errors.firstName
                                                                     ? "is-invalid"
                                                                     : ""
                                                                     }`}
-                                                                placeholder="Name"
-                                                                aria-label="name"
+                                                                placeholder="First Name"
+                                                                aria-label="firstName"
                                                                 aria-describedby="firstName-addon"
-                                                                name="name"
+                                                                name="firstName"
                                                             />
                                                             <ErrorMessage
                                                                 component="div"
-                                                                name="name"
+                                                                name="firstName"
+                                                                className="invalid-feedback"
+                                                            />
+                                                        </div>
+                                                        <div className="m-2 w-6/12">
+                                                            <Field
+                                                                type="text"
+                                                                className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${touched.lastName && errors.lastName
+                                                                    ? "is-invalid"
+                                                                    : ""
+                                                                    }`}
+                                                                placeholder="Last Name"
+                                                                name="lastName"
+                                                            />
+                                                            <ErrorMessage
+                                                                component="div"
+                                                                name="lastName"
+                                                                className="invalid-feedback"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex">
+                                                        <div className="m-2 w-6/12">
+                                                            <Field
+                                                                type="text"
+                                                                className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${touched.phone && errors.phone
+                                                                    ? "is-invalid"
+                                                                    : ""
+                                                                    }`}
+                                                                placeholder="Phone"
+                                                                aria-label="phone"
+                                                                name="phone"
+                                                            />
+                                                            <ErrorMessage
+                                                                component="div"
+                                                                name="phone"
                                                                 className="invalid-feedback"
                                                             />
                                                         </div>
@@ -176,7 +220,6 @@ const AgentFindProgram = () => {
                                                             />
                                                         </div>
                                                     </div>
-
                                                 </div>
                                                 <div className="border-2 my-2 p-4">
                                                     <h1>Qualification Details</h1>

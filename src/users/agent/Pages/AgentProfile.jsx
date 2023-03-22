@@ -59,6 +59,7 @@ const AgentProfile = () => {
         business_certificate: "",
         company_logo: "",
         base_url: "",
+        status: "",
         isWait: true,
     })
 
@@ -417,6 +418,7 @@ const AgentProfile = () => {
                     reference_website: res.data.details.agent.reference_website || "",
                 },
                 isWait: false,
+                status: res.data.details.agent.status || "",
                 business_certificate: res.data.details.agent.business_certificate || "",
                 company_logo: res.data.details.agent.company_logo || "",
                 base_url: res.data.details.baseUrl || "",
@@ -922,7 +924,14 @@ const AgentProfile = () => {
                                     <div className="shadow-xl m-4 p-2 rounded w-3/12">
                                         <div className="card-body">
                                             {/* <h5 className="card-title m-1 text-[#2a276b] font-bolder">Profile</h5> */}
-                                            <p className="card-text m-1 text-[#2a276b]">Your Profile is under verification</p>
+                                            {
+                                                state.status == "PENDING" ?
+                                                    <p className="card-text m-1 text-[#2a276b]">Your Profile is under verification</p> :
+                                                    state.status == "APPROVED" ?
+                                                        <p className="card-text m-1 text-[green]">Your Profile is Approved</p> :
+                                                        state.status == "REJECTED" &&
+                                                        <p className="card-text m-1 text-[red]">Your Profile is Rejected</p>
+                                            }
                                         </div>
                                         {/* <ul className="list-group list-group-flush">
                                             <li className="list-group-item">Registration Complete</li>

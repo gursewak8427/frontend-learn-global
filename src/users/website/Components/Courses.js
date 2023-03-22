@@ -177,7 +177,7 @@ export default function Courses() {
                         <button class="text-black font-bold py-2 px-4">
                           Application fee : Free
                         </button>
-                        <button class="check-btn hover:bg-black text-white font-bold py-2 px-4">
+                        <button class="check-btn  text-white font-bold py-2 px-4">
                           Check Eligibility
                         </button>
                       </div>
@@ -339,7 +339,7 @@ export default function Courses() {
                         <button class="text-black font-bold py-2 px-4">
                           Application fee : Free
                         </button>
-                        <button class="check-btn hover:bg-black text-white font-bold py-2 px-4">
+                        <button class="check-btn  text-white font-bold py-2 px-4">
                           Check Eligibility
                         </button>
                       </div>

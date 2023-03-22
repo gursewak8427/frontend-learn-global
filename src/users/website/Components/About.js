@@ -24,7 +24,10 @@ export default function About() {
                 school/college and courses. We help you classify the best
                 universities that match your profile.
               </p>
-              <button class="hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-full mt-8 lg:mt-14 ml-auto flex items-center">
+              <a
+                href="/about"
+                class="hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-full mt-8 lg:mt-14 ml-auto flex items-center"
+              >
                 Learn More{" "}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -40,7 +43,7 @@ export default function About() {
                     d="M8.25 4.5l7.5 7.5-7.5 7.5"
                   />
                 </svg>
-              </button>
+              </a>
             </div>
           </div>
         </div>

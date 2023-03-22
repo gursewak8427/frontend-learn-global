@@ -10,11 +10,13 @@ import Lg5 from "../images/lg5.jpg";
 
 export default function SimpleSlider() {
   var settings = {
-    dots: true,
+    dots: false,
     infinite: true,
     speed: 500,
     slidesToShow: 5,
     slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 1000,
     responsive: [
       {
         breakpoint: 480,

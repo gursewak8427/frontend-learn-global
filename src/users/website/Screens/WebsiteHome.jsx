@@ -17,6 +17,7 @@ export default function WebsiteHome({ children, page }) {
         if(page != "home"){
             document.getElementById("header_menu").classList.remove('header-part')
         }
+        window.scrollTo(0, 0)
     },
     [window.location.href])
 

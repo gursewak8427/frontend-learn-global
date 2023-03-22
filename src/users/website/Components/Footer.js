@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import Ft_logo from "../images/ft_logo.png";
 import Uni_1 from "../images/uni_1.jpg";
 import Uni_2 from "../images/uni_2.gif";
@@ -69,58 +70,58 @@ export default function Footer() {
               </h2>
               <ul>
                 <li className="mb-3">
-                  <a className="text-white" href="#">
+                  <Link className="text-white" to={"/eligible"}>
                     <i
                       className="text-white fa fa-caret-right mr-3"
                       aria-hidden="true"
                     ></i>
                     Apply Now
-                  </a>
+                  </Link>
                 </li>
                 <li className="mb-3">
-                  <a className="text-white" href="#">
+                  <Link className="text-white" to={"/discover"}>
                     <i
                       className="text-white fa fa-caret-right mr-3"
                       aria-hidden="true"
                     ></i>
                     Discover School
-                  </a>
+                  </Link>
                 </li>
                 <li className="mb-3">
-                  <a className="text-white" href="#">
+                  <Link className="text-white" to={"/d/"}>
                     <i
                       className="text-white fa fa-caret-right mr-3"
                       aria-hidden="true"
                     ></i>
                     Agent/Signup
-                  </a>
+                  </Link>
                 </li>
                 <li className="mb-3">
-                  <a className="text-white" href="#">
+                  <Link className="text-white" to={"/d/"}>
                     <i
                       className="text-white fa fa-caret-right mr-3"
                       aria-hidden="true"
                     ></i>
                     Login/Signup
-                  </a>
+                  </Link>
                 </li>
                 <li className="mb-3">
-                  <a className="text-white" href="#">
+                  <Link className="text-white" to={"/about"}>
                     <i
                       className="text-white fa fa-caret-right mr-3"
                       aria-hidden="true"
                     ></i>
                     About
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a className="text-white" href="#">
+                  <Link className="text-white" to={"/contact"}>
                     <i
                       className="text-white fa fa-caret-right mr-3"
                       aria-hidden="true"
                     ></i>
                     Contact
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -130,32 +131,32 @@ export default function Footer() {
               </h2>
               <ul className="">
                 <li className="mb-5">
-                  <a href="#" className="flex items-center">
+                  <Link to="/viewdetails" className="flex items-center">
                     <img className="rounded-full w-14 mr-3" src={Uni_1} />
                     <p className="mb-0 text-sm text-white">
                       University of
                       <br /> Sunshine Coast
                     </p>
-                  </a>
+                  </Link>
                 </li>
                 <li className="mb-5">
-                  <a href="#" className="flex items-center">
+                  <Link to="/viewdetails" className="flex items-center">
                     <img className="rounded-full w-14 mr-3" src={Uni_2} />
                     <p className="mb-0 text-sm text-white">
                       University
                       <br /> of Calgary
                     </p>
-                  </a>
+                  </Link>
                 </li>
 
                 <li>
-                  <a href="#" className="flex items-center">
+                  <Link to="/viewdetails" className="flex items-center">
                     <img className="rounded-full w-14 mr-3" src={Uni_3} />
                     <p className="mb-0 text-sm text-white">
                       Southern Cross
                       <br /> University
                     </p>
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>

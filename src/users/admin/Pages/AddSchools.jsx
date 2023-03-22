@@ -14,8 +14,8 @@ import { Buffer } from 'buffer';
 import socketIOClient from "socket.io-client";
 
 // const ENDPOINT = process.env.REACT_APP_NODE_URL + "/";
-const ENDPOINT = "https://learn-global-backend.onrender.com/";
-// const ENDPOINT = "http://localhost:3006/";
+// const ENDPOINT = "https://learn-global-backend.onrender.com/";
+const ENDPOINT = "http://localhost:3006/";
 
 console.log("COnnecting", ENDPOINT)
 var socket = socketIOClient(ENDPOINT);

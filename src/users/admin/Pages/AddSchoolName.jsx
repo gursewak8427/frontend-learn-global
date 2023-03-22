@@ -589,11 +589,11 @@ const Addschoolname = () => {
               <div class="flex flex-col">
                 <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
                   <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
-                    <div class="overflow-hidden shadow-lg p-4 border border-2">
-                      <table class="min-w-full designedTable">
-                        <thead class="bg-white border-b">
+                    <div class="overflow-hidden shadow-lg border">
+                      <table class="min-w-full agent-table">
+                        <thead class="">
                           <tr>
-                            <th class="text-sm font-medium text-gray-900 px-6 py-4 text-left font-bold">
+                            <th class="text-sm font-medium text-gray-900 px-2 py-4 text-left font-bold">
                               Sr.
                             </th>
                             <th class="capitalize text-sm font-medium text-gray-900 px-6 py-4 text-left font-bold">
