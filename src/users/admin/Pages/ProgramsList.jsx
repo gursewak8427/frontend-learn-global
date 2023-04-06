@@ -18,11 +18,13 @@ const ProgramsList = (props) => {
     schoolNamesList: [],
     countryNamesList: [],
     adminToken: getToken("admin"),
-    totalPages: 0,
-    currentPage: 1,
     wait: true,
     activeIndex: null,
     first: true,
+    searchItem: "",
+
+    totalPages: 0,
+    currentPage: 1,
   });
   const { id } = useParams();
 
@@ -50,7 +52,7 @@ const ProgramsList = (props) => {
   }, []);
 
   const getPaginationData = (
-    page,
+    page = 1,
     schoolsList,
     countryList,
     activeCountry = ""
@@ -59,18 +61,19 @@ const ProgramsList = (props) => {
       ...state,
       isWaiting: true,
     });
-    var schoolName = state.first
-      ? id
-      : document.getElementById("schoolName").value;
+    // var schoolName = state.first
+    //   ? id
+    //   : document.getElementById("schoolName").value;
     // var country = document.getElementById("country").value;
     // var schoolName = "";
     var country = "";
-    var searchItem = document.getElementById("searchItem").value;
+    var searchItem = state.searchItem;
+
     const config = { headers: { Authorization: `Bearer ${state.adminToken}` } };
 
-    console.log({ schoolName });
     console.log({ country });
-    let data = { currentPage: page, schoolName, country, searchItem };
+    let data = { currentPage: page, searchItem };
+
     axios
       .post(process.env.REACT_APP_NODE_URL + "/admin/getprograms", data, config)
       .then((res) => {
@@ -88,14 +91,14 @@ const ProgramsList = (props) => {
               countryNamesList: countryList,
               filterCountry: activeCountry,
               // school: res.data.details.school,
-              // totalPages: res.data.details.totalPages,
-              // currentPage: res.data.details.currentPage,
+              totalPages: res.data.details.totalPages,
               isWaiting: false,
               first: false,
             })
           : setState({
               ...state,
               school_programs: res.data.details.totalData,
+              totalPages: res.data.details.totalPages,
               isWaiting: false,
             });
       })
@@ -146,7 +149,10 @@ const ProgramsList = (props) => {
   };
 
   const handleChange = (e) => {
-    getPaginationData(1, state.schoolNamesList, state.countryList);
+    setState({
+      ...state,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const toggleFewSeatsStatus = (sId, pId) => {
@@ -371,12 +377,10 @@ const ProgramsList = (props) => {
                 <div className="schoolFilters mb-4">
                   <div className="left">
                     <div className="btn_outerxx ml-3">
-                      <button
-                        onClick={() => setModalCode(!ModalCode)}
-                        className="bg-gradient-primary px-6 py-2 text-white rounded  adcol-btn"
-                      >
-                        Columns
-                      </button>
+                      <ButtonPrimary
+                        title={"Columns"}
+                        onclick={() => setModalCode(!ModalCode)}
+                      />
                       {ModalCode ? (
                         <div className="modal_cover">
                           <div className="modal_inner select-col-popup">
@@ -498,8 +502,8 @@ const ProgramsList = (props) => {
                 </div>
                 <div className="card mb-4 mt-2">
                   <div className="card-body px-0 pt-0 pb-2">
-                    <div className="overflow-auto card shadow-lg m-4 col-12 px-0 pt-0 pb-2 agent-table border">
-                      <table className="table-auto overflow-scroll w-full files-table">
+                    <div className="overflow-auto card shadow-lg m-4 col-12 px-0 pt-0 pb-2  border">
+                      <table className="table-auto overflow-scroll w-full agent-table files-table">
                         <thead>
                           <tr>
                             {tableColumns.map((col) => {
@@ -733,8 +737,8 @@ const ProgramsList = (props) => {
                                         {program.few_seats_status ? (
                                           <Switch
                                             color="primary"
-                                            defaultChecked
-                                            onClick={(e) => {
+                                            defaultChecked={true}
+                                            onChange={(e) => {
                                               if (
                                                 window.confirm("Are you sure ?")
                                               ) {
@@ -752,7 +756,7 @@ const ProgramsList = (props) => {
                                         ) : (
                                           <Switch
                                             color="primary"
-                                            onClick={(e) => {
+                                            onChange={(e) => {
                                               if (
                                                 window.confirm("Are you sure ?")
                                               ) {
@@ -934,23 +938,21 @@ const ProgramsList = (props) => {
                       )}
                     </div>
                   </div>
-                  <div className="card-footer pb-0">
-                    {/* pagination is here */}
-                    <div className="pagination">
-                      <div className="pages">
-                        <ReactPaginate
-                          breakLabel="..."
-                          nextLabel="next"
-                          onPageChange={(event) => {
-                            getPaginationData(event.selected + 1);
-                          }}
-                          pageRangeDisplayed={2}
-                          pageCount={state.totalPages}
-                          previousLabel="prev"
-                          renderOnZeroPageCount={null}
-                        />
-                      </div>
-                    </div>
+                  {/* pagination is here */}
+                </div>
+                <div className="pagination mt-2">
+                  <div className="pages">
+                    <ReactPaginate
+                      breakLabel="..."
+                      nextLabel="next"
+                      onPageChange={(event) => {
+                        getPaginationData(event.selected + 1);
+                      }}
+                      pageRangeDisplayed={2}
+                      pageCount={state.totalPages}
+                      previousLabel="prev"
+                      renderOnZeroPageCount={null}
+                    />
                   </div>
                 </div>
               </div>

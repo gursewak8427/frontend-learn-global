@@ -136,7 +136,7 @@ const SchoolUpdate = () => {
               <div class="card-body">
                 <div className="flex">
                   <div class="m-3 w-6/12">
-                    <label>School Name</label>
+                    <label className="font-black text-md">School Name</label>
                     <input
                       placeholder="School Name"
                       type="text"
@@ -149,7 +149,7 @@ const SchoolUpdate = () => {
                   </div>
 
                   <div class="m-3 w-6/12">
-                    <label>School About</label>
+                    <label className="font-black text-md">School About</label>
                     <input
                       placeholder="School About"
                       type="text"
@@ -163,7 +163,7 @@ const SchoolUpdate = () => {
 
                 <div className="flex">
                   <div class="m-3 w-6/12">
-                    <label>School Location</label>
+                    <label className="font-black text-md">School Location</label>
                     <input
                       placeholder="School Location"
                       type="text"
@@ -175,7 +175,7 @@ const SchoolUpdate = () => {
                   </div>
 
                   <div class="m-3 w-6/12">
-                    <label>Country</label>
+                    <label className="font-black text-md">Country</label>
                     <select
                       disabled
                       type="select"
@@ -198,7 +198,7 @@ const SchoolUpdate = () => {
 
                 <div class="flex">
                   <div class="m-3 w-6/12">
-                    <label>School Type</label>
+                    <label className="font-black text-md">School Type</label>
                     <select
                       type="select"
                       class="block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm"
@@ -223,7 +223,7 @@ const SchoolUpdate = () => {
                   </div>
 
                   <div class="m-3 w-6/12">
-                    <label>School Order</label>
+                    <label className="font-black text-md">School Order</label>
                     <input
                       placeholder="School Order"
                       type="text"
@@ -237,7 +237,7 @@ const SchoolUpdate = () => {
 
                 <div className="flex">
                   <div class="m-3 w-6/12">
-                    <label>Total Students</label>
+                    <label className="font-black text-md">Total Students</label>
                     <input
                       placeholder="Total Students"
                       type="text"
@@ -249,7 +249,7 @@ const SchoolUpdate = () => {
                   </div>
 
                   <div class="m-3 w-6/12">
-                    <label>Total International Students</label>
+                    <label className="font-black text-md">Total International Students</label>
                     <input
                       placeholder="Total International Students"
                       type="text"
@@ -262,7 +262,7 @@ const SchoolUpdate = () => {
                 </div>
                 <div className="flex">
                   <div class="m-3 w-6/12">
-                    <label>Founded</label>
+                    <label className="font-black text-md">Founded</label>
                     <input
                       placeholder="Total Founded"
                       type="text"
@@ -281,7 +281,7 @@ const SchoolUpdate = () => {
                       defaultChecked={state.work_permit_feature}
                       onChange={handleChange}
                     />
-                    <label>Work Permit Feature</label>
+                    <label className="font-black text-md">Work Permit Feature</label>
                   </div>
                 </div>
 
@@ -294,7 +294,7 @@ const SchoolUpdate = () => {
                       defaultChecked={state.program_cooporation}
                       onChange={handleChange}
                     />
-                    <label>Program Cooporation</label>
+                    <label className="font-black text-md">Program Cooporation</label>
                   </div>
 
                   <div class="m-3 w-6/12 flex items-center">
@@ -305,7 +305,7 @@ const SchoolUpdate = () => {
                       defaultChecked={state.work_while_study}
                       onChange={handleChange}
                     />
-                    <label>Work While Study</label>
+                    <label className="font-black text-md">Work While Study</label>
                   </div>
                 </div>
 
@@ -318,7 +318,7 @@ const SchoolUpdate = () => {
                       defaultChecked={state.condition_offer_letter}
                       onChange={handleChange}
                     />
-                    <label>Condition Offer Letter</label>
+                    <label className="font-black text-md">Condition Offer Letter</label>
                   </div>
 
                   <div class="m-3 w-6/12 flex items-center">
@@ -330,7 +330,7 @@ const SchoolUpdate = () => {
                       defaultChecked={state.accomodation_feature}
                       onChange={handleChange}
                     />
-                    <label>Accomodation Feature</label>
+                    <label className="font-black text-md">Accomodation Feature</label>
                   </div>
                 </div>
 
@@ -343,7 +343,7 @@ const SchoolUpdate = () => {
                       defaultChecked={state.library}
                       onChange={handleChange}
                     />
-                    <label>Library</label>
+                    <label className="font-black text-md">Library</label>
                   </div>
                   <div class="m-3 w-6/12"></div>
                 </div>

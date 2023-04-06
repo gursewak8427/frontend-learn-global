@@ -10,7 +10,7 @@ import Dashboard from "../Screens/Dashboard/Dashboard";
 import { useDropzone } from "react-dropzone";
 import { toast } from "react-toastify";
 import ButtonPrimary from "../../../common/Buttons/ButtonPrimary";
-const countryToCurrency = require('country-to-currency');
+const countryToCurrency = require("country-to-currency");
 
 // web-socket
 // import socketIOClient from "socket.io-client";
@@ -30,8 +30,8 @@ const AddCurrency = () => {
     list: [],
 
     showPopup: false,
+    CurrencyObj: {},
   });
-
   useEffect(() => {
     // get country list
     axios
@@ -41,14 +41,32 @@ const AddCurrency = () => {
         if (countryResponse.data.status == "1") {
           axios
             .get(process.env.REACT_APP_NODE_URL + "/admin/getcurrency")
-            .then((response) => {
+            .then(async (response) => {
               console.log(response);
+              var CurrencyObj = {};
               if (response.data.status == "1") {
+                let getCodes = response.data.details.list.map(
+                  (el) => el.countryCode
+                );
+                let uniqueCodes = Array.from(new Set(getCodes));
+
+                for (let index = 0; index < uniqueCodes.length; index++) {
+                  const code = uniqueCodes[index];
+                  let response = await axios.get(
+                    `https://api.exchangerate.host/latest?base=${code}&symbols=INR`
+                  );
+                  let rate = response.data.rates["INR"];
+
+                  CurrencyObj[code] = rate;
+                }
+                console.log({});
+
                 setState({
                   ...state,
                   list: response.data.details.list,
                   countryList: countryResponse.data.details.countries,
                   isWait: false,
+                  CurrencyObj: CurrencyObj,
                 });
               } else {
                 setState({
@@ -66,31 +84,37 @@ const AddCurrency = () => {
       setState({
         ...state,
         countryId: e.target.value,
-      })
-      console.log({ val: e.target.value, code: countryToCurrency[e.target.value] })
+      });
+      console.log({
+        val: e.target.value,
+        code: countryToCurrency[e.target.value],
+      });
       // Here countryId is the country Code US, CA etc.
       // hit API
-      let response = await axios.get(`https://api.exchangerate.host/latest?base=${countryToCurrency[e.target.value]}&symbols=INR`)
-      let rates = response.data.rates["INR"]
+      let response = await axios.get(
+        `https://api.exchangerate.host/latest?base=${
+          countryToCurrency[e.target.value]
+        }&symbols=INR`
+      );
+      let rates = response.data.rates["INR"];
       console.log({
         ...state,
         countryCode: countryToCurrency[e.target.value],
         countryPrice: rates,
-      })
+      });
       setState({
         ...state,
         countryId: e.target.value,
         countryCode: countryToCurrency[e.target.value],
         countryPrice: rates,
-      })
+      });
     } else {
       setState({
         ...state,
         [e.target.name]: e.target.value,
       });
     }
-
-  }
+  };
 
   const uploadData = async () => {
     try {
@@ -110,7 +134,9 @@ const AddCurrency = () => {
         submitProcessing: true,
       });
 
-      const config = { headers: { "Authorization": `Bearer ${getToken("admin")}` } }
+      const config = {
+        headers: { Authorization: `Bearer ${getToken("admin")}` },
+      };
       let response = await axios.post(
         process.env.REACT_APP_NODE_URL + "/admin/addcurrency",
         {
@@ -118,12 +144,19 @@ const AddCurrency = () => {
           countryCode: state.countryCode,
           plusPrice: state.plusPrice,
         },
-        config,
+        config
       );
 
       if (response.data.status == "1") {
+        let response2 = await axios.get(
+          `https://api.exchangerate.host/latest?base=${state.countryCode}&symbols=INR`
+        );
+        let rate = response2.data.rates["INR"];
+        let old = state.CurrencyObj;
+        old[state.countryCode] = rate;
         setState({
           ...state,
+          CurrencyObj: old,
           countryId: "",
           countryCode: "",
           countryPrice: "",
@@ -280,12 +313,14 @@ const AddCurrency = () => {
   const deleteNow = async (school, index) => {
     if (window.confirm(`Are you confirm to delete ${school.countryName} ?`)) {
       // deleteSchoolName api
-      const config = { headers: { "Authorization": `Bearer ${getToken("admin")}` } }
+      const config = {
+        headers: { Authorization: `Bearer ${getToken("admin")}` },
+      };
       axios
         .delete(
           process.env.REACT_APP_NODE_URL +
-          "/admin/deletecurrency/" +
-          school._id,
+            "/admin/deletecurrency/" +
+            school._id,
           config
         )
         .then((res) => {
@@ -307,8 +342,9 @@ const AddCurrency = () => {
         <>
           <div className="row addCountryPage flex flex-row">
             <div
-              className={`w-5/12 mx-auto my-4 createSchoolNamePopup ${state.showPopup && "active"
-                }`}
+              className={`w-5/12 mx-auto my-4 createSchoolNamePopup ${
+                state.showPopup && "active"
+              }`}
             >
               <label htmlFor="">
                 <div className="flex justify-between align-center">
@@ -377,7 +413,8 @@ const AddCurrency = () => {
                     type="text"
                     className="bg-[lightgrey] block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm   "
                     value={state.countryPrice}
-                  /></div>
+                  />
+                </div>
 
                 <label>Plus Price </label>
                 <div className="mb-3">
@@ -484,10 +521,16 @@ const AddCurrency = () => {
                               country name
                             </th>
                             <th class="capitalize text-sm font-medium text-gray-900 px-2 py-4 text-left font-bold">
-                              country code
+                              Currency
+                            </th>
+                            <th class="capitalize text-sm font-medium text-gray-900 px-2 py-4 text-left font-bold">
+                              Live Rate
                             </th>
                             <th class="capitalize text-sm font-medium text-gray-900 px-2 py-4 text-left font-bold">
                               Add Amount
+                            </th>
+                            <th class="capitalize text-sm font-medium text-gray-900 px-2 py-4 text-left font-bold">
+                              Total
                             </th>
                             <th class="capitalize text-sm font-medium text-gray-900 px-6 py-4 text-center font-bold">
                               Actions
@@ -496,6 +539,7 @@ const AddCurrency = () => {
                         </thead>
                         <tbody>
                           {state.list.map((school, index) => {
+                            console.log(state.CurrencyObj[school?.countryCode]);
                             return (
                               <tr class="bg-gray-100 border-b">
                                 <td className="p-2 whitespace-nowrap text-sm font-medium text-gray-900">
@@ -505,11 +549,22 @@ const AddCurrency = () => {
                                   {school?.countryName || "--"}
                                 </td>
                                 <td className="text-sm text-gray-900 font-light p-2 whitespace-nowrap capitalize">
-                                  {school?.countryCode ||
-                                    "--"}
+                                  {school?.countryCode || "--"}
+                                </td>
+                                <td className="text-sm text-gray-900 font-light p-2 whitespace-nowrap capitalize">
+                                  {state.CurrencyObj[
+                                    school?.countryCode
+                                  ].toFixed(2) || "--"}
                                 </td>
                                 <td className="text-sm text-gray-900 font-light p-2 whitespace-nowrap capitalize">
                                   {school?.plusPrice || "--"}
+                                </td>
+                                <td className="text-sm text-gray-900 font-light p-2 whitespace-nowrap capitalize">
+                                  {(
+                                    parseFloat(
+                                      state.CurrencyObj[school?.countryCode]
+                                    ) + parseFloat(school?.plusPrice)
+                                  ).toFixed(2) || "--"}
                                 </td>
                                 <td className="text-sm text-gray-900 font-light p-2 whitespace-nowrap">
                                   <div className="action-icons-list">

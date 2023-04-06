@@ -1,12 +1,12 @@
 import axios from "axios";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import useRazorpay from "react-razorpay";
 import ButtonPrimary from "../../../common/Buttons/ButtonPrimary";
 import { getToken } from "../../../helper/auth";
 
 export default function StudentPayment({ enrollId, index, state, setState }) {
     const Razorpay = useRazorpay();
-
+    const [isPayLoading, setIsPayLoading] = useState(false)
 
     const payNow = (enrollId, index, res) => {
         let { razorpay_payment_id } = res;
@@ -30,7 +30,7 @@ export default function StudentPayment({ enrollId, index, state, setState }) {
 
         let body = {
             fileId: enrollId,
-            status: "IN_PROCESSING",
+            status: "PENDING",
             intake: intakeData,
             razorpay_payment_id: razorpay_payment_id,
         }
@@ -41,12 +41,14 @@ export default function StudentPayment({ enrollId, index, state, setState }) {
                 Authorization: `Bearer ${getToken("student")}`
             }
         }).then((res) => {
+            setIsPayLoading(false)
+
             console.log(res);
             document.getElementsByClassName(`payBtn_${index}`)[0].classList.remove("active")
             alert("Payment Successful")
 
             let oldEnrolledPrograms = state.enrolledPrograms;
-            oldEnrolledPrograms[index].enroll_status = "IN_PROCESSING"
+            oldEnrolledPrograms[index].enroll_status = res.data.details.enroll_status
             oldEnrolledPrograms[index].intake = {
                 year: parseInt(intakeData.year),
                 month: parseInt(intakeData.month),
@@ -58,6 +60,7 @@ export default function StudentPayment({ enrollId, index, state, setState }) {
             })
 
         }).catch((err) => {
+            setIsPayLoading(false)
             console.log(err);
             document.getElementsByClassName(`payBtn_${index}`)[0].classList.remove("active")
             alert("Payment Failed")
@@ -86,12 +89,14 @@ export default function StudentPayment({ enrollId, index, state, setState }) {
             return;
         }
 
+        setIsPayLoading(true)
+
         const order = await createOrder({ enrollId });
         console.log({ order })
         let { userDetails } = order;
 
         const options = {
-            key: "rzp_test_jMGvOqaZ2bLIC0",
+            key: "rzp_test_ElUkqLX4SVyVMn",
             amount: parseFloat(order.amount),
             currency: order.currency,
             name: "Learn Global",
@@ -120,7 +125,7 @@ export default function StudentPayment({ enrollId, index, state, setState }) {
 
     return (
         <div className="App">
-            <ButtonPrimary title={"Pay"} onclick={handlePayment} loading={false} />
+            <ButtonPrimary title={"Pay"} onclick={handlePayment} loading={isPayLoading} />
         </div>
     );
 }

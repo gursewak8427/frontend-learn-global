@@ -189,6 +189,8 @@ export default function MultiStepForm() {
       "new_stream": formData.new_stream,
       "grade_score": parseFloat(formData.gradeAverage)
     }
+
+    
     var jsondata = JSON.stringify(api_data);
     await uploadQueryNow()
     navigate("/search/" + jsondata)
@@ -255,7 +257,15 @@ export default function MultiStepForm() {
 
 
   if (state.iswait) {
-    return "Loading..."
+    return <div className="w-full pt-[50px]">
+      <center className="w-full my-10">
+        <img
+          width={80}
+          src="https://i.gifer.com/ZZ5H.gif"
+          alt=""
+        />
+      </center>
+    </div>;
   }
 
   return (
@@ -362,12 +372,12 @@ export default function MultiStepForm() {
                         id="gradingScheme"
                         value={formData.gradingScheme}
                         onChange={handleChange}>
-                          {
-                            formData.gradingScheme == "" ? <option value="" selected>--Select--</option> : <option value="">--Select--</option>
-                          }
-                          {
-                            formData.gradingScheme == "secondary_level" ? <option value="secondary_level" selected>Secondary Level - Scale: 0-100</option> : <option value="secondary_level">Secondary Level - Scale: 0-100</option>
-                          }
+                        {
+                          formData.gradingScheme == "" ? <option value="" selected>--Select--</option> : <option value="">--Select--</option>
+                        }
+                        {
+                          formData.gradingScheme == "secondary_level" ? <option value="secondary_level" selected>Secondary Level - Scale: 0-100</option> : <option value="secondary_level">Secondary Level - Scale: 0-100</option>
+                        }
                       </select>
                       <div className="error-field-gradingScheme text-[red] mt-1"></div>
                       <div className="flex justify-between">
@@ -393,7 +403,7 @@ export default function MultiStepForm() {
                     <>
                       <label>Grade Average</label>
                       <div className="m-4">
-                        <input className="w-full p-2 border rounded-lg" type="text" name="gradeAverage"
+                        <input className="w-full p-2 border rounded-lg" type="number" name="gradeAverage"
                           value={formData.gradeAverage}
                           id="gradeAverage"
                           placeholder="Enter Grade Average"
@@ -462,7 +472,7 @@ export default function MultiStepForm() {
                             <input
                               key={"5"}
                               className="border w-full rounded-lg p-2"
-                              type="phone"
+                              type="number"
                               name="phoneNumber"
                               id="phoneNumber"
                               value={formData.phoneNumber}
@@ -513,12 +523,26 @@ export default function MultiStepForm() {
                                   if (formData.email == "") {
                                     // alert("Email is required")
                                     document.getElementById("email").style.borderColor = "red"
+                                    document.getElementById("email").focus()
                                     // document.getElementsByClassName("error-field-phoneNumber")[0].innerText = "Email is required"
 
                                   } else {
-                                    setStep(7)
-                                    document.getElementById("country_to_go").style.borderColor = "white"
-                                    // document.getElementsByClassName("error-field-country_to_go")[0].innerText = "Highest Education is required"
+
+                                    var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+                                    if (formData.email.match(validRegex)) {
+
+
+                                      setStep(7)
+                                      document.getElementById("country_to_go").style.borderColor = "white"
+                                      // document.getElementsByClassName("error-field-country_to_go")[0].innerText = "Highest Education is required"
+
+                                    } else {
+                                      // alert("Email is required")
+                                      document.getElementById("email").style.borderColor = "red"
+                                      document.getElementById("email").focus()
+                                      return false;
+                                    }
+
 
                                   }
                                 }}>Next</button>
@@ -581,33 +605,33 @@ export default function MultiStepForm() {
                                     <div className="flex examLabels gap-4 red">
                                       <div>
                                         <label className="">Speaking:</label>
-                                        <input type="text" value={formData.speaking} name="speaking" onChange={handleChange} className="speaking border border-current  h-9 p-2" />
+                                        <input type="number" value={formData.speaking} name="speaking" onChange={handleChange} className="speaking border border-current  h-9 p-2" />
                                         <div className="error-field-speaking text-danger"></div>
                                       </div>
                                       <div>
                                         <label>Listening:</label>
-                                        <input type="text" value={formData.listening} name="listening" onChange={handleChange} className="listening border border-current  h-9 p-2" />
+                                        <input type="number" value={formData.listening} name="listening" onChange={handleChange} className="listening border border-current  h-9 p-2" />
                                         <div className="error-field-listening text-danger"></div>
                                       </div>
                                       <div>
                                         <label>Reading:</label>
-                                        <input type="text" value={formData.reading} name="reading" onChange={handleChange} className="reading border border-current  h-9 p-2" />
+                                        <input type="number" value={formData.reading} name="reading" onChange={handleChange} className="reading border border-current  h-9 p-2" />
                                         <div className="error-field-reading text-danger"></div>
                                       </div>
                                       <div>
                                         <label>Writing:</label>
-                                        <input type="text" value={formData.writing} name="writing" onChange={handleChange} className="writing border border-current  h-9 p-2" />
+                                        <input type="number" value={formData.writing} name="writing" onChange={handleChange} className="writing border border-current  h-9 p-2" />
                                         <div className="error-field-writing text-danger"></div>
                                       </div>
 
                                     </div> : formData.examType == "TOFEL" ? <div className="examLabels">
                                       <label>Tofel Score:</label>
-                                      <input type="text" name="tofel_score" value={formData.tofel_score} onChange={handleChange} className="writing border border-current  h-9 p-2 w-full" />
+                                      <input type="number" name="tofel_score" value={formData.tofel_score} onChange={handleChange} className="writing border border-current  h-9 p-2 w-full" />
                                       <div className="error-field-tofel_score text-danger"></div>
                                     </div> : formData.examType == "PTE" ?
                                       <div className="examLabels">
                                         <label>Pte Score:</label>
-                                        <input type="text" name="pte_score" value={formData.pte_score} onChange={handleChange} className="writing border border-current  h-9 p-2 w-full" />
+                                        <input type="number" name="pte_score" value={formData.pte_score} onChange={handleChange} className="writing border border-current  h-9 p-2 w-full" />
                                         <div className="error-field-pte_score text-danger"></div>
                                       </div>
                                       : <></>

@@ -8,6 +8,30 @@
   box-sizing: border-box;
 }
 
+.row-remove {
+  animation: row-remove .5s 1 forwards !important;
+  transform: scaleY(1);
+  transform-origin: center 0;
+  display: table-row;
+  background: rgb(211, 122, 122) !important;
+}
+
+@keyframes row-remove {
+  0% {
+    transform: scaleY(0.9);
+    background: rgb(211, 122, 122) !important;
+  }
+
+  100% {
+    transform: scaleY(0);
+    background: rgb(208, 20, 20) !important;
+  }
+}
+
+#aside {
+  position: fixed;
+}
+
 body {
   font-size: 80% !important;
 }
@@ -22,7 +46,7 @@ body {
 }
 
 #aside.hide-sidebar {
-  position: absolute;
+  position: fixed;
   transform: translateX(-100%);
   transition: 0.4s ease-in-out;
 }
@@ -80,12 +104,11 @@ code {
 
 .pagination {
   float: right;
-  padding: 10px;
+  padding: 0 10px;
   margin-bottom: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 20px 0px 0px;
 }
 
 .pagination .pages ul {
@@ -94,6 +117,7 @@ code {
   align-items: center;
   justify-content: center;
   list-style-type: none;
+  margin: 10px 0px 0px;
 }
 
 .pagination .pages ul li {
@@ -337,7 +361,7 @@ code {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 100px;
+  /* max-width: 100px; */
   cursor: pointer;
   border: 1px solid grey;
 }
@@ -1345,6 +1369,52 @@ footer {
   /* animation: closeItem 0.25s linear 1 forwards; */
 }
 
+#aside .defaultShowMenu {
+  display: flex !important;
+}
+
+#aside .default-rotate-0 {
+  transform: rotate(0) !important;
+}
+
+#aside .subGroupMenuItems {
+  /* overflow: hidden; */
+  display: block;
+  /* transition: display 0.3s ease-in-out; */
+  /* animation: openItem 0.25s linear 1 forwards; */
+}
+
+@media screen and (max-width: 960px) {
+  .overlay.show {
+    display: block !important;
+  }
+
+  #aside.show {
+    transform: translateX(-0%) !important;
+    -webkit-transform: translateX(-0%) !important;
+    -moz-transform: translateX(-0%) !important;
+    -ms-transform: translateX(-0%) !important;
+    -o-transform: translateX(-0%) !important;
+  }
+
+  main {
+    margin-left: 0 !important;
+    transition: 0.5s;
+  }
+
+  #aside {
+    z-index: 10005;
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translateX(-100%) !important;
+    -webkit-transform: translateX(-100%) !important;
+    -moz-transform: translateX(-100%) !important;
+    -ms-transform: translateX(-100%) !important;
+    -o-transform: translateX(-100%) !important;
+  }
+}
+
 @keyframes closeItem {
   0% {
     height: 100%;
@@ -1524,7 +1594,9 @@ footer {
 .filter-tab-title.active {
   background: rgba(128, 128, 128, 0.445);
 }
-
+.createSchoolNamePopup.documents{
+  height: 90vh;
+}
 .createSchoolNamePopup.active {
   display: block;
 }
@@ -1541,6 +1613,7 @@ footer {
   padding: 50px 20px 30px;
   border-radius: 10px;
   box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
+  z-index: 9999;
 }
 
 .createSchoolNamePopup>label {
@@ -1804,7 +1877,7 @@ footer {
 }
 
 .navbar-profile-dropdown img {
-  z-index: 9999;
+  z-index: 999;
   position: relative;
 }
 
@@ -1960,6 +2033,9 @@ footer {
   justify-content: center;
 }
 
+.files_documents {
+  max-height: 70vh !important;
+}
 
 .filter_model .modal_inner {
   width: 60%;
@@ -1978,4 +2054,43 @@ footer {
 
 .columns-popup p input {
   margin-right: 10px;
+}
+
+/* CSS */
+.button-33 {
+  background-color: #c2fbd7;
+  border-radius: 100px;
+  box-shadow: rgba(44, 187, 99, .2) 0 -25px 18px -14px inset, rgba(44, 187, 99, .15) 0 1px 2px, rgba(44, 187, 99, .15) 0 2px 4px, rgba(44, 187, 99, .15) 0 4px 8px, rgba(44, 187, 99, .15) 0 8px 16px, rgba(44, 187, 99, .15) 0 16px 32px;
+  color: green;
+  cursor: pointer;
+  display: inline-block;
+  font-family: CerebriSans-Regular, -apple-system, system-ui, Roboto, sans-serif;
+  padding: 7px 20px;
+  text-align: center;
+  text-decoration: none;
+  transition: all 250ms;
+  border: 0;
+  font-size: 16px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-33:hover {
+  box-shadow: rgba(44, 187, 99, .35) 0 -25px 18px -14px inset, rgba(44, 187, 99, .25) 0 1px 2px, rgba(44, 187, 99, .25) 0 2px 4px, rgba(44, 187, 99, .25) 0 4px 8px, rgba(44, 187, 99, .25) 0 8px 16px, rgba(44, 187, 99, .25) 0 16px 32px;
+  transform: scale(1.05) rotate(-1deg);
+}
+
+.loadingEnrollBtn {
+  cursor: pointer;
+}
+
+.loadingEnrollBtn:hover {}
+
+.loadingEnrollBtn span:nth-child(1) {
+  display: none;
+}
+
+.loadingEnrollBtn span:nth-child(2) {
+  display: block;
 }

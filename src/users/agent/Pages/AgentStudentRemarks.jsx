@@ -25,7 +25,7 @@ const AgentStudentRemarks = (props) => {
     axios
       .post(process.env.REACT_APP_NODE_URL + "/student/getRemarks", body, config)
       .then((res) => {
-        console.log(res);
+        console.log({remarks: res});
         setState({
           ...state,
           history: res.data.details.history,
@@ -54,9 +54,9 @@ const AgentStudentRemarks = (props) => {
                 className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
                 scope="col"
               >
-                Program
+                Description
               </th>
-              <th
+              {/* <th
                 className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
                 scope="col"
               >
@@ -73,7 +73,7 @@ const AgentStudentRemarks = (props) => {
                 scope="col"
               >
                 User
-              </th>
+              </th> */}
               <th
                 className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
                 scope="col"
@@ -91,9 +91,9 @@ const AgentStudentRemarks = (props) => {
                   <tr key={history._id}>
                     <td className="p-2 border-2">{index + 1}</td>
                     <td className="p-2 border-2">{history.content}</td>
+                    {/* <td className="p-2 border-2"></td>
                     <td className="p-2 border-2"></td>
-                    <td className="p-2 border-2"></td>
-                    <td className="p-2 border-2"></td>
+                    <td className="p-2 border-2"></td> */}
                     <td className="p-2 border-2">{(history.createdAt)}</td>
                   </tr>
                 );

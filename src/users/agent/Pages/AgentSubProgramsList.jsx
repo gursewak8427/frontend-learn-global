@@ -32,7 +32,7 @@ const AgentSubProgramsList = () => {
     })
 
     useEffect(() => {
-        let api_data = { schoolId }
+        let api_data = { schoolId, currentPage: 1 }
         console.log({ api_data })
 
         setState({

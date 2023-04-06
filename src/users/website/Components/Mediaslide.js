@@ -6,8 +6,10 @@ import Md1 from "../images/md1.png";
 import Md2 from "../images/md2.png";
 import Md3 from "../images/md3.png";
 import Lw_arw from "../images/lw_arw.png";
+import { useSelector, useDispatch } from 'react-redux'
 
 export default function Mediaslide() {
+  const landingPage = useSelector((state) => state.landingPage)
   var settings = {
     dots: true,
     infinite: true,
@@ -29,18 +31,23 @@ export default function Mediaslide() {
   return (
     <div className="container mx-auto">
       <Slider {...settings}>
-        <div className="mdslides relative">
-          <img src={Md1} alt="" />
+      {
+      landingPage.media.images.map((el)=>{
+          return ( <div className="mdslides relative">
+          <img src={el} alt="" />
           <img className="crl-img absolute" src={Lw_arw} />
-        </div>
-        <div className="mdslides relative">
+        </div>)
+        })
+      }
+        
+        {/* <div className="mdslides relative">
           <img src={Md2} alt="" />
           <img className="crl-img absolute" src={Lw_arw} />
         </div>
         <div className="mdslides relative">
           <img src={Md3} alt="" />
           <img className="crl-img absolute" src={Lw_arw} />
-        </div>
+        </div> */}
       </Slider>
     </div>
   );

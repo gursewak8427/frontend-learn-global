@@ -5,30 +5,32 @@ import Uni_1 from "../images/uni_1.jpg";
 import Uni_2 from "../images/uni_2.gif";
 import Uni_3 from "../images/uni_3.png";
 
+import { useSelector, useDispatch } from "react-redux";
+
 export default function Footer() {
+  const landingPage = useSelector((state) => state.landingPage);
+
+  let baseUrl = "http://learn-global-backend.onrender.com/uploads/agent/";
   return (
     <div>
-      <div className="footer-content bg-black py-20 px-4 lg:px-0">
+      <div className="footer-content bg-black py-20 px-4">
         <div class="container mx-auto">
           <div className="grid lg:grid-cols-3 gap-4">
             <div>
-              <img src={Ft_logo} />
+              <img src={landingPage.main_logo} />
               <p className="text-white text-sm text-left my-5">
-                Learn Global means learn anywhere in
-                <br /> the world and we provide you the best
-                <br /> platform to study abroad and make your
-                <br /> future bright.
+                {landingPage.footer_description}
               </p>
               <a
-                className="text-white mb-5 block text-xl"
+                className="text-white mb-5 inline-block text-xl"
                 href="mailto:info@learnglobal.com"
               >
                 <i className="fa fa-envelope mr-2" aria-hidden="true"></i>
-                info@learnglobal.com
+                {landingPage.main_email}
               </a>
               <ul className="social-list flex gap-4 items-center">
                 <li>
-                  <a href="#">
+                  <a href={landingPage.social_links.linked_in}>
                     <i
                       className="text-white fa fa-linkedin"
                       aria-hidden="true"
@@ -37,7 +39,7 @@ export default function Footer() {
                 </li>
 
                 <li>
-                  <a href="#">
+                  <a href={landingPage.social_links.twitter}>
                     <i
                       className="text-white fa fa-pinterest-p"
                       aria-hidden="true"
@@ -46,7 +48,7 @@ export default function Footer() {
                 </li>
 
                 <li>
-                  <a href="#">
+                  <a href={landingPage.social_links.instagram}>
                     <i
                       className="text-white fa fa-youtube-play"
                       aria-hidden="true"
@@ -55,7 +57,7 @@ export default function Footer() {
                 </li>
 
                 <li>
-                  <a href="#">
+                  <a href={landingPage.social_links.facebook}>
                     <i
                       className="text-white fa fa-facebook"
                       aria-hidden="true"
@@ -130,41 +132,31 @@ export default function Footer() {
                 Top Universities
               </h2>
               <ul className="">
-                <li className="mb-5">
-                  <Link to="/viewdetails" className="flex items-center">
-                    <img className="rounded-full w-14 mr-3" src={Uni_1} />
-                    <p className="mb-0 text-sm text-white">
-                      University of
-                      <br /> Sunshine Coast
-                    </p>
-                  </Link>
-                </li>
-                <li className="mb-5">
-                  <Link to="/viewdetails" className="flex items-center">
-                    <img className="rounded-full w-14 mr-3" src={Uni_2} />
-                    <p className="mb-0 text-sm text-white">
-                      University
-                      <br /> of Calgary
-                    </p>
-                  </Link>
-                </li>
-
-                <li>
-                  <Link to="/viewdetails" className="flex items-center">
-                    <img className="rounded-full w-14 mr-3" src={Uni_3} />
-                    <p className="mb-0 text-sm text-white">
-                      Southern Cross
-                      <br /> University
-                    </p>
-                  </Link>
-                </li>
+                {landingPage.topSchools.map((el) => {
+                  return (
+                    <li className="mb-5">
+                      <Link
+                        to={`/specificSchool/${el._id}`}
+                        className="flex items-center"
+                      >
+                        <img
+                          className="rounded-full w-14 mr-3"
+                          src={baseUrl + el.schoolLogo}
+                        />
+                        <p className="mb-0 text-sm text-white capitalize">
+                          {el.schoolName}
+                        </p>
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="lower-content py-5 bg-gray-700">
+      <div className="lower-content py-5 px-4 bg-gray-700">
         <div class="container mx-auto">
           <div className="grid lg:grid-cols-2">
             <div>

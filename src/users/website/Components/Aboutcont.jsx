@@ -4,13 +4,13 @@ import About2 from "../images/about2.jpg";
 export default function Aboutcont() {
   return (
     <div>
-      <div className="container mx-auto py-20 px-4 lg:px-0">
+      <div className="container mx-auto pt-20 px-4 lg:px-0">
         <div className="lg:flex gap-6">
           <div className="lg:w-1/2">
             <img className="w-full" src={About2} />
           </div>
           <div className="lg:w-1/2 mt-4 lg:mt-0">
-            <h2 className="text-5xl mb-8">About</h2>
+            <h2 className="text-4xl mb-8">About</h2>
             <p className="lg:text-base mb-6 leading-6">
               Learn Global means learn anywhere in the world and we provide you
               the best platform to study abroad and make your future bright. We

@@ -114,9 +114,12 @@ export default function Login2(props) {
   };
   const LoginNow = async (e) => {
     e.preventDefault();
-
     const { email, password } = state;
-    const data = { email, password, tokenPreserve: getCookie("admin-2fa") };
+    const d = (new Date());
+    const date = d.toLocaleDateString();
+    const time = d.toLocaleTimeString();
+
+    const data = { email, password, tokenPreserve: getCookie("admin-2fa"), mooment: { date, time } };
     const config = { "content-type": "application/json" };
     console.log({
       method: "POST",

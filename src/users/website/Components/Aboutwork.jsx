@@ -7,7 +7,7 @@ import How4 from "../../website/images/how4.jpg";
 export default function Aboutwork() {
   return (
     <div>
-      <div className="py-20 px-4 lg:px-0 how-work">
+      <div className="pt-20 px-4 lg:px-0 how-work">
         <div className="container mx-auto">
           <h4 className="text-center font-bold text-3xl mb-16">
             How It Works?

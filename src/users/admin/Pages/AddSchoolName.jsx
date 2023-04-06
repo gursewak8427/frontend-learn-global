@@ -262,7 +262,10 @@ const Addschoolname = () => {
           setState({
             ...state,
             countryId,
+            stateId: "",
+            cityId: "",
             stateList: stateResponse.data.details.state,
+            cityList: []
           });
         }
       });
@@ -277,6 +280,7 @@ const Addschoolname = () => {
           setState({
             ...state,
             stateId,
+            cityId: "",
             cityList: cityResponse.data.details.city,
           });
         }
@@ -345,7 +349,7 @@ const Addschoolname = () => {
                     <input
                       placeholder="Enter School Name"
                       type="text"
-                      className="block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm   "
+                      className="block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm"
                       name="schoolName"
                       value={state.schoolName}
                       onChange={handleChange}

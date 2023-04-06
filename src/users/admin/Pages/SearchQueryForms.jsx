@@ -50,7 +50,7 @@ const SearchQueryForms = () => {
             <div className="row p-45">
               <div className="col-12">
                 <div className="card mb-4 mt-4">
-                  <div className="card-body  shadow-lg border border-2 p-4">
+                  <div className="card-body  shadow-lg  p-4">
                     <div className="table-responsive p-0">
                       <table className="table-responsive w-full mb-0 agent-table">
                         <thead>

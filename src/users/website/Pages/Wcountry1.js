@@ -1,23 +1,24 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import WebsiteHome from "../Screens/WebsiteHome";
 import "./Wcountry1.css";
 import Countryinfo from "../Components/Countryinfo";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 export default function Wcountry1() {
-  useEffect(() => {
-    document.getElementById("header_menu").classList.remove("header-part");
-    document.getElementById("header_menu").classList.add("static-header");
-  }, []);
+  // useEffect(() => {
+  //   document.getElementById("header_menu").classList.remove("header-part");
+  //   document.getElementById("header_menu").classList.add("static-header");
+  // }, []);
+ 
+  
+  const {id} = useParams();
+
   return (
-    <WebsiteHome>
+    <div>
       <div id="countryPage">
-        <div className="country-banr py-32">
-          <div class="container mx-auto">
-            <h1 className="text-center text-white text-6xl">NEW ZEALAND</h1>
-          </div>
-        </div>
-        <Countryinfo />
+        <Countryinfo id={id} />
       </div>
-    </WebsiteHome>
+    </div>
   );
 }

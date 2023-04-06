@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export default function Possibilities() {
   return (
@@ -13,7 +14,9 @@ export default function Possibilities() {
           your dream
         </p>
         <button class="text-white mt-12 py-4 px-8 mx-auto block  font-bold py-2 px-4 rounded-full relative">
+          <Link to="/eligible">
           Get Started
+          </Link>
         </button>
       </div>
     </div>

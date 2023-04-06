@@ -507,7 +507,7 @@ const IntakesManagement = (props) => {
                 ) : (
                   <div className="card mb-4 mt-2">
                     <div className="card-body px-0 pt-0 pb-2">
-                      <table className="table table-responsive intakestable w-full">
+                      <table className="table table-responsive agent-table intakestable w-full">
                         <thead>
                           <tr>
                             <th>

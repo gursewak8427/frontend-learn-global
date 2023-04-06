@@ -56,11 +56,11 @@ const StudentHeader = () => {
       icon: <i class="fa-solid fa-file-csv"></i>,
       path: "/d/student/enrolled",
     },
-    {
-      label: "Documents",
-      icon: <i class="fa-solid fa-file-csv"></i>,
-      path: "/d/student/documents",
-    },
+    // {
+    //   label: "Documents",
+    //   icon: <i class="fa-solid fa-file-csv"></i>,
+    //   path: "/d/student/documents",
+    // },
     // {
     //   label: "History",
     //   icon: <i class="fa-solid fa-file-csv"></i>,

@@ -390,12 +390,10 @@ const SchoolList = () => {
                       /> */}
 
                       <div className="btn_outerxx">
-                        <button
-                          onClick={() => setModalCodeFilter(!ModalCodeFilter)}
-                          className="bg-gradient-primary px-6 py-2 text-white rounded"
-                        >
-                          Filter
-                        </button>
+                        <ButtonPrimary
+                          title={"Filter"}
+                          onclick={() => setModalCodeFilter(!ModalCodeFilter)}
+                        />
                         {ModalCodeFilter ? (
                           <div className="modal_cover filter_model">
                             <div className="modal_inner select-col-popup">
@@ -1190,7 +1188,7 @@ const SchoolList = () => {
 
                                 <div className="flex justify-end p-2">
                                   <ButtonPrimary
-                                    title={"Filter"}
+                                    title={"Submit"}
                                     onclick={() =>
                                       getPaginationData(1, "", "", "", "", true)
                                     }
@@ -1375,8 +1373,8 @@ const SchoolList = () => {
                   </div>
                 </div>
 
-                <div className="overflow-auto card shadow-lg col-12 px-0 pt-0 pb-2 agent-table border">
-                  <table className="table-auto overflow-scroll w-full files-table">
+                <div className="overflow-auto card shadow-lg col-12 px-0 pt-0 pb-2  border">
+                  <table className="table-auto overflow-scroll w-full agent-table files-table">
                     <thead>
                       <tr>
                         {tableColumns.map((col) => {
@@ -1409,7 +1407,7 @@ const SchoolList = () => {
                                     width={60}
                                     src={
                                       state.baseUrl +
-                                      school?.school_meta_details.schoolLogo
+                                      school?.school_meta_details.countryLogo
                                     }
                                     className="avatar avatar-sm me-3"
                                     alt="user1"
@@ -1424,7 +1422,7 @@ const SchoolList = () => {
                                     width={60}
                                     src={
                                       state.baseUrl +
-                                      school?.school_meta_details.countryLogo
+                                      school?.school_meta_details.schoolLogo
                                     }
                                     className="avatar avatar-sm me-3"
                                     alt="user1"
@@ -1584,23 +1582,21 @@ const SchoolList = () => {
                   ) : (
                     <></>
                   )}
-                  <div className="card-footer pb-0">
-                    {/* pagination is here */}
-                    <div className="pagination">
-                      <div className="pages">
-                        <ReactPaginate
-                          breakLabel="..."
-                          nextLabel="next"
-                          onPageChange={(event) => {
-                            getPaginationData(event.selected + 1);
-                          }}
-                          pageRangeDisplayed={2}
-                          pageCount={state.totalPages}
-                          previousLabel="prev"
-                          renderOnZeroPageCount={null}
-                        />
-                      </div>
-                    </div>
+                </div>
+                {/* pagination is here */}
+                <div className="pagination mt-2">
+                  <div className="pages">
+                    <ReactPaginate
+                      breakLabel="..."
+                      nextLabel="next"
+                      onPageChange={(event) => {
+                        getPaginationData(event.selected + 1);
+                      }}
+                      pageRangeDisplayed={2}
+                      pageCount={state.totalPages}
+                      previousLabel="prev"
+                      renderOnZeroPageCount={null}
+                    />
                   </div>
                 </div>
               </div>

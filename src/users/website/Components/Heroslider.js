@@ -2,13 +2,11 @@ import React from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import Sl_1 from "../images/sl_1.jpg";
-import Sl_2 from "../images/sl_2.png";
-import Sl_3 from "../images/sl_3.png";
-import Sl_4 from "../images/sl_4.png";
-import Sl_5 from "../images/sl_5.jpg";
+import { useSelector, useDispatch } from 'react-redux'
 
-export default function Heroslider() {
+export default function Heroslider(props) {
+  const landingPage = useSelector((state) => state.landingPage)
+
   var settings = {
     dots: true,
     infinite: true,
@@ -34,53 +32,17 @@ export default function Heroslider() {
       },
     ],
   };
+
   return (
     <Slider className="mt-14" {...settings}>
-      <div className="inner-content">
-        <img src={Sl_1} />
-        <p className="text-center w-full text-2xl">Canada</p>
-      </div>
-
-      <div className="inner-content">
-        <img src={Sl_2} />
-        <p className="text-center w-full text-2xl">Germany</p>
-      </div>
-
-      <div className="inner-content">
-        <img src={Sl_3} />
-        <p className="text-center w-full text-2xl">Dubai</p>
-      </div>
-      <div className="inner-content">
-        <img src={Sl_4} />
-        <p className="text-center w-full text-2xl">Spain</p>
-      </div>
-      <div className="inner-content">
-        <img src={Sl_5} />
-        <p className="text-center w-full text-2xl">Russia</p>
-      </div>
-
-      <div className="inner-content">
-        <img src={Sl_1} />
-        <p className="text-center w-full text-2xl">Canada</p>
-      </div>
-
-      <div className="inner-content">
-        <img src={Sl_2} />
-        <p className="text-center w-full text-2xl">Germany</p>
-      </div>
-
-      <div className="inner-content">
-        <img src={Sl_3} />
-        <p className="text-center w-full text-2xl">Dubai</p>
-      </div>
-      <div className="inner-content">
-        <img src={Sl_4} />
-        <p className="text-center w-full text-2xl">Spain</p>
-      </div>
-      <div className="inner-content">
-        <img src={Sl_5} />
-        <p className="text-center w-full text-2xl">Russia</p>
-      </div>
+      {
+      landingPage.countryList.map((el)=>{
+          return ( <div className="inner-content">
+          <img src={landingPage.baseUrl+el.countryLogo} />
+          <p className="text-center w-full text-2xl">{el.countryDetails.countryName}</p>
+        </div>)
+        })
+      }
     </Slider>
   );
 }

@@ -5,9 +5,9 @@ import WebsiteHome from "../Screens/WebsiteHome";
 
 export default function WEligible() {
   return (
-    <WebsiteHome>
+    <div>
       <MultiStepForm />
       {/* <Eligibleform /> */}
-    </WebsiteHome>
+    </div>
   );
 }

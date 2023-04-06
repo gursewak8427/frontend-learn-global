@@ -1,7 +1,10 @@
 import React from "react";
 import H_about from "../images/h_about.jpg";
 import Rect from "../images/rect.png";
+import { useSelector, useDispatch } from 'react-redux'
+
 export default function About() {
+  const landingPage = useSelector((state) => state.landingPage)
   return (
     <div>
       <div className="about-part abt-upr relative mt-10 lg:mt-0  px-4 lg:px-0">
@@ -9,7 +12,7 @@ export default function About() {
           <div className="grid lg:grid-cols-2  items-center">
             <div>
               <div className="img-part relative">
-                <img className="w-full main-up-img" src={H_about} alt="about" />
+                <img className="w-full main-up-img" src={landingPage.about.image} alt="about" />
                 <img className="bm-rect absolute" src={Rect} alt="" />
               </div>
             </div>
@@ -18,11 +21,7 @@ export default function About() {
                 <span>About</span> Us
               </h2>
               <p className="text-black tracking-widest leading-relaxed  lg:pr-20">
-                Learn Global means learn anywhere in the world and we provide
-                you the best platform to study abroad and make your future
-                bright. We offer exact information for students interested in
-                school/college and courses. We help you classify the best
-                universities that match your profile.
+               {landingPage.about.text}
               </p>
               <a
                 href="/about"

@@ -172,7 +172,7 @@ const ProgramUpdate = () => {
               <div class="card-body">
                 <div className="flex">
                   <div class="m-3 w-6/12">
-                    <label>Program Name</label>
+                    <label className="font-black">Program Name</label>
                     <input
                       placeholder="Program Name"
                       type="text"
@@ -185,7 +185,7 @@ const ProgramUpdate = () => {
                   </div>
 
                   <div class="m-3 w-6/12">
-                    <label>Description</label>
+                    <label className="font-black">Description</label>
                     <input
                       placeholder="Description"
                       type="text"
@@ -199,7 +199,7 @@ const ProgramUpdate = () => {
 
                 <div className="flex">
                 <div class="m-3 w-3/12">
-                    <label>Duration Year</label>
+                    <label className="font-black">Duration Year</label>
                     <input
                       placeholder="Duration"
                       type="text"
@@ -210,7 +210,7 @@ const ProgramUpdate = () => {
                     />
                   </div>
                   <div class="m-3 w-3/12">
-                    <label>Duration Sem Per Year</label>
+                    <label className="font-black">Duration Sem Per Year</label>
                     <input
                       placeholder="Duration Semester Per Year"
                       type="text"
@@ -221,7 +221,7 @@ const ProgramUpdate = () => {
                     />
                   </div>
                   <div class="m-3 w-6/12">
-                    <label>Visa Processing Days</label>
+                    <label className="font-black">Visa Processing Days</label>
 
                     <input
                       placeholder="Duration"
@@ -236,7 +236,7 @@ const ProgramUpdate = () => {
 
                 <div class="flex">
                   <div class="m-3 w-6/12">
-                    <label>Acceptance Letter</label>
+                    <label className="font-black">Acceptance Letter</label>
                     <input
                       placeholder="Acceptance Letter"
                       type="text"
@@ -248,7 +248,7 @@ const ProgramUpdate = () => {
                   </div>
 
                   <div class="m-3 w-6/12">
-                    <label>Acceptable Band</label>
+                    <label className="font-black">Acceptable Band</label>
                     <input
                       placeholder="Acceptable Band"
                       type="text"
@@ -262,7 +262,7 @@ const ProgramUpdate = () => {
 
                 <div className="flex">
                   <div class="m-3 w-6/12">
-                    <label>Modules</label>
+                    <label className="font-black">Modules</label>
                     <input
                       placeholder="Modules"
                       type="text"
@@ -274,7 +274,7 @@ const ProgramUpdate = () => {
                   </div>
 
                   <div class="m-3 w-6/12">
-                    <label>Application Fee</label>
+                    <label className="font-black">Application Fee</label>
                     <input
                       placeholder="Application Fee"
                       type="text"
@@ -287,7 +287,7 @@ const ProgramUpdate = () => {
                 </div>
                 <div className="flex">
                   <div class="m-3 w-6/12">
-                    <label>Credentials</label>
+                    <label className="font-black">Credentials</label>
                     <input
                       placeholder="Credentials"
                       type="text"
@@ -298,7 +298,7 @@ const ProgramUpdate = () => {
                     />
                   </div>
                   <div class="m-3 w-6/12">
-                    <label>Streams</label>
+                    <label className="font-black">Streams</label>
                     <select
                       type="select"
                       class="block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm"
@@ -314,7 +314,7 @@ const ProgramUpdate = () => {
                 </div>
                 <div className="flex">
                   <div class="m-3 w-6/12">
-                    <label>Level</label>
+                    <label className="font-black">Level</label>
                     <select
                       type="select"
                       class="block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm"
@@ -327,7 +327,7 @@ const ProgramUpdate = () => {
                     </select>
                   </div>
                   <div class="m-3 w-6/12">
-                    <label>Cost Of Living</label>
+                    <label className="font-black">Cost Of Living</label>
                     <input
                       placeholder="Cost Of Living"
                       type="text"
@@ -340,7 +340,7 @@ const ProgramUpdate = () => {
                 </div>
                 <div className="flex">
                   <div class="m-3 w-6/12">
-                    <label>Currency</label>
+                    <label className="font-black">Currency</label>
                     <input
                       placeholder="Currency"
                       type="text"
@@ -351,7 +351,7 @@ const ProgramUpdate = () => {
                     />
                   </div>
                   <div class="m-3 w-6/12">
-                    <label>Grade Score</label>
+                    <label className="font-black">Grade Score</label>
                     <input
                       placeholder="Grade Score"
                       type="text"
@@ -364,7 +364,7 @@ const ProgramUpdate = () => {
                 </div>
                 <div className="flex">
                   <div class="m-3 w-6/12">
-                    <label>Overall Band</label>
+                    <label className="font-black">Overall Band</label>
                     <input
                       placeholder="Overall Band"
                       type="text"
@@ -375,7 +375,7 @@ const ProgramUpdate = () => {
                     />
                   </div>
                   <div class="m-3 w-6/12">
-                    <label>Pte Score</label>
+                    <label className="font-black">Pte Score</label>
                     <input
                       placeholder="Pte Score"
                       type="text"
@@ -388,7 +388,7 @@ const ProgramUpdate = () => {
                 </div>
                 <div className="flex">
                   <div class="m-3 w-6/12">
-                    <label>Tofel Points</label>
+                    <label className="font-black">Tofel Points</label>
                     <input
                       placeholder="Tofel Points"
                       type="text"
@@ -399,7 +399,7 @@ const ProgramUpdate = () => {
                     />
                   </div>
                   <div class="m-3 w-6/12">
-                    <label>English Language</label>
+                    <label className="font-black">English Language</label>
                     <input
                       placeholder="English Language"
                       type="text"
@@ -412,7 +412,7 @@ const ProgramUpdate = () => {
                 </div>
                 <div className="flex">
                   <div class="m-3 w-6/12">
-                    <label>Foundation Fee</label>
+                    <label className="font-black">Foundation Fee</label>
                     <input
                       placeholder="Foundation Fee"
                       type="text"
@@ -423,7 +423,7 @@ const ProgramUpdate = () => {
                     />
                   </div>
                   <div class="m-3 w-3/12">
-                    <label>Max Tuition Fees</label>
+                    <label className="font-black">Max Tuition Fees</label>
                     <input
                       placeholder="Max Tuition Fees"
                       type="text"
@@ -434,7 +434,7 @@ const ProgramUpdate = () => {
                     />
                   </div>
                   <div class="m-3 w-3/12">
-                    <label>Min Tuition Fees</label>
+                    <label className="font-black">Min Tuition Fees</label>
                     <input
                       placeholder="Min Tuition Fees"
                       type="text"
@@ -447,7 +447,7 @@ const ProgramUpdate = () => {
                 </div>
                 <div className="flex">
                   <div class="m-3 w-6/12">
-                    <label>Other Fees</label>
+                    <label className="font-black">Other Fees</label>
                     <input
                       placeholder="Other Fees"
                       type="text"
@@ -458,7 +458,7 @@ const ProgramUpdate = () => {
                     />
                   </div>
                   <div class="m-3 w-6/12">
-                    <label>Other Comment</label>
+                    <label className="font-black">Other Comment</label>
                     <input
                       placeholder="Other Comment"
                       type="text"
@@ -478,7 +478,7 @@ const ProgramUpdate = () => {
                       defaultChecked={state.few_seats_status}
                       onChange={handleChange}
                     />
-                    <label>Few Seats</label>
+                    <label className="font-black">Few Seats</label>
                   </div>
                   <div class="m-3 w-6/12 flex items-center">
                     <input
@@ -488,7 +488,7 @@ const ProgramUpdate = () => {
                       defaultChecked={state.top_status}
                       onChange={handleChange}
                     />
-                    <label>Top Status</label>
+                    <label className="font-black">Top Status</label>
                   </div>
                 </div>
 

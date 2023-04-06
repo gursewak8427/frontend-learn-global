@@ -73,6 +73,15 @@ import Wviewdetails from "./users/website/Pages/Wviewdetails";
 import AgentStudentRemarks from "./users/agent/Pages/AgentStudentRemarks";
 import AddCurrency from "./users/admin/Pages/AddCurrency";
 import ProgramUpdate from "./users/admin/Pages/ProgramUpdate";
+import AdminStudentRemarks from "./users/admin/Pages/AdminStudentRemarks";
+import WebsiteHome from "./users/website/Screens/WebsiteHome";
+
+
+// Redux
+import { useSelector, useDispatch } from 'react-redux'
+import { setData } from './redux/reducers/landingPage'
+import AddRequiredDocuments from "./users/admin/Pages/AddRequiredDocuments";
+import StudentEmbassyDocuments from "./users/student/Pages/StudentEmbassyDocuments";
 
 // web-socket
 // import socketIOClient from "socket.io-client";
@@ -80,7 +89,10 @@ import ProgramUpdate from "./users/admin/Pages/ProgramUpdate";
 // console.log("COnnecting")
 // const socket = socketIOClient(ENDPOINT);
 
+
 const App = () => {
+  const dispatch = useDispatch()
+
   const roleFromUrl = window.location.href.split("/")[4];
   const [state, setState] = useState({
     wait: true,
@@ -179,14 +191,21 @@ const App = () => {
           });
       });
     } else {
-      setState({
-        ...state,
-        currentPermissions: "ALLOW",
-        wait: false,
-        tokenAdmin,
-        tokenAgent,
-        tokenStudent,
-      });
+      axios
+        .get(process.env.REACT_APP_NODE_URL + "/student/landingPage").then(response => {
+          let data = response.data.details;
+          dispatch(setData(data))
+          setState({
+            ...state,
+            currentPermissions: "ALLOW",
+            wait: false,
+            tokenAdmin,
+            tokenAgent,
+            tokenStudent,
+          });
+
+        })
+
     }
   }, []);
 
@@ -200,6 +219,7 @@ const App = () => {
       </center>
     );
   }
+
   return (
     <>
       <Notification />
@@ -490,40 +510,48 @@ const App = () => {
           />
           <Route path="enrolled-files" element={<FilesList type="ALL" />} />
           <Route path="pending-files" element={<FilesList type="PENDING" />} />
+          <Route path="remarks/:fileId" element={<AdminStudentRemarks />} />
           <Route
             path="under-verification-files"
             element={<FilesList type="UNDER_VERIFICATION" />}
           />
-          <Route
+          {/* <Route
             path="fees-pending"
             element={<FilesList type="FEES_PENDING" />}
-          />
+          /> */}
           <Route
             path="in-processing-files"
             element={<FilesList type="IN_PROCESSING" />}
           />
           <Route path="closed-files" element={<FilesList type="CLOSED" />} />
           <Route
-            path="rejected-files"
-            element={<FilesList type="REJECTED" />}
+            path="documents-rejected-files"
+            element={<FilesList type="DOC_REJECTED" />}
+          />
+          <Route
+            path="permanent-rejected-files"
+            element={<FilesList type="PERMANENT_REJECTED" />}
           />
 
           {/* Currency Routes */}
           <Route path="currency" element={<AddCurrency />} />
+          <Route path="required-documents" element={<AddRequiredDocuments />} />
 
           {/* demo */}
           {/* <Route path="demodatatable" element={<ProtectedRoute token={state.tokenAdmin} role={"admin"} permissions={state.currentPermissions}><DataTable /></ProtectedRoute>} /> */}
         </Route>
 
         {/* website routes */}
-        <Route path="/" element={<WHome />} />
-        <Route path="/eligible" element={<WEligible />} />
-        <Route path="/search/:query" element={<WSearch />} />
-        <Route path="/about" element={<Wabout />} />
-        <Route path="/discover" element={<Wdiscover />} />
-        <Route path="/contact" element={<Wcontact />} />
-        <Route path="/countries" element={<Wcountry1 />} />
-        <Route path="/viewdetails" element={<Wviewdetails />} />
+        <Route path="/" element={<WebsiteHome />}>
+          <Route index element={<WHome />} />
+          <Route path="eligible" element={<WEligible />} />
+          <Route path="search/:query" element={<WSearch />} />
+          <Route path="about" element={<Wabout />} />
+          <Route path="discover" element={<Wdiscover />} />
+          <Route path="contact" element={<Wcontact />} />
+          <Route path="countries/:id" element={<Wcountry1 />} />
+          <Route path="specificSchool/:id" element={<Wviewdetails />} />
+        </Route>
 
         {/* <Route path="/" element={<Home />} /> */}
 
@@ -581,7 +609,7 @@ const App = () => {
         <Route path="/d/student/confirm/:token" element={<StudentConfirm />} />
 
         <Route path="/login2" element={<Login2 />} />
-        <Route path="/d/student/forgot/" element={<StudentForgot />} />
+        {/* <Route path="/d/student/forgot/" element={<StudentForgot />} /> */}
         <Route path="/d/student/forgot/:token" element={<Login3 />} />
 
         <Route path="/d/student" element={<StudentDashboard />}>
@@ -604,6 +632,7 @@ const App = () => {
           <Route path="register" element={<StudentRegister />} /> */}
           <Route path="enrolled" element={<StudentEnrolled />} />
           <Route path="documents" element={<StudentDocuments />} />
+          <Route path="embassy_documents" element={<StudentEmbassyDocuments />} />
           <Route path="notifications" element={<StudentNotifications />} />
           <Route path="history" element={<StudentHistory />} />
           <Route path="remarks/:fileId" element={<StudentRemarks />} />

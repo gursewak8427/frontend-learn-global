@@ -15,7 +15,7 @@ import ButtonPrimary from "../../../common/Buttons/ButtonPrimary";
 import { authenticate, getToken } from "../../../helper/auth";
 import Dashboard from "../Screens/Dashboard/Dashboard";
 
-const AdminStudentProfile = () => {
+const AdminStudentProfile = ({sId, fId}) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const navigate = useNavigate();
     const [state, setState] = useState({
@@ -47,9 +47,12 @@ const AdminStudentProfile = () => {
 
     const [tab, setTab] = useState(searchParams.get("tab") == "documents" ? 2 : 1);
 
-    const studentId = searchParams.get("id");
+    var studentId = searchParams.get("id");
 
     useEffect(() => {
+        if(!studentId){
+            studentId = sId;
+        }
         if (studentId) {
             const config = {
                 headers: {
@@ -709,7 +712,7 @@ const AdminStudentProfile = () => {
                                             })
                                         } </tbody>
                                     </table>
-                                    <div className="w-full p-[10px] flex justify-end">
+                                    {/* <div className="w-full p-[10px] flex justify-end">
                                         <div class="relative mr-2">
                                             <select name="fileId" onChange={handleInput} class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
                                                 <option>--Select File--</option>
@@ -726,7 +729,7 @@ const AdminStudentProfile = () => {
                                             </div>
                                         </div>
                                         <ButtonPrimary title={"Approve"} onclick={approveFileNow} loading={state.approveFileLoading} />
-                                    </div>
+                                    </div> */}
                                     {/* <div className="profile-image">
                                         <label htmlFor="">Profile Image</label>
                                         {

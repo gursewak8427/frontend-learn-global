@@ -350,9 +350,9 @@ const EmployeeList = () => {
           <div className="w-full">
             <div className="w-full">
               <div className="w-full">
-                <div className="shadow-lg lg:m-5 lg:border lg:border-2 lg:p-4">
+                <div className="shadow-lg lg:m-5  lg:p-4">
                   <div className="p-1 lg:p-4   mt-6  h-[80vh]">
-                    <table className="table w-full mb-0">
+                    <table className="table  w-full mb-0 agent-table">
                       <thead>
                         <tr className="">
                           <th className="p-2 ">Id</th>
@@ -365,7 +365,7 @@ const EmployeeList = () => {
                       <tbody>
                         {state.list.map((student, index) => {
                           return (
-                            <tr className="w-full border-bottom border-2">
+                            <tr className="w-full">
                               <td className="p-2 text-center">
                                 <p className="text-xs font-weight-bold mb-0">
                                   {index + 1}

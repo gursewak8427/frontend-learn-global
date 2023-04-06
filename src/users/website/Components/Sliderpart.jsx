@@ -7,8 +7,11 @@ import Lg2 from "../images/lg2.jpg";
 import Lg3 from "../images/lg3.png";
 import Lg4 from "../images/lg4.png";
 import Lg5 from "../images/lg5.jpg";
+import { useSelector, useDispatch } from 'react-redux'
 
 export default function SimpleSlider() {
+  const landingPage = useSelector((state) => state.landingPage)
+
   var settings = {
     dots: false,
     infinite: true,
@@ -29,39 +32,19 @@ export default function SimpleSlider() {
       },
     ],
   };
+  let baseUrl = "http://learn-global-backend.onrender.com/uploads/agent/"
   return (
     <div className="partner container mx-auto py-20">
       <Slider {...settings}>
-        <div>
-          <img src={Lg1} alt="" />
-        </div>
-        <div>
-          <img src={Lg2} alt="" />
-        </div>
-        <div>
-          <img src={Lg3} alt="" />
-        </div>
-        <div>
-          <img src={Lg4} alt="" />
-        </div>
-        <div>
-          <img src={Lg5} alt="" />
-        </div>
-        <div>
-          <img src={Lg1} alt="" />
-        </div>
-        <div>
-          <img src={Lg2} alt="" />
-        </div>
-        <div>
-          <img src={Lg3} alt="" />
-        </div>
-        <div>
-          <img src={Lg4} alt="" />
-        </div>
-        <div>
-          <img src={Lg5} alt="" />
-        </div>
+        {
+          landingPage.schoolsLogo.map((el) => {
+            return (<div>
+              <img src={baseUrl + el.schoolLogo} alt="" />
+            </div>)
+          })
+        }
+
+
       </Slider>
     </div>
   );

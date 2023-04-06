@@ -74,9 +74,9 @@ const StudentDashboard = ({ children }) => {
       )}
 
       {state.isPendingProgramPopupShow &&
-      state.student.status == "PENDING" &&
-      (window.location.href.split("/")[5] == "" ||
-        window.location.href.split("/")[5] == "enrolled") ? (
+        state.student.status == "PENDING" &&
+        (window.location.href.split("/")[5] == "" ||
+          window.location.href.split("/")[5] == "enrolled") ? (
         <>
           <div
             className="overlay active"
@@ -113,7 +113,7 @@ const StudentDashboard = ({ children }) => {
       <main className="ml-[255px]">
         <StudentNavbar />
         <div className="innerBox">
-          <div style={{ minHeight: "" }}>
+          <div style={{ minHeight: "85vh" }}>
             <Outlet />
           </div>
 

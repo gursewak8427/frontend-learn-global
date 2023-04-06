@@ -1,7 +1,7 @@
 /* eslint-disable no-lone-blocks */
 /* eslint-disable no-dupe-keys */
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Logo from "../../website/images/logo.png";
 import Gogl from "../../website/images/gogl.png";
 import Fbk from "../../website/images/fbk.png";
@@ -41,7 +41,6 @@ const provider = new GoogleAuthProvider();
 const Login3 = (props) => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-
   const [state, setState] = useState({
     username: "",
     password: "",
@@ -53,10 +52,22 @@ const Login3 = (props) => {
     school: searchParams.get("school"),
     program: searchParams.get("program"),
 
+
+
     email: "",
     confirmpassword: "",
     newpassword: "",
   });
+
+  const [buttonLoading, setButtonLoading] = useState({
+    type: "FALSE"
+  })
+
+
+  // student forgot password screen
+  const { token } = useParams();
+  console.log({ token })
+
   const handleInput = (e) => {
     setState({
       ...state,
@@ -65,21 +76,19 @@ const Login3 = (props) => {
   };
   // // agent login api
   const LoginNow = async () => {
-    setState({
-      ...state,
-      submitProcessing: true,
-    });
     const { username, password } = state;
 
     if (username == "" || password == "")
       return toast("All fields are required");
 
+    setButtonLoading({ type: "AGENT_LOGIN" })
     const data = { username, password };
     const config = { "content-type": "application/json" };
     axios
       .post(process.env.REACT_APP_NODE_URL + "/agent/login", data)
       .then((res) => {
         console.log({ data: res });
+        setButtonLoading({ type: "FALSE" })
         if (res.data.status == "0") {
           toast(res.data.message);
           return;
@@ -93,16 +102,14 @@ const Login3 = (props) => {
         // redirect
       })
       .catch((err) => {
+        setButtonLoading({ type: "FALSE" })
         console.log(err.response.data);
         toast(err.response.data.message);
       });
   };
   // student login api
   const LoginStudent = async () => {
-    setState({
-      ...state,
-      submitProcessing: true,
-    });
+    setButtonLoading({ type: "STUDENT_LOGIN" })
     const { data, password } = state;
     const data2 = { data, password };
     const config = { "content-type": "application/json" };
@@ -112,10 +119,7 @@ const Login3 = (props) => {
         console.log(res);
         if (res.data.status == "0") {
           toast(res.data.message);
-          setState({
-            ...state,
-            submitProcessing: false,
-          });
+          setButtonLoading({ type: "FALSE" })
           return;
         }
         authenticate(res, "student", () => {
@@ -139,12 +143,7 @@ const Login3 = (props) => {
               .then((response) => {
                 console.log(response);
                 toast(response.data.message);
-
-                setState({
-                  ...state,
-                  submitProcessing: false,
-                });
-
+                setButtonLoading({ type: "FALSE" })
                 window.location.href = "/d/student/";
               })
               .catch((err) => {
@@ -154,7 +153,8 @@ const Login3 = (props) => {
                 });
               });
           } else {
-            console.log("Token added as agent_token");
+            setButtonLoading({ type: "FALSE" })
+            console.log("Token added as student_token");
             window.location.href = "/d/student/";
           }
         });
@@ -166,10 +166,8 @@ const Login3 = (props) => {
       });
   };
   const signin = () => {
-    setState({
-      ...state,
-      submitProcessing: true,
-    });
+
+    setButtonLoading({ type: "STUDENT_GOOGEL_LOGIN" })
 
     signInWithPopup(firebaseAuth, provider)
       .then((res) => {
@@ -196,11 +194,8 @@ const Login3 = (props) => {
           .then((res) => {
             console.log({ res11: res });
             if (res.data.status == "0") {
-              toast(res.data.message);
-              setState({
-                ...state,
-                submitProcessing: false,
-              });
+              setButtonLoading({ type: "FALSE" })
+              toast.error(res.data.message);
               return;
             }
             authenticate(res, "student", () => {
@@ -224,15 +219,17 @@ const Login3 = (props) => {
                     config
                   )
                   .then((response) => {
+                    setButtonLoading({ type: "FALSE" })
                     console.log(response);
-                    toast(response.data.message);
+                    if (response.data.status == "0") {
+                      toast.error(response.data.message);
+                    } else {
+                      toast(response.data.message);
+                    }
                     window.location.href = "/d/student/";
                   });
               } else {
-                setState({
-                  ...state,
-                  submitProcessing: false,
-                });
+                setButtonLoading({ type: "FALSE" })
                 console.log("Token added as agent_token");
                 window.location.href = "/d/student/";
               }
@@ -240,6 +237,7 @@ const Login3 = (props) => {
             // window.location.href = "/student/login"
           })
           .catch((err) => {
+            setButtonLoading({ type: "FALSE" })
             console.log(err.response.data);
             if (err.response.data.name == "ValidationError") {
               let errors = err.response.data.details.error;
@@ -285,33 +283,34 @@ const Login3 = (props) => {
     phone: Yup.string().required("Phone number is required"),
   });
   const handleSubmit = (values) => {
+    setButtonLoading({ type: "AGENT_REGISTER" })
     const config = { "content-type": "application/json" };
     axios
       .post(process.env.REACT_APP_NODE_URL + "/agent/register", values)
       .then((res) => {
         // redirect
+        setButtonLoading({ type: "FALSE" })
         if (res.data.status == "0") {
           toast(res.data.message);
         } else {
-          window.location.href = "/login3";
           setagentRegisterSide(false);
+          setagentLoginSide(true);
         }
       })
       .catch((err) => {
+        setButtonLoading({ type: "FALSE" })
         console.log(err.response.data);
         toast(err.response.data.message);
       });
   };
   // Student Register
   const RegisterNow = async (values) => {
-    setState({
-      ...state,
-      submitProcessing: true,
-    });
     const { email, password, confirmPassword, firstName, lastName, phone } =
       values;
     if (password !== confirmPassword)
-      return toast("Both passwords should be same");
+      return toast.error("Both passwords should be same");
+
+    setButtonLoading({ type: "STUDENT_REGISTER" })
     const data = { email, password, firstName, lastName, phone };
     const config = { "content-type": "application/json" };
 
@@ -320,22 +319,20 @@ const Login3 = (props) => {
       .then((res) => {
         console.log({ register: res });
         if (res.data.status === "0") {
-          toast(res.data.message);
-          setState({
-            ...state,
-            submitProcessing: false,
-          });
+          toast.error(res.data.message);
+          setButtonLoading({ type: "FALSE" })
           return;
         }
         if (state.redirect === "true") {
           window.location.href =
-            "/login3" + state.school + "&program=" + state.program;
+            "/d" + state.school + "&program=" + state.program;
         } else {
-          window.location.href = "/login3";
+          window.location.href = "/d?user=student";
         }
       })
       .catch((err) => {
         console.log(err.response.data);
+        setButtonLoading({ type: "FALSE" })
         if (err.response.data.name === "ValidationError") {
           let errors = err.response.data.details.error;
           let msg = "";
@@ -349,11 +346,9 @@ const Login3 = (props) => {
         toast(err.response.data.message);
       });
   };
-  // student forgot password screen
-  const { token } = useParams();
   const ForgotStudent = async () => {
     if (state.newpassword !== state.confirmpassword) {
-      toast("Both passwords should be same");
+      toast.error("Both passwords should be same");
       return;
     }
     if (state.newpassword === "" || state.confirmpassword === "") {
@@ -380,7 +375,7 @@ const Login3 = (props) => {
           return;
         }
         toast(res.data.message);
-        navigate("/login3");
+        navigate("/d");
         // redirect
       })
       .catch((err) => {
@@ -393,14 +388,12 @@ const Login3 = (props) => {
       toast("Email is required");
       return;
     }
-    setState({
-      ...state,
-      submitProcessing: true,
-    });
+    setButtonLoading({ type: "FORGOT_EMAIL_SEND" })
     const data = { email: state.email };
     axios
       .post(process.env.REACT_APP_NODE_URL + "/student/forgotpassword", data)
       .then((res) => {
+        setButtonLoading({ type: "FALSE" })
         console.log(res);
         if (res.data.status === "0") {
           toast(res.data.message);
@@ -412,6 +405,7 @@ const Login3 = (props) => {
         // redirect
       })
       .catch((err) => {
+        setButtonLoading({ type: "FALSE" })
         console.log(err.response.data);
         toast(err.response.data.message);
       });
@@ -464,6 +458,16 @@ const Login3 = (props) => {
   const [studentRegisterSide, setstudentRegisterSide] = useState(false);
   const [click1, setclick1] = useState("click1");
   const [click2, setclick2] = useState();
+
+  useEffect(() => {
+    if (searchParams.get("user") == "student") {
+      setstudentLoginSide(true)
+      setagentLoginSide(false)
+      setclick1("")
+      setclick2("click1")
+    }
+  }, [])
+
   const handleAgentButton = () => {
     setagentLoginSide(true);
     setstudentLoginSide(false);
@@ -480,6 +484,107 @@ const Login3 = (props) => {
     setclick1();
     setclick2("click1");
   };
+
+  if (token) {
+    return (
+      <>
+        <ToastContainer />
+        <div className="new-main">
+          <div className="lg:flex items-center">
+            <div className="lg:w-1/2 flex items-center justify-center new-left  py-10 lg:py-0 px-4 lg:px-0">
+              <img className="w-40 lg:w-96" src={Logo} alt="" />
+            </div>
+            <div className="lg:w-1/2  new-right flex items-center">
+              <div className="rt-inner w-full">
+                <div className="inner-form-data rounded-lg border border-2 bg-white p-10">
+                  <h2 style={{ marginBottom: "30px" }}>
+                    Welcome to
+                    <br />
+                    <b>Learn Global</b>
+                  </h2>
+                  {
+                    token &&
+                    <div className="col-12">
+                      <h1 className="text-xl mb-2 font-black">
+                        Set New Password
+                      </h1>
+                      <div className="shadow sm:overflow-hidden sm:rounded-md">
+                        <div className="space-y-6 bg-white px-4 py-2 sm:p-2">
+                          <div className="">
+                            <div className="col-span-3 sm:col-span-2">
+                              <label
+                                htmlFor="company-website"
+                                className="block text-sm font-medium text-gray-700"
+                              >
+                                New Password
+                              </label>
+                              <div className="mt-1 flex rounded-md shadow-sm">
+                                <input
+                                  type="password"
+                                  name="newpassword"
+                                  value={state.newpassword}
+                                  onChange={handleInput}
+                                  id="company-website"
+                                  className="block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm"
+                                  placeholder="Enter your email or phone"
+                                />
+                              </div>
+                            </div>
+                          </div>
+
+                          <div>
+                            <label
+                              htmlFor="about"
+                              className="block text-sm font-medium text-gray-700"
+                            >
+                              Confirm Password
+                            </label>
+                            <div className="mt-1">
+                              <input
+                                type="password"
+                                name="confirmpassword"
+                                value={state.confirmpassword}
+                                onChange={handleInput}
+                                className="block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm"
+                                placeholder="Enter your confirm password"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
+                          <button
+                            type="button"
+                            onClick={ForgotStudent}
+                            className="bg-gradient-primary inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                          >
+                            Update
+                          </button>
+                        </div>
+                      </div>
+                      <div className="text-center pt-2 px-lg-2 px-1">
+                        <p className="mb-4 text-sm mx-auto">
+                          Want to login?
+                          <span
+                            onClick={() =>
+                              navigate("/d/")
+                            }
+                            className="pl-2 text-info text-gradient font-bold cursor-pointer"
+                          >
+                            Login
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
       <ToastContainer />
@@ -504,102 +609,114 @@ const Login3 = (props) => {
                     Student
                   </button>
                 </div>
-                {agentLoginSide ? (
-                  <AgentAuthScreen>
-                    <div>
-                      <div className="part-cont relative text-center my-3">
-                        <p>
-                          <span className="relative bg-white py-2 px-10">
-                            Agent Login
-                          </span>
-                        </p>
-                      </div>
-                      <div className="input-content py-2 px-4 rounded-lg">
-                        <div className="flex items-center gap-4">
-                          <div>
-                            <img src={Mail} alt="" />
-                          </div>
-                          <div className="w-full">
-                            <label className="custom-field one w-full">
-                              <input
-                                name="username"
-                                value={state.username}
-                                onChange={handleInput}
-                                className="w-full"
-                                type="text"
-                                placeholder=" "
-                              />
-                              <span className="placeholder">User Name</span>
-                            </label>
+                {
+                  agentLoginSide ? (
+                    <AgentAuthScreen>
+                      <div>
+                        <div className="part-cont relative text-center my-3">
+                          <p>
+                            <span className="relative bg-white py-2 px-10">
+                              Agent Login
+                            </span>
+                          </p>
+                        </div>
+                        <div className="input-content py-2 px-4 rounded-lg">
+                          <div className="flex items-center gap-4">
+                            <div>
+                              <img src={Mail} alt="" />
+                            </div>
+                            <div className="w-full">
+                              <label className="custom-field one w-full">
+                                <input
+                                  name="username"
+                                  value={state.username}
+                                  onChange={handleInput}
+                                  className="w-full"
+                                  type="text"
+                                  placeholder=" "
+                                />
+                                <span className="placeholder">User Name</span>
+                              </label>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div className="input-content py-2 px-4 mt-4 rounded-lg">
-                        <div className="flex items-center gap-4">
-                          <div>
-                            <img src={Key} alt="" />
-                          </div>
-                          <div className="w-full">
-                            <label className="custom-field one w-full">
-                              <input
-                                name="password"
-                                type={typeConfirm}
-                                value={state.password}
-                                onChange={handleInput}
-                                className="w-full"
-                                placeholder=" "
-                              />
-                              <span className="placeholder">Password</span>
-                            </label>
-                            <div className="field_eye_view">
-                              <div
-                                className="icon icon-eye"
-                                onClick={handleToggleConfirm}
-                              >
-                                <Icon icon={iconConfirm} size={20} />
+                        <div className="input-content py-2 px-4 mt-4 rounded-lg">
+                          <div className="flex items-center gap-4">
+                            <div>
+                              <img src={Key} alt="" />
+                            </div>
+                            <div className="w-full">
+                              <label className="custom-field one w-full">
+                                <input
+                                  name="password"
+                                  type={typeConfirm}
+                                  value={state.password}
+                                  onChange={handleInput}
+                                  className="w-full"
+                                  placeholder=" "
+                                />
+                                <span className="placeholder">Password</span>
+                              </label>
+                              <div className="field_eye_view">
+                                <div
+                                  className="icon icon-eye"
+                                  onClick={handleToggleConfirm}
+                                >
+                                  <Icon icon={iconConfirm} size={20} />
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                      <div className="py-2  mt-4 rounded-lg">
-                        <div className="flex  gap-2">
-                          <div className="ml-auto">
-                            <Link to="#" className="text-primary forgot-link">
-                              Forgot Password?
-                            </Link>
+                        <div className="py-2  mt-4 rounded-lg">
+                          <div className="flex  gap-2">
+                            <div className="ml-auto">
+                              <Link to="#" className="text-primary forgot-link">
+                                Forgot Password?
+                              </Link>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <button
-                        onClick={LoginNow}
-                        className="log-btn w-full py-4 text-white mt-4 rounded-lg"
-                      >
-                        Login
-                      </button>
-                      {/* <button id="google_login_a" className="shadow w-full justify-center p-2 rounded flex items-center gap-2 mt-5">
+                        <button
+                          onClick={LoginNow}
+                          className="log-btn w-full py-4 text-white mt-4 rounded-lg"
+                        >
+                          {
+                            buttonLoading.type == "AGENT_LOGIN" ? <div className="flex items-center justify-center">
+                              <svg class="h-5 w-5 animate-spin" viewBox="3 3 18 18">
+                                <path
+                                  class="fill-gray-200"
+                                  d="M12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5ZM3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12Z"></path>
+                                <path
+                                  class="fill-gray-800"
+                                  d="M16.9497 7.05015C14.2161 4.31648 9.78392 4.31648 7.05025 7.05015C6.65973 7.44067 6.02656 7.44067 5.63604 7.05015C5.24551 6.65962 5.24551 6.02646 5.63604 5.63593C9.15076 2.12121 14.8492 2.12121 18.364 5.63593C18.7545 6.02646 18.7545 6.65962 18.364 7.05015C17.9734 7.44067 17.3403 7.44067 16.9497 7.05015Z"></path>
+                              </svg>
+                            </div> : "Login"
+                          }
+                        </button>
+                        {/* <button id="google_login_a" className="shadow w-full justify-center p-2 rounded flex items-center gap-2 mt-5">
                         <img src={Gogl} alt="" />
                         Login with Google
                       </button> */}
-                      <p className="mt-5 text-center">
-                        Don’t have an account ?{" "}
-                        <p
-                          style={{ cursor: "pointer" }}
-                          onClick={() =>
-                            setagentRegisterSide(!agentRegisterSide)(
-                              setagentLoginSide(false)
-                            )
-                          }
-                          className="forgot-link"
-                        >
-                          Register
+                        <p className="mt-5 text-center">
+                          Don’t have an account ?{" "}
+                          <p
+                            style={{ cursor: "pointer" }}
+                            onClick={() =>
+                              setagentRegisterSide(!agentRegisterSide)(
+                                setagentLoginSide(false)
+                              )
+                            }
+                            className="forgot-link"
+                          >
+                            Register
+                          </p>
                         </p>
-                      </p>
-                    </div>
-                  </AgentAuthScreen>
-                ) : (
-                  ""
-                )}
+                      </div>
+                    </AgentAuthScreen>
+                  ) : (
+                    ""
+                  )}
                 {agentRegisterSide ? (
                   <AgentAuthScreen>
                     <>
@@ -645,11 +762,10 @@ const Login3 = (props) => {
                                               type="email"
                                               name="email"
                                               id="email"
-                                              className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${
-                                                touched.email && errors.email
-                                                  ? "is-invalid"
-                                                  : ""
-                                              }`}
+                                              className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${touched.email && errors.email
+                                                ? "is-invalid"
+                                                : ""
+                                                }`}
                                             />
                                             <ErrorMessage
                                               name="email"
@@ -663,11 +779,10 @@ const Login3 = (props) => {
                                               type="number"
                                               name="phone"
                                               id="phone"
-                                              className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${
-                                                touched.email && errors.email
-                                                  ? "is-invalid"
-                                                  : ""
-                                              }`}
+                                              className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${touched.email && errors.email
+                                                ? "is-invalid"
+                                                : ""
+                                                }`}
                                             />
                                             <ErrorMessage
                                               name="phone"
@@ -685,11 +800,10 @@ const Login3 = (props) => {
                                               type="text"
                                               name="first_name"
                                               id="first_name"
-                                              className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${
-                                                touched.email && errors.email
-                                                  ? "is-invalid"
-                                                  : ""
-                                              }`}
+                                              className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${touched.email && errors.email
+                                                ? "is-invalid"
+                                                : ""
+                                                }`}
                                             />
                                             <ErrorMessage
                                               name="first_name"
@@ -705,11 +819,10 @@ const Login3 = (props) => {
                                               type="text"
                                               name="last_name"
                                               id="last_name"
-                                              className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${
-                                                touched.email && errors.email
-                                                  ? "is-invalid"
-                                                  : ""
-                                              }`}
+                                              className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${touched.email && errors.email
+                                                ? "is-invalid"
+                                                : ""
+                                                }`}
                                             />
                                             <ErrorMessage
                                               name="last_name"
@@ -725,11 +838,10 @@ const Login3 = (props) => {
                                               type="text"
                                               name="street"
                                               id="street"
-                                              className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${
-                                                touched.email && errors.email
-                                                  ? "is-invalid"
-                                                  : ""
-                                              }`}
+                                              className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${touched.email && errors.email
+                                                ? "is-invalid"
+                                                : ""
+                                                }`}
                                             />
                                             <ErrorMessage
                                               name="street"
@@ -743,11 +855,10 @@ const Login3 = (props) => {
                                               type="text"
                                               name="city"
                                               id="city"
-                                              className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${
-                                                touched.email && errors.email
-                                                  ? "is-invalid"
-                                                  : ""
-                                              }`}
+                                              className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${touched.email && errors.email
+                                                ? "is-invalid"
+                                                : ""
+                                                }`}
                                             />
                                             <ErrorMessage
                                               name="city"
@@ -763,11 +874,10 @@ const Login3 = (props) => {
                                               type="text"
                                               name="state"
                                               id="state"
-                                              className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${
-                                                touched.email && errors.email
-                                                  ? "is-invalid"
-                                                  : ""
-                                              }`}
+                                              className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${touched.email && errors.email
+                                                ? "is-invalid"
+                                                : ""
+                                                }`}
                                             />
                                             <ErrorMessage
                                               name="state"
@@ -781,11 +891,10 @@ const Login3 = (props) => {
                                               type="text"
                                               name="country"
                                               id="country"
-                                              className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${
-                                                touched.email && errors.email
-                                                  ? "is-invalid"
-                                                  : ""
-                                              }`}
+                                              className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${touched.email && errors.email
+                                                ? "is-invalid"
+                                                : ""
+                                                }`}
                                             />
                                             <ErrorMessage
                                               name="country"
@@ -803,11 +912,10 @@ const Login3 = (props) => {
                                               type="number"
                                               name="postalcode"
                                               id="postalcode"
-                                              className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${
-                                                touched.email && errors.email
-                                                  ? "is-invalid"
-                                                  : ""
-                                              }`}
+                                              className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${touched.email && errors.email
+                                                ? "is-invalid"
+                                                : ""
+                                                }`}
                                             />
                                             <ErrorMessage
                                               name="postalcode"
@@ -821,7 +929,18 @@ const Login3 = (props) => {
                                             type="submit"
                                             className="log-btn w-full py-4 text-white mt-4 rounded-lg"
                                           >
-                                            Register
+                                            {
+                                              buttonLoading.type == "AGENT_REGISTER" ? <div className="flex items-center justify-center">
+                                                <svg class="h-5 w-5 animate-spin" viewBox="3 3 18 18">
+                                                  <path
+                                                    class="fill-gray-200"
+                                                    d="M12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5ZM3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12Z"></path>
+                                                  <path
+                                                    class="fill-gray-800"
+                                                    d="M16.9497 7.05015C14.2161 4.31648 9.78392 4.31648 7.05025 7.05015C6.65973 7.44067 6.02656 7.44067 5.63604 7.05015C5.24551 6.65962 5.24551 6.02646 5.63604 5.63593C9.15076 2.12121 14.8492 2.12121 18.364 5.63593C18.7545 6.02646 18.7545 6.65962 18.364 7.05015C17.9734 7.44067 17.3403 7.44067 16.9497 7.05015Z"></path>
+                                                </svg>
+                                              </div> : "Register"
+                                            }
                                           </button>
                                         </div>
                                       </Form>
@@ -933,15 +1052,28 @@ const Login3 = (props) => {
                         id="bt"
                         title={"Login"}
                         onclick={LoginStudent}
-                        // loading={state.submitProcessing}
+                        loading={buttonLoading.type == "STUDENT_LOGIN"}
                       />
                       <button
                         onClick={signin}
                         id="google_login_a"
                         className="shadow w-full justify-center p-2 rounded flex items-center gap-2 mt-5"
                       >
-                        <img src={Gogl} alt="" />
-                        Login with Google
+                        {
+                          buttonLoading.type == "STUDENT_GOOGEL_LOGIN" ? <div className="flex items-center justify-center">
+                            <svg class="h-5 w-5 animate-spin" viewBox="3 3 18 18">
+                              <path
+                                class="fill-gray-200"
+                                d="M12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5ZM3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12Z"></path>
+                              <path
+                                class="fill-gray-800"
+                                d="M16.9497 7.05015C14.2161 4.31648 9.78392 4.31648 7.05025 7.05015C6.65973 7.44067 6.02656 7.44067 5.63604 7.05015C5.24551 6.65962 5.24551 6.02646 5.63604 5.63593C9.15076 2.12121 14.8492 2.12121 18.364 5.63593C18.7545 6.02646 18.7545 6.65962 18.364 7.05015C17.9734 7.44067 17.3403 7.44067 16.9497 7.05015Z"></path>
+                            </svg>
+                          </div> : <>
+                            <img src={Gogl} alt="" />
+                            Login with Google
+                          </>
+                        }
                       </button>
                       <p className="mt-5 text-center">
                         Don’t have an account ?{" "}
@@ -968,6 +1100,7 @@ const Login3 = (props) => {
                     <div className="modal_inner">
                       <div className="header_modal login-part-modal">
                         <GrClose
+                          className="cursor-pointer"
                           onClick={() => setStudentForgotPassword(false)}
                         />
                         <h4 className="my-2 text-center font-bold text-xl mb-10">
@@ -975,141 +1108,62 @@ const Login3 = (props) => {
                         </h4>
                       </div>
                       <AuthScreen>
-                        {!token ? (
-                          <div className="flex flex-col justify-center">
+                        <div className="flex flex-col justify-center">
+                          <div className="">
                             <div className="">
-                              <div className="">
-                                <div className="shadow sm:overflow-hidden sm:rounded-md">
-                                  <div className="space-y-6 bg-white px-4 py-2 sm:p-2">
-                                    <div className="">
-                                      <div className="col-span-3 sm:col-span-2">
-                                        <label
-                                          htmlFor="company-website"
-                                          className="block text-sm font-medium text-gray-700"
-                                        >
-                                          Email
-                                        </label>
-                                        <div className="mt-1 flex rounded-md shadow-sm">
-                                          <input
-                                            type="email"
-                                            name="email"
-                                            value={state.email}
-                                            onChange={handleInput}
-                                            id="company-website"
-                                            className="block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm"
-                                            placeholder="Enter your Email"
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
-                                    <button
-                                      type="button"
-                                      onClick={SendEmail}
-                                      className="bg-gradient-primary inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                    >
-                                      Submit
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="text-center pt-2 px-lg-2 px-1">
-                              <p className="mb-4 text-sm mx-auto">
-                                Want to login?
-                                <span
-                                  onClick={() =>
-                                    setStudentForgotPassword(false)
-                                  }
-                                  className="pl-2 text-gradient font-bold cursor-pointer"
-                                >
-                                  Login
-                                </span>
-                              </p>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="flex flex-col justify-center">
-                            <div className="md:grid md:grid-cols-3 md:gap-6">
-                              <div className="mt-5 md:col-start-2 md:mt-0 m-auto w-full lg:w-9/12">
-                                <h1 className="text-xl mb-2 font-black">
-                                  Set New Password
-                                </h1>
-                                <div className="shadow sm:overflow-hidden sm:rounded-md">
-                                  <div className="space-y-6 bg-white px-4 py-2 sm:p-2">
-                                    <div className="">
-                                      <div className="col-span-3 sm:col-span-2">
-                                        <label
-                                          htmlFor="company-website"
-                                          className="block text-sm font-medium text-gray-700"
-                                        >
-                                          New Password
-                                        </label>
-                                        <div className="mt-1 flex rounded-md shadow-sm">
-                                          <input
-                                            type="password"
-                                            name="newpassword"
-                                            value={state.newpassword}
-                                            onChange={handleInput}
-                                            id="company-website"
-                                            className="block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm"
-                                            placeholder="Enter your email or phone"
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
-
-                                    <div>
+                              <div className="shadow sm:overflow-hidden sm:rounded-md">
+                                <div className="space-y-6 bg-white px-4 py-2 sm:p-2">
+                                  <div className="">
+                                    <div className="col-span-3 sm:col-span-2">
                                       <label
-                                        htmlFor="about"
+                                        htmlFor="company-website"
                                         className="block text-sm font-medium text-gray-700"
                                       >
-                                        Confirm Password
+                                        Email
                                       </label>
-                                      <div className="mt-1">
+                                      <div className="mt-1 flex rounded-md shadow-sm">
                                         <input
-                                          type="password"
-                                          name="confirmpassword"
-                                          value={state.confirmpassword}
+                                          type="email"
+                                          name="email"
+                                          value={state.email}
                                           onChange={handleInput}
+                                          id="company-website"
                                           className="block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm"
-                                          placeholder="Enter your confirm password"
+                                          placeholder="Enter your Email"
                                         />
                                       </div>
                                     </div>
                                   </div>
-                                  <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
-                                    <button
-                                      type="button"
-                                      onClick={ForgotStudent}
-                                      className="bg-gradient-primary inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                    >
-                                      Update
-                                    </button>
-                                  </div>
+                                </div>
+                                <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
+                                  <ButtonPrimaryCopy
+                                    title={"Submit"}
+                                    onclick={SendEmail}
+                                    loading={buttonLoading.type == "FORGOT_EMAIL_SEND"}
+                                  />
                                 </div>
                               </div>
                             </div>
-                            <div className="text-center pt-2 px-lg-2 px-1">
-                              <p className="mb-4 text-sm mx-auto">
-                                Want to login?
-                                <span
-                                  onClick={() =>
-                                    setStudentForgotPassword(false)
-                                  }
-                                  className="pl-2 text-info text-gradient font-bold cursor-pointer"
-                                >
-                                  Login
-                                </span>
-                              </p>
-                            </div>
                           </div>
-                        )}
+                          {/* <div className="text-center pt-2 px-lg-2 px-1">
+                            <p className="mb-4 text-sm mx-auto">
+                              Want to login?
+                              <span
+                                onClick={() =>
+                                  setStudentForgotPassword(false)
+                                }
+                                className="pl-2 text-gradient font-bold cursor-pointer"
+                              >
+                                Login
+                              </span>
+                            </p>
+                          </div> */}
+                        </div>
                       </AuthScreen>
                     </div>
                   </div>
                 )}
+
                 {/* End - Forgot Password Popup */}
                 {studentRegisterSide ? (
                   <AuthScreen>
@@ -1164,12 +1218,11 @@ const Login3 = (props) => {
                                               <label>First Name</label>
                                               <Field
                                                 type="text"
-                                                className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${
-                                                  touched.firstName &&
+                                                className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${touched.firstName &&
                                                   errors.firstName
-                                                    ? "is-invalid"
-                                                    : ""
-                                                }`}
+                                                  ? "is-invalid"
+                                                  : ""
+                                                  }`}
                                                 placeholder="firstName"
                                                 aria-label="firstName"
                                                 aria-describedby="firstName-addon"
@@ -1185,12 +1238,11 @@ const Login3 = (props) => {
                                               <label>Last Name</label>
                                               <Field
                                                 type="text"
-                                                className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${
-                                                  touched.lastName &&
+                                                className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${touched.lastName &&
                                                   errors.lastName
-                                                    ? "is-invalid"
-                                                    : ""
-                                                }`}
+                                                  ? "is-invalid"
+                                                  : ""
+                                                  }`}
                                                 placeholder="lastName"
                                                 aria-label="lastName"
                                                 aria-describedby="lastName-addon"
@@ -1208,11 +1260,10 @@ const Login3 = (props) => {
                                             <label>Phone</label>
                                             <Field
                                               type="text"
-                                              className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${
-                                                touched.phone && errors.phone
-                                                  ? "is-invalid"
-                                                  : ""
-                                              }`}
+                                              className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${touched.phone && errors.phone
+                                                ? "is-invalid"
+                                                : ""
+                                                }`}
                                               placeholder="Phone"
                                               aria-label="Phone"
                                               aria-describedby="phone-addon"
@@ -1229,11 +1280,10 @@ const Login3 = (props) => {
                                             <label>Email</label>
                                             <Field
                                               type="email"
-                                              className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${
-                                                touched.email && errors.email
-                                                  ? "is-invalid"
-                                                  : ""
-                                              }`}
+                                              className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${touched.email && errors.email
+                                                ? "is-invalid"
+                                                : ""
+                                                }`}
                                               placeholder="Email"
                                               aria-label="Email"
                                               aria-describedby="email-addon"
@@ -1250,12 +1300,11 @@ const Login3 = (props) => {
                                             <label>Password</label>
                                             <Field
                                               type="password"
-                                              className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${
-                                                touched.password &&
+                                              className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${touched.password &&
                                                 errors.password
-                                                  ? "is-invalid"
-                                                  : ""
-                                              }`}
+                                                ? "is-invalid"
+                                                : ""
+                                                }`}
                                               placeholder="Password"
                                               aria-label="Password"
                                               aria-describedby="password-addon"
@@ -1272,12 +1321,11 @@ const Login3 = (props) => {
                                             <label>Confrim password</label>
                                             <Field
                                               type="password"
-                                              className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${
-                                                touched.confirmPassword &&
+                                              className={`block w-full flex-1 border-gray-300 focus:border-black border-2 border-gray p-2 w-full focus:ring-indigo-500 sm:text-sm form-control ${touched.confirmPassword &&
                                                 errors.confirmPassword
-                                                  ? "is-invalid"
-                                                  : ""
-                                              }`}
+                                                ? "is-invalid"
+                                                : ""
+                                                }`}
                                               placeholder="confirmPassword"
                                               aria-label="confirmPassword"
                                               aria-describedby="confirmPassword-addon"
@@ -1290,14 +1338,12 @@ const Login3 = (props) => {
                                             />
                                           </div>
                                           <div className="text-center mt-5">
-                                            <button
+                                            <ButtonPrimaryCopy
                                               title={"Register"}
-                                              loading={state.submitProcessing}
+                                              loading={buttonLoading.type == "STUDENT_REGISTER"}
                                               type="submit"
                                               className="log-btn w-full py-4 text-white mt-4 rounded-lg"
-                                            >
-                                              Register
-                                            </button>
+                                            />
                                             {/* <button type="submit" className="bg-gradient-primary text-white px-4 py-1 mt-4 mb-0 text-white rounded-full">Register</button> */}
                                           </div>
                                         </Form>

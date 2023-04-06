@@ -1,13 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Logo from "../images/logo.png";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
 import Can from "../images/can.jpg";
 import Russ from "../images/russ.jpg";
 import Usa from "../images/usa.png";
 import Log_a from "../images/log_a.png";
 import { getToken } from "../../../helper/auth";
 
-export default function Header({ page }) {
+// Redux
+import { useSelector, useDispatch } from 'react-redux'
+import { setData } from '../../../redux/reducers/landingPage'
+
+export default function Header({}) {
+  const landingPage = useSelector((state) => state.landingPage)
+  
+  const location = useLocation()
+
   const [headerClassName, setHeaderClassName] = useState("");
   const [isDark, setIsDark] = useState(true);
   const [Show, setShow] = useState(false);
@@ -29,15 +37,26 @@ export default function Header({ page }) {
     window.onscroll = () => handleScroll(headerClassName);
   }, [headerClassName]);
 
+
+  useEffect(() => {
+    // console.log(window.location.pathname)
+    console.log("pathname", window.location.pathname)
+    if (window.location.pathname != "/") {
+        document.getElementById("header_menu")?.classList?.add('not-home')
+    }
+    // window.scrollTo(0, 0)
+    
+  }, [location])
+
   return (
-    <div className={page != "home" && isDark ? "header-bg-dark" : ""}>
+    <div className={window.location.pathname != "/" && true ? "header-bg-dark" : ""}>
       <div
         className={
-          headerClassName
-            ? `${headerClassName}` + "header-part "
-            : page == "home"
-            ? "header-part "
-            : ""
+          headerClassName 
+            ? window.location.pathname == "/" ? `${headerClassName}` + "header-part " : `${headerClassName}` + "header-part not-home"
+            : window.location.pathname == "/"
+              ? "header-part"
+              : "not-home"  
         }
         id="header_menu"
       >
@@ -50,20 +69,20 @@ export default function Header({ page }) {
                   href="mailto:info@learnglobal.com"
                 >
                   <i class="fa fa-envelope mr-2" aria-hidden="true"></i>
-                  info@learnglobal.com
+                  {landingPage.main_email}
                 </a>
               </div>
               <div className="flex items-center justify-center  gap-4 pl-4 mb-5 lg:mb-0">
-                <Link to="#">
+                <Link to={landingPage.social_links.linked_in}>
                   <i className="fa fa-linkedin" aria-hidden="true"></i>
                 </Link>
-                <Link to="#">
+                <Link to={landingPage.social_links.twitter}>
                   <i class="fa fa-twitter" aria-hidden="true"></i>
                 </Link>
-                <Link to="#">
+                <Link to={landingPage.social_links.instagram}>
                   <i class="fa fa-instagram" aria-hidden="true"></i>
                 </Link>
-                <Link to="#">
+                <Link to={landingPage.social_links.facebook}>
                   <i class="fa fa-facebook" aria-hidden="true"></i>
                 </Link>
               </div>
@@ -104,10 +123,10 @@ export default function Header({ page }) {
         <nav class="border-gray-200 px-2 sm:px-4 py-2.5 rounded light:bg-gray-800">
           <div class="container flex flex-wrap justify-between items-center mx-auto">
             <a href="/" className="logo flex items-center">
-              <img className="logo-norml" src={Log_a} />
+              <img className="logo-norml" src={ landingPage.baseUrl + landingPage.main_logo_a} />
               <img
-                className="logo-scroll"
-                src={Logo}
+                className={"logo-scroll"}
+                src={ landingPage.baseUrl + landingPage.main_logo_b}
                 alt="Logo"
                 width={"200px"}
               />
@@ -159,18 +178,17 @@ export default function Header({ page }) {
                   <Link
                     to="/"
                     class="block text-sm py-2 pr-4 pl-3   rounded md:bg-transparent text-gray-700 md:p-0 dark:text-dark"
-                    aria-current="page"
                   >
                     Home
                   </Link>
                 </li>
                 <li>
-                  <a
-                    href="/discover"
+                  <Link
+                    to="/discover"
                     class="block text-sm py-2 pr-4 pl-3  border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0  md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
                   >
                     Discover School
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   {getToken("student") ? (
@@ -190,12 +208,12 @@ export default function Header({ page }) {
                   )}
                 </li>
                 <li>
-                  <a
-                    href="/contact"
+                  <Link
+                    to="/contact"
                     class="block text-sm py-2 pr-4 pl-3  border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0  md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
                   >
                     Contact
-                  </a>
+                  </Link>
                 </li>
                 <li className="relative">
                   <a
@@ -218,24 +236,16 @@ export default function Header({ page }) {
                       />
                     </svg>
                     <ul className="head-sub-menus absolute">
-                      <li>
-                        <Link className="flex items-center" to="/countries">
-                          <img src={Can} alt="" />
-                          Canada
-                        </Link>
-                      </li>
-                      <li>
-                        <a className="flex items-center" href="#">
-                          <img src={Russ} alt="" />
-                          russia
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#">
-                          <img src={Usa} alt="" />
-                          USA
-                        </a>
-                      </li>
+                      {
+                        landingPage.countryList.map((el) => {
+                          return (<li>
+                            <Link className="flex items-center" to={"/countries/" + el.countryDetails.countryId}>
+                              <img src={Can} alt="" />
+                              {el.countryDetails.countryName}
+                            </Link>
+                          </li>)
+                        })
+                      }
                     </ul>
                   </a>
                 </li>

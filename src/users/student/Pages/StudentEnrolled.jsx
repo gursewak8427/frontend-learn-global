@@ -9,16 +9,20 @@ import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { firebaseAuth } from "../../../firebase";
 import ButtonPrimary from "../../../common/Buttons/ButtonPrimary";
 import StudentPayment from "./StudentPayment";
+import { toast } from "react-toastify";
 const provider = new GoogleAuthProvider();
 
 const StudentEnrolled = (props) => {
   const navigate = useNavigate();
+
+  const [swiftLoading, setSwiftLoading] = useState(false)
 
   const [state, setState] = useState({
     isWait: true,
     enrolledPrograms: [],
     student: "",
     baseUrl: "",
+    baseUrlStudent: "",
     pendingDocuments: true,
 
     // new
@@ -28,7 +32,65 @@ const StudentEnrolled = (props) => {
     underVerification: false,
     disabled: false,
     paymentLoading: false,
+
+    popup: false,
+    activeFileIndex: -1,
+    swiftFile: null,
   });
+
+  const handleFile = (e) => {
+    setState({
+      ...state,
+      swiftFile: e.target.files[0]
+    })
+  }
+
+  const uploadSwiftFile = () => {
+    if (state?.activeFileIndex == -1) {
+      alert("Undefined File Index")
+      return
+    }
+    if (!state?.enrolledPrograms[state.activeFileIndex]?._id) {
+      alert("Undefined Enrolled File")
+      return
+    }
+    setSwiftLoading(true)
+
+    let enrollId = state?.enrolledPrograms[state.activeFileIndex]?._id
+    const formData = new FormData();
+    formData.append("fileId", enrollId);
+    formData.append("UploadTutionFeesReceipt", state.swiftFile);
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${getToken("student")}`
+      }
+    };
+    axios.post(process.env.REACT_APP_NODE_URL + "/student/uploadTutionFeesReceipt", formData, config).then((res) => {
+      console.log({ res });
+      setSwiftLoading(false)
+      if (res.data.status == "0") {
+        toast.error(res.data.message)
+      } else {
+        toast(res.data.message)
+        let oldFiles = state.enrolledPrograms;
+        oldFiles[state.activeFileIndex].enroll_status = res?.data?.details?.file.enroll_status
+        oldFiles[state.activeFileIndex].tution_fees_recepit = res?.data?.details?.file.tution_fees_recepit
+        console.log({ oldFile: oldFiles[state.activeFileIndex] })
+        document.getElementById("swift-file").value = ""
+        setState({
+          ...state,
+          popup: false,
+          activeFileIndex: -1,
+          enrolledPrograms: oldFiles,
+          swiftFile: null,
+        })
+      }
+    }).catch((err) => {
+      console.log(err);
+      setSwiftLoading(false)
+    });
+  }
 
   useEffect(() => { // get enrolled list data from api using axios
     const config = {
@@ -44,6 +106,7 @@ const StudentEnrolled = (props) => {
         enrolledPrograms: res.data.details.enrolled_list,
         student: res.data.details.student,
         baseUrl: res.data.details.baseUrl,
+        baseUrlStudent: res.data.details.baseUrlStudent,
         isWait: false,
         documents: res.data.details.documents,
         isDocsRequired: res.data.details.isDocsRequired,
@@ -74,7 +137,8 @@ const StudentEnrolled = (props) => {
 
   return (<>
     {
-      state.isDocsRequiredPopup || state.student.status == "DOC_REJECTED" ? (
+      false ? (
+        // state.isDocsRequiredPopup || state.student.status == "DOC_REJECTED" ? (
         <>
           <div className="overlay active"
             onClick={
@@ -88,9 +152,6 @@ const StudentEnrolled = (props) => {
               })
             }></div>
           <div className="pendingDocAlert popup active">
-            {/* <div className="cross flex justify-end">
-              <span className="mb-2 rounded-full w-[40px] h-[40px] bg-[red] text-[white] items-center justify-center flex cursor-pointer hover:bg-[darkred]">X</span>
-            </div> */}
             <div class="pending-documents">
               <i class="fas fa-exclamation-circle"></i>
               <h2>Pending Documents</h2>
@@ -133,228 +194,333 @@ const StudentEnrolled = (props) => {
           <p>Your document's verification is in the processing.</p>
         </div>
     }
-    <div className="overflow-auto card shadow-lg m-4 col-12 px-0 pt-0 pb-2 agent-table border">
-      <table className="table-auto overflow-scroll w-full files-table">
-        <thead>
-          <tr>
-            {/* Logo, File Id, Country, School Name, Course, Application Fees, ESL, Fees Paid, In Take, Payment, Action,  */}
-            <th
-              className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
-              scope="col"
-            >
-              Country Logo
-            </th>
-            <th
-              className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
-              scope="col"
-            >
-              School Logo
-            </th>
-            <th
-              className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
-              scope="col"
-            >
-              File Id
-            </th>
-            <th
-              className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
-              scope="col"
-            >
-              Country
-            </th>
-            <th
-              className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
-              scope="col"
-            >
-              School Name
-            </th>
-            <th
-              className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
-              scope="col"
-            >
-              Course
-            </th>
-            <th
-              className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
-              scope="col"
-            >
-              Application Fees
-            </th>
-            <th
-              className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
-              scope="col"
-            >
-              ESL
-            </th>
-            <th
-              className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
-              scope="col"
-            >
-              Fees Paid
-            </th>
-            <th
-              className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
-              scope="col"
-            >
-              Payment Id
-            </th>
-            <th
-              className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
-              scope="col"
-            >
-              In Take
-            </th>
-            <th
-              className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
-              scope="col"
-            >
-              Payment
-            </th>
-            <th
-              className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
-              scope="col"
-            >
-              Status
-            </th>
-            <th
-              className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
-              scope="col"
-            >
-              Action
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {state.isWait ? (
-            <></>
-          ) : (
-            state.enrolledPrograms.map((enroll, index) => {
-              return (
-                <tr key={enroll.fileId}>
-                  <td className="p-2 border-2">
-                    <img
-                      width={"100px"}
-                      src={
-                        state.baseUrl +
-                        enroll.school_details.school_meta_details
-                          .countryLogo
+    {
+      state.enrolledPrograms.length != 0 && !state.isWait &&
+      <div className="overflow-auto card shadow-lg m-4 col-12 px-0 pt-0 pb-2 agent-table border">
+        <table className="table-auto overflow-scroll w-full files-table">
+          <thead>
+            <tr>
+              {/* Logo, File Id, Country, School Name, Course, Application Fees, ESL, Fees Paid, In Take, Payment, Action,  */}
+              <th
+                className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
+                scope="col"
+              >
+                Country Logo
+              </th>
+              <th
+                className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
+                scope="col"
+              >
+                School Logo
+              </th>
+              <th
+                className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
+                scope="col"
+              >
+                File Id
+              </th>
+              <th
+                className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
+                scope="col"
+              >
+                Country
+              </th>
+              <th
+                className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
+                scope="col"
+              >
+                School Name
+              </th>
+              <th
+                className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
+                scope="col"
+              >
+                Course
+              </th>
+              <th
+                className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
+                scope="col"
+              >
+                Application Fees
+              </th>
+              <th
+                className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
+                scope="col"
+              >
+                ESL
+              </th>
+              <th
+                className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
+                scope="col"
+              >
+                Fees Paid
+              </th>
+              <th
+                className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
+                scope="col"
+              >
+                Payment Id
+              </th>
+              <th
+                className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
+                scope="col"
+              >
+                In Take
+              </th>
+              <th
+                className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
+                scope="col"
+              >
+                Payment
+              </th>
+              <th
+                className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
+                scope="col"
+              >
+                Documents
+              </th>
+              <th
+                className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
+                scope="col"
+              >
+                Status
+              </th>
+              <th
+                className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
+                scope="col"
+              >
+                Tution Fees
+              </th>
+              <th
+                className="p-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-left"
+                scope="col"
+              >
+                Embassy Documents
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {state.isWait ? (
+              <></>
+            ) : (
+              state.enrolledPrograms.map((enroll, index) => {
+                return (
+                  <tr key={enroll.fileId}>
+                    <td className="p-2 border-2">
+                      <img
+                        width={"100px"}
+                        src={
+                          state.baseUrl +
+                          enroll.school_details.school_meta_details
+                            .countryLogo
+                        }
+                        alt="logo"
+                        className=""
+                      />
+                    </td>
+                    <td className="p-2 border-2">
+                      <img
+                        width={"100px"}
+                        src={
+                          state.baseUrl +
+                          enroll.school_details.school_meta_details
+                            .schoolLogo
+                        }
+                        alt="logo"
+                        className="img-fluid"
+                      />
+                    </td>
+                    <td onClick={() => navigate("/d/student/remarks/" + enroll._id)} className="p-2 border-2 cursor-pointer hover:underline">{enroll.fileId}</td>
+                    <td className="p-2 border-2">
+                      {enroll.school_details.country}
+                    </td>
+                    <td className="p-2 border-2 capitalize">
+                      {enroll.school_details.school_name}
+                    </td>
+                    <td className="p-2 border-2 max-two-line-text hover-text">
+                      {enroll.school_details?.school_programs
+                        ?.program_name || "--"}
+                    </td>
+                    <td className="p-2 border-2 capitalize">
+                      {enroll.school_details?.school_programs
+                        ?.application_fee == 0
+                        ? "Free"
+                        : <>{enroll.school_details?.school_programs?.application_fee} {enroll.school_details?.school_programs?.currency}</>
                       }
-                      alt="logo"
-                      className=""
-                    />
-                  </td>
-                  <td className="p-2 border-2">
-                    <img
-                      width={"100px"}
-                      src={
-                        state.baseUrl +
-                        enroll.school_details.school_meta_details
-                          .schoolLogo
-                      }
-                      alt="logo"
-                      className="img-fluid"
-                    />
-                  </td>
-                  <td onClick={() => navigate("/d/student/remarks/" + enroll._id)} className="p-2 border-2 cursor-pointer hover:underline">{enroll.fileId}</td>
-                  <td className="p-2 border-2">
-                    {enroll.school_details.country}
-                  </td>
-                  <td className="p-2 border-2 capitalize">
-                    {enroll.school_details.school_name}
-                  </td>
-                  <td className="p-2 border-2 capitalize">
-                    {enroll.school_details?.school_programs
-                      ?.program_name || "--"}
-                  </td>
-                  <td className="p-2 border-2 capitalize">
-                    {enroll.school_details?.school_programs
-                      ?.application_fee == 0
-                      ? "Free"
-                      : <>{enroll.school_details?.school_programs?.application_fee} {enroll.school_details?.school_programs?.currency}</>
-                    }
-                  </td>
-                  <td className="p-2 border-2">{"--"}</td>
-                  <td className="p-2 border-2">
-                    {enroll.fees_status}
-                  </td>
-                  <td className="p-2 border-2">
-                    {enroll.payment_id || "--"}
-                  </td>
-                  <td className="p-2 border-2 text-center">
-                    {
-                      enroll.fees_status == "PENDING" ?
-                        <select name="intakes" id={`selectedIntake_${index}`} className="p-2">
-                          <option value="">--Select--</option>
-                          {
-                            // USE map to show intakes under school_details.school_programs.intakes_data
-                            enroll.school_details.school_programs.intakes_data.map(
-                              (intakes, IntakeIndex) => {
-                                return intakes.months.map(
-                                  (month, monthIndex) => {
-                                    if (month == true) {
-                                      return (
-                                        <option
-                                          key={
-                                            IntakeIndex + "-" + monthIndex
-                                          }
-                                          value={
-                                            intakes.year + "-" + monthIndex
-                                          }
-                                        >
-                                          {intakes.year +
-                                            " " +
-                                            monthsArr[monthIndex]}
-                                        </option>
-                                      );
+                    </td>
+                    <td className="p-2 border-2">{"--"}</td>
+                    <td className="p-2 border-2">
+                      {enroll.fees_status}
+                    </td>
+                    <td className="p-2 border-2">
+                      {enroll.payment_id || "--"}
+                    </td>
+                    <td className="p-2 border-2 text-center">
+                      {
+                        enroll.fees_status == "PENDING" ?
+                          <select name="intakes" id={`selectedIntake_${index}`} className="p-2">
+                            <option value="">--Select--</option>
+                            {
+                              // USE map to show intakes under school_details.school_programs.intakes_data
+                              enroll.school_details.school_programs.intakes_data.map(
+                                (intakes, IntakeIndex) => {
+                                  return intakes.months.map(
+                                    (month, monthIndex) => {
+                                      if (month == true) {
+                                        return (
+                                          <option
+                                            key={
+                                              IntakeIndex + "-" + monthIndex
+                                            }
+                                            value={
+                                              intakes.year + "-" + monthIndex
+                                            }
+                                          >
+                                            {intakes.year +
+                                              " " +
+                                              monthsArr[monthIndex]}
+                                          </option>
+                                        );
+                                      }
                                     }
-                                  }
-                                );
-                              }
-                            )
-                          }
-                        </select> :
-                        <>
-                          {monthsArr[enroll.intake.month - 1]}, {enroll.intake.year}
-                        </>
-                    }
-                  </td>
-                  <td className="p-2 border-2 text-center">
-                    {
-                      enroll.enroll_status == "FEES_PENDING" ?
+                                  );
+                                }
+                              )
+                            }
+                          </select> :
+                          <>
+                            {monthsArr[enroll.intake.month - 1]}, {enroll.intake.year}
+                          </>
+                      }
+                    </td>
+                    <td className="p-2 border-2 text-center">
+                      {
+                        enroll.enroll_status == "FEES_PENDING" || enroll.enroll_status == "FEES_AND_DOC_PENDING" ?
+                          <div className={`mx-auto flex justify-center payBtn payBtn_${index}`}>
+                            <span className="first">
+                              <StudentPayment index={index} enrollId={enroll._id} state={state} setState={setState} />
+                              {/* <ButtonPrimary title={"Pay"} onclick={_ => payNow(enroll, index)} loading={false} /> */}
+                            </span>
+                            <span className="second">
+                              <StudentPayment index={index} enrollId={enroll._id} state={state} setState={setState} />
+                              {/* <ButtonPrimary title={"Pay"} onclick={_ => payNow(enroll, index)} loading={true} /> */}
+                            </span>
+                          </div> : "--"
+                      }
+                    </td>
+                    <td className="p-2 border-2 text-center">
+                      {
                         <div className={`mx-auto flex justify-center payBtn payBtn_${index}`}>
-                          <span className="first">
-                            <StudentPayment index={index} enrollId={enroll._id} state={state} setState={setState} />
-                            {/* <ButtonPrimary title={"Pay"} onclick={_ => payNow(enroll, index)} loading={false} /> */}
-                          </span>
-                          <span className="second">
-                            <StudentPayment index={index} enrollId={enroll._id} state={state} setState={setState} />
-                            {/* <ButtonPrimary title={"Pay"} onclick={_ => payNow(enroll, index)} loading={true} /> */}
-                          </span>
-                        </div> : enroll.enroll_status == "PENDING" || enroll.enroll_status == "UNDER_VERIFICATION" ? <span>
-                          <ButtonPrimary title={"Pay"} onclick={() => alert("Your document's verification is pending!")} loading={false} />
-                        </span> : "--"
-                    }
-                  </td>
-                  <td className="p-2 border-2">
-                    <button>{enroll.enroll_status}</button>
-                  </td>
-                  <td className="p-2 border-2">
-                    {/* <button>Delete</button> */}
-                  </td>
-                </tr>
-              );
-            })
-          )}
-        </tbody>
-      </table>
-    </div>
-    {state.isWait ? (
-      <center className="w-full my-10">
-        <img width={80} src="https://i.gifer.com/ZZ5H.gif" alt="" />
-      </center>
-    ) : (
-      <></>
-    )}
+                          <ButtonPrimary title={"Documents"} onclick={() => navigate("/d/student/documents?fileId=" + enroll._id)} loading={false} />
+                        </div>
+                      }
+                    </td>
+                    <td className="p-2 border-2">
+                      <button>{enroll.enroll_status == "PENDING" ? "DOCUMENTS PENDING" : enroll.enroll_status == "IN_PROCESSING" ? "OL Awaited" : enroll.enroll_status}</button>
+                    </td>
+                    <td className="p-2 border-2 w-[138px]">
+                      {
+                        ["OL_RECEIVED", "TUTION_FEES_PROCESSING", "TUTION_FEES_REJECTED", "FILE_LODGED", "FILE_LODGED_DOCS_PROCESSING", "FILE_LODGED_DOCS_REJECTED", "RESULT_AWAITED", "VISA_APPROVED", "VISA_REJECTED", "CLOSE"].includes(enroll?.enroll_status) && <>
+                          <ButtonPrimary title={"Receipt"} onclick={
+                            () => setState({
+                              ...state,
+                              popup: true,
+                              activeFileIndex: index,
+                            })
+                          } />
+                          <div className={
+                            `overlay ${state.popup == true ? "active" : ""
+                            }`
+                          }
+                            onClick={
+                              () => setState({
+                                ...state,
+                                popup: false,
+                                activeFileIndex: -1,
+                              })
+                            }></div>
+                          <div className={
+                            `pendingDocAlert popup  ${state.popup == true ? "active" : ""
+                            }`
+                          }>
+                            {
+                              (state?.activeFileIndex != -1) &&
+                              <div class="w-full">
+                                <h1 class="text-3xl font-bold mb-5">
+                                  {
+                                    !["FILE_LODGED", "FILE_LODGED_DOCS_PROCESSING", "FILE_LODGED_DOCS_REJECTED", "RESULT_AWAITED", "VISA_APPROVED", "VISA_REJECTED", "CLOSE"].includes(state?.enrolledPrograms[state?.activeFileIndex]?.enroll_status) ? (state?.enrolledPrograms[state?.activeFileIndex]?.enroll_status == "TUTION_FEES_PROCESSING") ?
+                                      "Change" : "Upload" : ""} Fees Receipt (Swift Copy)</h1>
+                                <div class="mb-5">
+                                  Fee Receipt : {["TUTION_FEES_PROCESSING", "TUTION_FEES_REJECTED", "FILE_LODGED", "FILE_LODGED_DOCS_PROCESSING", "FILE_LODGED_DOCS_REJECTED", "RESULT_AWAITED", "VISA_APPROVED", "VISA_REJECTED", "CLOSE"].includes(state?.enrolledPrograms[state?.activeFileIndex]?.enroll_status) &&
+                                    <a href={state.baseUrlStudent + state?.enrolledPrograms[state.activeFileIndex]?.tution_fees_recepit} className="text-[blue] mx-2 px-2 py-1 border-[blue] hover:bg-[blue] hover:text-white border" target="_blank" rel="noopener noreferrer">View</a>
+                                  }
+                                  {
+                                    !["FILE_LODGED", "FILE_LODGED_DOCS_PROCESSING", "FILE_LODGED_DOCS_REJECTED", "RESULT_AWAITED", "VISA_APPROVED", "VISA_REJECTED", "CLOSE"].includes(state?.enrolledPrograms[state?.activeFileIndex]?.enroll_status) && (
+                                      <>
+                                        <label for="swift-file" class="block font-medium mb-2">
+                                          File:
+                                        </label>
+                                        <input type="file" id="swift-file" name="swiftFile" className="border px-4 py-2 w-full"
+                                          onChange={handleFile}
+                                        />
+                                      </>
+                                    )
+                                  }
+                                </div>
+                                {
+                                  !["FILE_LODGED", "FILE_LODGED_DOCS_PROCESSING", "FILE_LODGED_DOCS_REJECTED", "RESULT_AWAITED", "VISA_APPROVED", "VISA_REJECTED", "CLOSE"].includes(state?.enrolledPrograms[state?.activeFileIndex]?.enroll_status) &&
+                                  <div className="flex justify-end">
+                                    <ButtonPrimary onclick={uploadSwiftFile}
+                                      type="button"
+                                      title={
+                                        state?.enrolledPrograms[state?.activeFileIndex]?.enroll_status == "TUTION_FEES_PROCESSING" ?
+                                          "Change" : "Upload"
+                                      }
+                                      loading={swiftLoading}
+                                    />
+                                  </div>
+
+                                }
+                              </div>
+                            }
+                          </div>
+                        </>
+                      }
+                    </td>
+                    <td className="p-2 border-2 text-center">
+                      {
+                        ["FILE_LODGED", "FILE_LODGED_DOCS_PROCESSING", "FILE_LODGED_DOCS_REJECTED", "RESULT_AWAITED", "VISA_APPROVED", "VISA_REJECTED", "CLOSE"].includes(enroll?.enroll_status) &&
+                        <div className={`mx-auto flex justify-center payBtn payBtn_${index}`}>
+                          <ButtonPrimary title={"E. Docs"} onclick={() => navigate("/d/student/embassy_documents?fileId=" + enroll._id)} loading={false} />
+                        </div>
+                      }
+                    </td>
+                  </tr>
+                );
+              })
+            )}
+          </tbody>
+        </table>
+      </div >
+    }
+
+    {
+      state.enrolledPrograms.length == 0 && !state.isWait && <>
+        <div className="flex flex-col justify-center items-center p-[20px]">
+          <h1 className="font-black">You haven't enrolled in any program yet.</h1>
+          <button className="button-33 mt-3" role="button" onClick={() => navigate("/eligible")}>Apply Here</button>
+        </div>
+      </>
+    }
+    {
+      state.isWait ? (
+        <center className="w-full my-10">
+          <img width={80} src="https://i.gifer.com/ZZ5H.gif" alt="" />
+        </center>
+      ) : (
+        <></>
+      )
+    }
   </>
   );
 };

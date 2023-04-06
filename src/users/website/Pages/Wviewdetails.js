@@ -1,24 +1,56 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Viewinfo from "../Components/Viewinfo";
-import Viewcontent from "../Components/viewcontent";
+// import Viewcontent from "../Components/Viewcontent";
 import WebsiteHome from "../Screens/WebsiteHome";
+import axios from "axios";
+import Viewcontent from "../Components/viewcontent";
+import { useParams } from "react-router-dom";
+import Admitted from "../Components/Admitted";
+import Fees from "../Components/Fees";
 
 export default function Wviewdetails() {
+  // useEffect(() => {
+  //   document.getElementById("header_menu").classList.remove("header-part");
+  //   document.getElementById("header_menu").classList.add("static-header");
+  // }, []);
+
+  const { id } = useParams();
+
+  const [data, setData] = useState();
+  const [wait, setWait] = useState(true);
+
   useEffect(() => {
-    document.getElementById("header_menu").classList.remove("header-part");
-    document.getElementById("header_menu").classList.add("static-header");
-  }, []);
+    axios
+      .get(process.env.REACT_APP_NODE_URL + `/student/specificSchool/${id}`)
+      .then((response) => {
+        setData(response.data.details);
+        setWait(false);
+      });
+  }, [id]);
+
+  if (wait) {
+    return (
+      <>
+        <div className="pt-[150px]">
+          <center className="w-full my-10">
+            <img width={80} src="https://i.gifer.com/ZZ5H.gif" alt="" />
+          </center>
+        </div>
+      </>
+    );
+  }
+
   return (
     <div>
-      <WebsiteHome>
+      <div>
         <div id="view-details">
-          <div className="view-banr py-32">
-            <h1 className="text-center text-4xl text-white">NMIT</h1>
-          </div>
-          <Viewinfo />
-          <Viewcontent />
+          <Viewinfo data={data} />
+          {/* small v */}
+          <Viewcontent data={data} /> 
+          <Admitted />
+          <Fees />
         </div>
-      </WebsiteHome>
+      </div>
     </div>
   );
 }
